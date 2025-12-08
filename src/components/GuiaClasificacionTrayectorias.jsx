@@ -278,21 +278,31 @@ export default function GuiaClasificacionTrayectorias() {
   return (
     <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ 
-        backgroundColor: '#E3F2FD', 
-        padding: '20px', 
-        borderRadius: '8px', 
-        marginBottom: '30px',
-        border: '2px solid #2196F3'
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '2rem', 
+        borderRadius: '0', 
+        marginBottom: '2rem',
+        color: 'white'
       }}>
-        <h2 style={{ marginTop: 0, color: '#1976D2' }}>
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: 'white',
+          marginTop: 0,
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>
           📚 Guía de Clasificación de Trayectorias del Desarrollo
         </h2>
-        <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '10px' }}>
-          Basado en <strong>Thomas et al. (2009)</strong> - "Using developmental trajectories to understand developmental disorders"
-        </p>
-        <p style={{ fontSize: '14px', color: '#555', marginBottom: 0 }}>
-          Esta guía presenta las <strong>7 tipologías de trayectorias atípicas</strong> identificadas en el artículo,
-          con gráficas teóricas, criterios de clasificación e implicaciones clínicas.
+        <p style={{
+          fontSize: '1.2rem',
+          color: 'white',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Basado en Thomas et al. (2009) - 7 tipologías de trayectorias atípicas con criterios de clasificación e implicaciones clínicas
         </p>
       </div>
 
@@ -466,6 +476,221 @@ export default function GuiaClasificacionTrayectorias() {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Sección adicional con gráficos de problemas metodológicos */}
+      <div style={{
+        backgroundColor: '#FFF8E7',
+        padding: '20px',
+        borderRadius: '8px',
+        border: '2px solid #FFA726',
+        marginBottom: '30px'
+      }}>
+        <h3 style={{ marginTop: 0, color: '#E65100' }}>
+          📈 Simulaciones de Problemas Metodológicos
+        </h3>
+        <p style={{ marginBottom: '20px', fontSize: '14px', color: '#555' }}>
+          Las siguientes gráficas ilustran problemas comunes en la evaluación del desarrollo que las trayectorias ayudan a identificar.
+        </p>
+
+        {/* Gráfico del problema del CD */}
+        <div style={{ marginBottom: '25px' }}>
+          <h4 style={{ color: '#E65100', marginBottom: '10px' }}>
+            ⚠️ Problema del Cociente de Desarrollo (CD) Aislado
+          </h4>
+          <p style={{ fontSize: '13px', color: '#666', marginBottom: '15px' }}>
+            Tres niños con el mismo CD (70%) pero trayectorias muy diferentes. Solo el análisis longitudinal revela el verdadero patrón.
+          </p>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                type="number"
+                domain={[12, 36]}
+                label={{ value: 'Edad Cronológica (meses)', position: 'insideBottom', offset: -5 }}
+              />
+              <YAxis 
+                label={{ value: 'Edad de Desarrollo (meses)', angle: -90, position: 'insideLeft' }}
+              />
+              <Tooltip formatter={(value, name) => [`${value.toFixed(1)} meses`, name]} />
+              <Legend />
+              <ReferenceLine 
+                stroke="#999" 
+                strokeDasharray="5 5"
+                segment={[{ x: 12, y: 12 }, { x: 36, y: 36 }]}
+              />
+              {/* Línea típica */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[{x: 12, y: 12}, {x: 18, y: 18}, {x: 24, y: 24}, {x: 30, y: 30}, {x: 36, y: 36}]}
+                stroke="#4CAF50" 
+                strokeWidth={3}
+                name="Desarrollo Típico"
+                dot={false}
+              />
+              {/* Niño A: Retraso estable (CD = 70%) */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[{x: 12, y: 8.4}, {x: 18, y: 12.6}, {x: 24, y: 16.8}, {x: 30, y: 21}, {x: 36, y: 25.2}]}
+                stroke="#2196F3" 
+                strokeWidth={3}
+                name="Niño A: Retraso Estable"
+                dot={{ fill: '#2196F3', r: 4 }}
+              />
+              {/* Niño B: Desaceleración progresiva */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[{x: 12, y: 11}, {x: 18, y: 14.5}, {x: 24, y: 16.8}, {x: 30, y: 18}, {x: 36, y: 18.5}]}
+                stroke="#F44336" 
+                strokeWidth={3}
+                name="Niño B: Desaceleración"
+                dot={{ fill: '#F44336', r: 4 }}
+              />
+              {/* Niño C: Recuperación tras intervención */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[{x: 12, y: 6}, {x: 18, y: 8.5}, {x: 24, y: 16.8}, {x: 30, y: 26}, {x: 36, y: 34}]}
+                stroke="#9C27B0" 
+                strokeWidth={3}
+                name="Niño C: Recuperación"
+                dot={{ fill: '#9C27B0', r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          <div style={{ 
+            backgroundColor: '#FFF3E0',
+            padding: '10px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            marginTop: '10px'
+          }}>
+            <strong>Interpretación:</strong> Los tres niños tienen CD = 70% a los 24 meses, pero:
+            <br/>• <span style={{color: '#2196F3'}}>Azul</span>: Progreso constante, buen pronóstico
+            <br/>• <span style={{color: '#F44336'}}>Rojo</span>: Deterioro progresivo, requiere intervención urgente
+            <br/>• <span style={{color: '#9C27B0'}}>Morado</span>: Respuesta excelente a la intervención
+          </div>
+        </div>
+
+        {/* Gráfico del problema de heterocedasticidad */}
+        <div style={{ marginBottom: '15px' }}>
+          <h4 style={{ color: '#E65100', marginBottom: '10px' }}>
+            📊 Problema de la Heterocedasticidad
+          </h4>
+          <p style={{ fontSize: '13px', color: '#666', marginBottom: '15px' }}>
+            La variabilidad del desarrollo no es constante: aumenta con la edad, especialmente en poblaciones atípicas.
+          </p>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 60 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                type="number"
+                domain={[6, 36]}
+                label={{ value: 'Edad Cronológica (meses)', position: 'insideBottom', offset: -5 }}
+              />
+              <YAxis 
+                label={{ value: 'Edad de Desarrollo (meses)', angle: -90, position: 'insideLeft' }}
+              />
+              <Tooltip formatter={(value, name) => [`${value.toFixed(1)} meses`, name]} />
+              <Legend />
+              
+              {/* Banda de desarrollo típico (± 1 DE) */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 6}, {x: 12, y: 12}, {x: 18, y: 18}, 
+                  {x: 24, y: 24}, {x: 30, y: 30}, {x: 36, y: 36}
+                ]}
+                stroke="#4CAF50" 
+                strokeWidth={3}
+                name="Media Típica"
+                dot={false}
+              />
+              {/* Límites superiores e inferiores (heterocedasticidad) */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 7.5}, {x: 12, y: 15.5}, {x: 18, y: 24}, 
+                  {x: 24, y: 33}, {x: 30, y: 42.5}, {x: 36, y: 52.5}
+                ]}
+                stroke="#81C784" 
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                name="+1 DE Típico"
+                dot={false}
+              />
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 4.5}, {x: 12, y: 8.5}, {x: 18, y: 12}, 
+                  {x: 24, y: 15}, {x: 30, y: 17.5}, {x: 36, y: 19.5}
+                ]}
+                stroke="#81C784" 
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                name="-1 DE Típico"
+                dot={false}
+              />
+              
+              {/* Población atípica con mayor heterocedasticidad */}
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 4.2}, {x: 12, y: 8.4}, {x: 18, y: 12.6}, 
+                  {x: 24, y: 16.8}, {x: 30, y: 21}, {x: 36, y: 25.2}
+                ]}
+                stroke="#F44336" 
+                strokeWidth={3}
+                name="Media Atípica"
+                dot={false}
+              />
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 5.5}, {x: 12, y: 13}, {x: 18, y: 22}, 
+                  {x: 24, y: 32.5}, {x: 30, y: 44}, {x: 36, y: 57}
+                ]}
+                stroke="#FFCDD2" 
+                strokeWidth={2}
+                strokeDasharray="3 3"
+                name="+1 DE Atípico"
+                dot={false}
+              />
+              <Line 
+                type="monotone"
+                dataKey="y"
+                data={[
+                  {x: 6, y: 2.9}, {x: 12, y: 3.8}, {x: 18, y: 3.2}, 
+                  {x: 24, y: 1.1}, {x: 30, y: -2}, {x: 36, y: -6.6}
+                ]}
+                stroke="#FFCDD2" 
+                strokeWidth={2}
+                strokeDasharray="3 3"
+                name="-1 DE Atípico"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          <div style={{ 
+            backgroundColor: '#FFEBEE',
+            padding: '10px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            marginTop: '10px'
+          }}>
+            <strong>Observación clave:</strong> La variabilidad aumenta dramáticamente con la edad. 
+            A los 36 meses, un niño atípico puede estar entre -6.6 y +57 meses de desarrollo, 
+            mientras que uno típico varía solo entre 19.5 y 52.5 meses.
+          </div>
+        </div>
       </div>
 
       {/* Tabla comparativa */}

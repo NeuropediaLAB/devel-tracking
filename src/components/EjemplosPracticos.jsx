@@ -684,7 +684,31 @@ function EjemplosPracticos({ onEjemploCreado, onSeleccionarNino }) {
   return (
     <div className="ejemplos-clinicos" style={{ padding: '20px' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <h2>📚 Ejemplos Prácticos de Trayectorias de Desarrollo</h2>
+        <div style={{ 
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          padding: '2rem', 
+          borderRadius: '0', 
+          marginBottom: '2rem',
+          color: 'white'
+        }}>
+          <h2 style={{
+            fontSize: '2.4rem',
+            fontWeight: '700',
+            color: 'white',
+            marginBottom: '1rem',
+            letterSpacing: '-0.01em',
+            lineHeight: '1.2'
+          }}>📚 Ejemplos Prácticos de Trayectorias de Desarrollo</h2>
+          <p style={{
+            fontSize: '1.2rem',
+            color: 'white',
+            lineHeight: '1.8',
+            margin: '0',
+            fontWeight: '400'
+          }}>
+            Casos clínicos simulados que representan diferentes patrones de desarrollo infantil
+          </p>
+        </div>
         
         <div style={{ 
           backgroundColor: '#e7f3ff', 

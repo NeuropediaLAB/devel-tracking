@@ -318,18 +318,24 @@ function FuentesNormativas() {
 
   return (
     <div className="fuentes-normativas-container">
-      <div className="fuentes-header">
+      <div style={{ 
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '2rem', 
+        borderRadius: '0', 
+        marginBottom: '2rem',
+        color: 'white'
+      }}>
         <h2 style={{
           fontSize: '2.4rem',
           fontWeight: '700',
-          color: '#111',
+          color: 'white',
           marginBottom: '1rem',
           letterSpacing: '-0.01em',
           lineHeight: '1.2'
         }}>Fuentes Normativas</h2>
         <p style={{
           fontSize: '1.2rem',
-          color: '#767676',
+          color: 'white',
           lineHeight: '1.8',
           margin: '0',
           fontWeight: '400'

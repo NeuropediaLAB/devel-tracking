@@ -29,8 +29,7 @@ function App() {
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'analisis', 'fuentes-normativas'
-  const [subVistaTutorial, setSubVistaTutorial] = useState('fundamentos'); // 'fundamentos', 'ejemplos'
-  const [subVistaFundamentos, setSubVistaFundamentos] = useState('guia'); // 'guia', 'bibliografia'
+  const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
 
   useEffect(() => {
     if (autenticado) {
@@ -180,7 +179,7 @@ function App() {
             onClick={() => {
               setVistaActual('tutorial');
               setNinoSeleccionado(null);
-              setSubVistaTutorial('fundamentos'); // Reset to default
+              setSubVistaTutorial('guia'); // Reset to default
             }}
           >
             📖 Tutorial
@@ -247,42 +246,16 @@ function App() {
                 <div className="tutorial-nombre">📖 Tutorial</div>
               </div>
               <button 
-                className={`sub-nav-btn ${subVistaTutorial === 'fundamentos' ? 'active' : ''}`}
-                onClick={() => {
-                  setSubVistaTutorial('fundamentos');
-                  setSubVistaFundamentos('guia'); // Reset to default
-                }}
+                className={`sub-nav-btn ${subVistaTutorial === 'guia' ? 'active' : ''}`}
+                onClick={() => setSubVistaTutorial('guia')}
               >
-                📚 Fundamentos Científicos
+                📋 Guía de Trayectorias
               </button>
               <button 
                 className={`sub-nav-btn ${subVistaTutorial === 'ejemplos' ? 'active' : ''}`}
                 onClick={() => setSubVistaTutorial('ejemplos')}
               >
                 📋 Ejemplos Prácticos
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Sub-pestañas jerárquicas para fundamentos científicos */}
-        {vistaActual === 'tutorial' && subVistaTutorial === 'fundamentos' && (
-          <div className="nav-level-3">
-            <div className="sub-nav-buttons">
-              <div className="fundamentos-name-tab">
-                <div className="fundamentos-nombre">📚 Fundamentos Científicos</div>
-              </div>
-              <button 
-                className={`sub-nav-btn ${subVistaFundamentos === 'guia' ? 'active' : ''}`}
-                onClick={() => setSubVistaFundamentos('guia')}
-              >
-                📋 Guía de Trayectorias
-              </button>
-              <button 
-                className={`sub-nav-btn ${subVistaFundamentos === 'bibliografia' ? 'active' : ''}`}
-                onClick={() => setSubVistaFundamentos('bibliografia')}
-              >
-                📖 Referencias Bibliográficas
               </button>
             </div>
           </div>
@@ -339,8 +312,8 @@ function App() {
 
         {vistaActual === 'tutorial' && (
           <>
-            {subVistaTutorial === 'fundamentos' && (
-              <Fundamentos subVista={subVistaFundamentos} />
+            {subVistaTutorial === 'guia' && (
+              <Fundamentos />
             )}
             {subVistaTutorial === 'ejemplos' && (
               <EjemplosPracticos 

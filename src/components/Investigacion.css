@@ -491,22 +491,25 @@
 }
 
 .investigacion-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0073AA;
   color: white;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: 0;
   margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-bottom: 2px solid #005177;
 }
 
 .investigacion-header h2 {
-  margin: 0 0 10px 0;
-  font-size: 28px;
+  margin: 0 0 15px 0;
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .investigacion-descripcion {
   margin: 0;
-  font-size: 16px;
+  font-size: 1.1em;
   opacity: 0.95;
   line-height: 1.6;
 }
@@ -514,17 +517,19 @@
 .parametros-seccion {
   background: white;
   padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
+  border: 1px solid #ddd;
 }
 
 .parametros-seccion h3 {
-  color: #333;
+  color: #111;
   margin-top: 0;
   margin-bottom: 20px;
-  font-size: 22px;
-  border-bottom: 2px solid #667eea;
+  font-size: 1.4em;
+  font-weight: 700;
+  border-bottom: 2px solid #0073AA;
   padding-bottom: 10px;
 }
 
