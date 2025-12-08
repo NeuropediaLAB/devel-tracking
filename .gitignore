@@ -26,3 +26,7 @@ Thumbs.db
 # Temporal
 .env
 .env.local
+
+# Backup files
+*.backup*
+*.bak

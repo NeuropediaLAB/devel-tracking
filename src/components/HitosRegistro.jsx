@@ -3,6 +3,7 @@ import { calcularEdadCronologicaMeses, calcularEdadCorregidaMeses, formatearEdad
 import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 
+import VideoModal from './VideoModal';
 function HitosRegistro({ ninoId }) {
   const [dominios, setDominios] = useState([]);
   const [hitosNormativos, setHitosNormativos] = useState([]);
@@ -18,6 +19,8 @@ function HitosRegistro({ ninoId }) {
   const [fechaEvaluacion, setFechaEvaluacion] = useState(new Date().toISOString().split('T')[0]);
   const [edadEvaluacionMeses, setEdadEvaluacionMeses] = useState(0);
   const [rangoEdadInferior, setRangoEdadInferior] = useState(0); // Para expandir rango en modo puntual
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoSeleccionado, setVideoSeleccionado] = useState(null);
 
   useEffect(() => {
     cargarFuentesNormativas();
@@ -232,7 +235,31 @@ function HitosRegistro({ ninoId }) {
     } catch (error) {
       console.error('Error al registrar hito no alcanzado:', error);
     }
+  }
+  const abrirVideo = (video) => {
+    if (video && video.url) {
+      window.open(video.url, '_blank');
+    }
+  }
+  const getVideoThumbnail = (url) => {
+    if (!url) return null;
+    
+    // Buscar ID de YouTube de forma simple
+    let videoId = null;
+    if (url.includes('youtube.com/watch?v=')) {
+      videoId = url.split('v=')[1]?.split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    }
+    
+    if (videoId && videoId.length === 11) {
+      return `https://img.youtube.com/vi/${videoId}/default.jpg`;
+    }
+    
+    return null;
   };
+;
+;
 
   const eliminarHitoNoAlcanzado = async (hitoNoAlcanzadoId) => {
     try {
@@ -669,6 +696,94 @@ function HitosRegistro({ ninoId }) {
                 </div>
               )}
               
+              
+              {/* Videos asociados desde la biblioteca de medios */}
+              {hito.videos_asociados && hito.videos_asociados.length > 0 && (
+                <div className="videos-asociados" style={{
+                  marginTop: '8px',
+                  paddingTop: '8px',
+                  borderTop: '1px solid #eee'
+                }}>
+                  <div style={{
+                    fontSize: '0.85em',
+                    fontWeight: '600',
+                    color: '#666',
+                    marginBottom: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    <i className="fas fa-video" style={{ color: '#ff6b35' }}></i>
+                    Videos de evaluación:
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {hito.videos_asociados.map((video, index) => (
+                      <button
+                        key={video.id || index}
+                        onClick={() => abrirVideo(video)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 10px',
+                          backgroundColor: '#fff3e0',
+                          border: '2px solid #ff9800',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '0.8em',
+                          fontWeight: '500',
+                          color: '#e65100',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#ffe0b2';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff3e0';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        {(() => {
+                          const thumbnail = getVideoThumbnail(video.url);
+                          return thumbnail ? (
+                            <div style={{
+                              width: '50px',
+                              height: '30px',
+                              marginRight: '8px',
+                              borderRadius: '4px',
+                              overflow: 'hidden',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#f0f0f0',
+                              border: '1px solid #ddd'
+                            }}>
+                              <img 
+                                src={thumbnail} 
+                                alt="Video"
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover'
+                                }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.parentNode.innerHTML = '<i class="fas fa-play-circle" style="color: #ff9800; font-size: 1.2em;"></i>';
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <i className="fas fa-play-circle" style={{ fontSize: '1.1em', marginRight: '8px' }}></i>
+                          );
+                        })()}
+                        <span>{video.titulo}</span>
+                        <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="hito-info">
                 <span>Edad esperada: {hito.edad_media_meses} meses (± {hito.desviacion_estandar})</span>
                 <span>Rango: {hito.edad_minima_meses}-{hito.edad_maxima_meses} meses</span>
@@ -946,7 +1061,95 @@ function HitosRegistro({ ninoId }) {
                     </div>
                   )}
                   
-                  <div className="hito-info">
+                  
+              {/* Videos asociados desde la biblioteca de medios */}
+              {hito.videos_asociados && hito.videos_asociados.length > 0 && (
+                <div className="videos-asociados" style={{
+                  marginTop: '8px',
+                  paddingTop: '8px',
+                  borderTop: '1px solid #eee'
+                }}>
+                  <div style={{
+                    fontSize: '0.85em',
+                    fontWeight: '600',
+                    color: '#666',
+                    marginBottom: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    <i className="fas fa-video" style={{ color: '#ff6b35' }}></i>
+                    Videos de evaluación:
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {hito.videos_asociados.map((video, index) => (
+                      <button
+                        key={video.id || index}
+                        onClick={() => abrirVideo(video)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 10px',
+                          backgroundColor: '#fff3e0',
+                          border: '2px solid #ff9800',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '0.8em',
+                          fontWeight: '500',
+                          color: '#e65100',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#ffe0b2';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff3e0';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        {(() => {
+                          const thumbnail = getVideoThumbnail(video.url);
+                          return thumbnail ? (
+                            <div style={{
+                              width: '50px',
+                              height: '30px',
+                              marginRight: '8px',
+                              borderRadius: '4px',
+                              overflow: 'hidden',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#f0f0f0',
+                              border: '1px solid #ddd'
+                            }}>
+                              <img 
+                                src={thumbnail} 
+                                alt="Video"
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover'
+                                }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.parentNode.innerHTML = '<i class="fas fa-play-circle" style="color: #ff9800; font-size: 1.2em;"></i>';
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <i className="fas fa-play-circle" style={{ fontSize: '1.1em', marginRight: '8px' }}></i>
+                          );
+                        })()}
+                        <span>{video.titulo}</span>
+                        <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="hito-info">
                     <span>Edad esperada: {hito.edad_media_meses} meses (± {hito.desviacion_estandar})</span>
                     <span>Evaluado a los: {Math.round(edadEvaluacion)} meses</span>
                     <span>Fecha evaluación: {fechaRegistro.toLocaleDateString()}</span>

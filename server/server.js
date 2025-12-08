@@ -546,15 +546,42 @@ app.get('/api/hitos-normativos', (req, res) => {
   const fuenteNormativaId = req.query.fuente || 1;
   
   const query = `
-    SELECT hn.*, d.nombre as dominio_nombre
+    SELECT hn.*, d.nombre as dominio_nombre,
+           v.id as video_id, v.titulo as video_titulo, v.url as video_url, v.fuente as video_fuente
     FROM hitos_normativos hn
     JOIN dominios d ON hn.dominio_id = d.id
+    LEFT JOIN videos_hitos vh ON hn.id = vh.hito_id
+    LEFT JOIN videos v ON vh.video_id = v.id
     WHERE hn.fuente_normativa_id = ?
     ORDER BY hn.edad_media_meses, d.id
   `;
+  
   db.all(query, [fuenteNormativaId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
+    
+    // Agrupar videos por hito
+    const hitosMap = new Map();
+    rows.forEach(row => {
+      const hitoId = row.id;
+      if (!hitosMap.has(hitoId)) {
+        hitosMap.set(hitoId, {
+          ...row,
+          videos_asociados: []
+        });
+      }
+      
+      if (row.video_id) {
+        hitosMap.get(hitoId).videos_asociados.push({
+          id: row.video_id,
+          titulo: row.video_titulo,
+          url: row.video_url,
+          fuente: row.video_fuente
+        });
+      }
+    });
+    
+    const hitosConVideos = Array.from(hitosMap.values());
+    res.json(hitosConVideos);
   });
 });
 
@@ -1103,13 +1130,24 @@ app.get('/api/videos', verificarToken, (req, res) => {
 });
 
 // Obtener todos los hitos completos del sistema
-app.get('/api/hitos-completos', verificarToken, (req, res) => {
+app.get("/api/hitos-completos", (req, res) => {
   const query = `
-    SELECT h.id, h.nombre as descripcion, h.edad_media_meses as edad, d.nombre as area,
-           h.video_url, h.video_fuente, h.video_url_cdc, h.video_url_pathways
-    FROM hitos_normativos h
-    LEFT JOIN dominios d ON h.dominio_id = d.id
-    ORDER BY h.edad_media_meses, d.nombre, h.nombre
+    SELECT h.id, 
+           CASE 
+             WHEN f.nombre LIKE "%CDC%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - CDC" 
+             WHEN f.nombre LIKE "%OMS%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - OMS" 
+             WHEN f.nombre LIKE "%Bayley%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - Bayley" 
+             WHEN f.nombre LIKE "%Battelle%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - Battelle" 
+             ELSE h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - " || SUBSTR(f.nombre, 1, 10) 
+           END as descripcion, 
+           h.edad_media_meses as edad, 
+           d.nombre as area, 
+           f.nombre as fuente_normativa, 
+           h.video_url_cdc, h.video_url_pathways 
+    FROM hitos_normativos h 
+    LEFT JOIN dominios d ON h.dominio_id = d.id 
+    LEFT JOIN fuentes_normativas f ON h.fuente_normativa_id = f.id 
+    ORDER BY h.edad_media_meses, d.nombre, f.nombre, h.nombre
   `;
   
   db.all(query, [], (err, hitos) => {

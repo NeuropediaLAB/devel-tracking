@@ -283,7 +283,6 @@ function App() {
         {vistaActual === 'medios' && esAdmin() && (
           <BibliotecaMedios />
         )}
-        )}
       </main>
     </div>
   );

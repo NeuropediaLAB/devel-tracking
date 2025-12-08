@@ -193,6 +193,34 @@ db.serialize(() => {
     FOREIGN KEY (nino_id) REFERENCES ninos(id)
   )`);
 
+  // Crear tabla videos
+  db.run(`
+    CREATE TABLE IF NOT EXISTS videos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      titulo TEXT NOT NULL,
+      descripcion TEXT,
+      url TEXT NOT NULL,
+      fuente TEXT NOT NULL,
+      duracion TEXT,
+      edad_meses INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Crear tabla de relación videos-hitos si no existe
+  db.run(`
+    CREATE TABLE IF NOT EXISTS videos_hitos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      video_id INTEGER NOT NULL,
+      hito_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE,
+      FOREIGN KEY (hito_id) REFERENCES hitos_normativos(id) ON DELETE CASCADE,
+      UNIQUE(video_id, hito_id)
+    )
+  `);
+
   // Insertar fuentes normativas predeterminadas
   const fuentesNormativas = [
     [
