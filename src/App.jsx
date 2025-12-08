@@ -7,6 +7,7 @@ import IntroduccionDatos from './components/IntroduccionDatos';
 import GraficoDesarrollo from './components/GraficoDesarrollo';
 import EjemplosPracticos from './components/EjemplosPracticos';
 import Bibliografia from './components/Bibliografia';
+import Fundamentos from './components/Fundamentos';
 import Investigacion from './components/Investigacion';
 import BibliotecaMedios from './components/BibliotecaMedios';
 import { API_URL } from './config';
@@ -24,9 +25,11 @@ function App() {
   const [usuario, setUsuario] = useState(getUsuario());
   const [ninos, setNinos] = useState([]);
   const [ninoSeleccionado, setNinoSeleccionado] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // lista, introduccion, grafico, ejemplos, bibliografia, investigacion, medios
+  const [vistaActual, setVistaActual] = useState('lista'); // lista, introduccion, grafico, tutorial, investigacion, medios
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
+  const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'analisis', 'fuentes-normativas'
+  const [subVistaTutorial, setSubVistaTutorial] = useState('fundamentos'); // 'fundamentos', 'ejemplos'
 
   useEffect(() => {
     if (autenticado) {
@@ -171,34 +174,23 @@ function App() {
           >
             👶 Niños
           </button>
-          {!modoAvanzado && (
-            <>
-              <button 
-                className={vistaActual === 'bibliografia' ? 'active' : ''}
-                onClick={() => {
-                  setVistaActual('bibliografia');
-                  setNinoSeleccionado(null);
-                }}
-              >
-                📖 Fundamentos Científicos
-              </button>
-              <button 
-                className={vistaActual === 'ejemplos' ? 'active' : ''}
-                onClick={() => {
-                  setVistaActual('ejemplos');
-                  setNinoSeleccionado(null);
-                }}
-              >
-                📚 Ejemplos Prácticos
-              </button>
-            </>
-          )}
+          <button 
+            className={vistaActual === 'tutorial' ? 'active' : ''}
+            onClick={() => {
+              setVistaActual('tutorial');
+              setNinoSeleccionado(null);
+              setSubVistaTutorial('fundamentos'); // Reset to default
+            }}
+          >
+            📖 Tutorial
+          </button>
           {modoAvanzado && (
             <button 
               className={vistaActual === 'investigacion' ? 'active' : ''}
               onClick={() => {
                 setVistaActual('investigacion');
                 setNinoSeleccionado(null);
+                setSubVistaInvestigacion('limitaciones'); // Reset to default
               }}
             >
               🔬 Investigación
@@ -245,6 +237,64 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Sub-pestañas jerárquicas para tutorial */}
+        {vistaActual === 'tutorial' && (
+          <div className="nav-level-2">
+            <div className="sub-nav-buttons">
+              <div className="tutorial-name-tab">
+                <div className="tutorial-nombre">📖 Tutorial</div>
+              </div>
+              <button 
+                className={`sub-nav-btn ${subVistaTutorial === 'fundamentos' ? 'active' : ''}`}
+                onClick={() => setSubVistaTutorial('fundamentos')}
+              >
+                📚 Fundamentos Científicos
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaTutorial === 'ejemplos' ? 'active' : ''}`}
+                onClick={() => setSubVistaTutorial('ejemplos')}
+              >
+                📋 Ejemplos Prácticos
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Sub-pestañas jerárquicas para investigación */}
+        {modoAvanzado && vistaActual === 'investigacion' && (
+          <div className="nav-level-2">
+            <div className="sub-nav-buttons">
+              <div className="investigacion-name-tab">
+                <div className="investigacion-nombre">🔬 Investigación</div>
+              </div>
+              <button 
+                className={`sub-nav-btn ${subVistaInvestigacion === 'limitaciones' ? 'active' : ''}`}
+                onClick={() => setSubVistaInvestigacion('limitaciones')}
+              >
+                ⚠️ Limitaciones Estadísticas
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaInvestigacion === 'simulacion' ? 'active' : ''}`}
+                onClick={() => setSubVistaInvestigacion('simulacion')}
+              >
+                🧪 Simulación de Poblaciones
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaInvestigacion === 'analisis' ? 'active' : ''}`}
+                onClick={() => setSubVistaInvestigacion('analisis')}
+              >
+                📊 Análisis de Resultados
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaInvestigacion === 'fuentes-normativas' ? 'active' : ''}`}
+                onClick={() => setSubVistaInvestigacion('fuentes-normativas')}
+              >
+                🗂️ Fuentes Normativas
+              </button>
+            </div>
+          </div>
+        )}
       </nav>
 
       <main className="main-content">
@@ -260,14 +310,21 @@ function App() {
           </div>
         )}
 
-        {vistaActual === 'ejemplos' && (
-          <EjemplosPracticos 
-            onEjemploCreado={handleEjemploCreado}
-            onSeleccionarNino={(nino) => {
-              setNinoSeleccionado(nino);
-              setVistaActual('grafico');
-            }}
-          />
+        {vistaActual === 'tutorial' && (
+          <>
+            {subVistaTutorial === 'fundamentos' && (
+              <Fundamentos subVista="bibliografia" />
+            )}
+            {subVistaTutorial === 'ejemplos' && (
+              <EjemplosPracticos 
+                onEjemploCreado={handleEjemploCreado}
+                onSeleccionarNino={(nino) => {
+                  setNinoSeleccionado(nino);
+                  setVistaActual('introduccion');
+                }}
+              />
+            )}
+          </>
         )}
 
         {vistaActual === 'introduccion' && ninoSeleccionado && (
@@ -282,12 +339,8 @@ function App() {
           />
         )}
 
-        {vistaActual === 'bibliografia' && (
-          <Bibliografia />
-        )}
-
         {vistaActual === 'investigacion' && (
-          <Investigacion />
+          <Investigacion subVista={subVistaInvestigacion} />
         )}
         
         {vistaActual === 'medios' && esAdmin() && (

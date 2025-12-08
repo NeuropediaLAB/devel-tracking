@@ -540,6 +540,205 @@ function getInfoAdicionalFuente(fuenteId) {
   return info[fuenteId] || {};
 }
 
+// ==================== ENDPOINTS PARA FUENTES NORMATIVAS COMPLETAS ====================
+
+// Endpoint para fuentes normativas con información completa
+app.get('/api/fuentes-normativas-completas', (req, res) => {
+  const query = `
+    SELECT 
+      fn.*,
+      COUNT(DISTINCT hn.id) as total_hitos,
+      MIN(hn.edad_media_meses) as edad_minima,
+      MAX(hn.edad_media_meses) as edad_maxima,
+      AVG(hn.edad_media_meses) as edad_media,
+      AVG(hn.desviacion_estandar) as de_media
+    FROM fuentes_normativas fn
+    LEFT JOIN hitos_normativos hn ON fn.id = hn.fuente_normativa_id
+    WHERE fn.activa = 1
+    GROUP BY fn.id
+    ORDER BY fn.id
+  `;
+  
+  db.all(query, [], (err, fuentes) => {
+    if (err) return res.status(500).json({ error: err.message });
+    
+    // Añadir información adicional conocida
+    const fuentesCompletas = fuentes.map(fuente => {
+      const infoAdicional = getInfoAdicionalFuente(fuente.id);
+      
+      return {
+        ...fuente,
+        ...infoAdicional,
+        // Información psicométrica adicional
+        año_publicacion: getAñoPublicacion(fuente.id),
+        pais_region: getPaisRegion(fuente.id),
+        autores: getAutores(fuente.id),
+        editorial: getEditorial(fuente.id),
+        descripcion: getDescripcion(fuente.id),
+        metodologia: getMetodologia(fuente.id),
+        limitaciones: getLimitaciones(fuente.id),
+        confiabilidad: getConfiabilidad(fuente.id),
+        validez: getValidez(fuente.id),
+        referencias_bibliograficas: getReferencias(fuente.id),
+        url_original: getUrlOriginal(fuente.id)
+      };
+    });
+    
+    res.json(fuentesCompletas);
+  });
+});
+
+// Endpoint para estadísticas detalladas por fuente
+app.get('/api/estadisticas-fuente/:id', (req, res) => {
+  const fuenteId = req.params.id;
+  
+  const queryEstadisticas = `
+    SELECT 
+      COUNT(*) as total_hitos,
+      MIN(edad_media_meses) as edad_minima,
+      MAX(edad_media_meses) as edad_maxima,
+      AVG(edad_media_meses) as edad_media,
+      AVG(desviacion_estandar) as de_media
+    FROM hitos_normativos 
+    WHERE fuente_normativa_id = ?
+  `;
+  
+  const queryDominios = `
+    SELECT 
+      d.nombre as dominio,
+      COUNT(hn.id) as cantidad
+    FROM dominios d
+    JOIN hitos_normativos hn ON d.id = hn.dominio_id
+    WHERE hn.fuente_normativa_id = ?
+    GROUP BY d.id, d.nombre
+    ORDER BY cantidad DESC
+  `;
+  
+  db.get(queryEstadisticas, [fuenteId], (err, estadisticas) => {
+    if (err) return res.status(500).json({ error: err.message });
+    
+    db.all(queryDominios, [fuenteId], (err, dominios) => {
+      if (err) return res.status(500).json({ error: err.message });
+      
+      res.json({
+        ...estadisticas,
+        dominios_cobertura: dominios
+      });
+    });
+  });
+});
+
+// Funciones auxiliares para información adicional
+function getAñoPublicacion(fuenteId) {
+  const años = {
+    1: 2022, // CDC
+    2: 2006, // OMS  
+    3: 2005, // Bayley
+    4: 1984  // Battelle
+  };
+  return años[fuenteId] || null;
+}
+
+function getPaisRegion(fuenteId) {
+  const regiones = {
+    1: 'Estados Unidos',
+    2: 'Internacional (OMS)',
+    3: 'Estados Unidos',
+    4: 'Estados Unidos'
+  };
+  return regiones[fuenteId] || 'No especificado';
+}
+
+function getAutores(fuenteId) {
+  const autores = {
+    1: 'CDC - Centros para el Control y Prevención de Enfermedades',
+    2: 'Organización Mundial de la Salud',
+    3: 'Nancy Bayley',
+    4: 'Newborg, Stock, Wnek, Guidubaldi, Svinicki'
+  };
+  return autores[fuenteId] || 'No especificado';
+}
+
+function getEditorial(fuenteId) {
+  const editoriales = {
+    1: 'CDC',
+    2: 'OMS',
+    3: 'Harcourt Assessment',
+    4: 'DLM Teaching Resources'
+  };
+  return editoriales[fuenteId] || 'No especificado';
+}
+
+function getDescripcion(fuenteId) {
+  const descripciones = {
+    1: 'Guía clínica basada en evidencia para la identificación temprana de retrasos en el desarrollo en niños de 0 a 5 años.',
+    2: 'Estándares internacionales de crecimiento y desarrollo motor grueso basados en estudios multicéntricos.',
+    3: 'Escala de evaluación del desarrollo mental y motor para niños de 1 a 42 meses de edad.',
+    4: 'Inventario comprensivo de desarrollo que evalúa habilidades en múltiples dominios desde el nacimiento hasta los 8 años.'
+  };
+  return descripciones[fuenteId] || 'No hay descripción disponible';
+}
+
+function getMetodologia(fuenteId) {
+  const metodologias = {
+    1: 'Revisión sistemática de literatura y consenso de panel de expertos. Criterio del 75% de logro poblacional.',
+    2: 'Estudio longitudinal multicéntrico con 8440 niños de 6 países. Mediciones estandarizadas cada 2 semanas.',
+    3: 'Estandarización con muestra normativa de 1700 niños. Evaluación directa con materiales específicos.',
+    4: 'Estandarización con 800 niños típicos y atípicos. Evaluación observacional y con ítems específicos.'
+  };
+  return metodologias[fuenteId] || 'No especificada';
+}
+
+function getLimitaciones(fuenteId) {
+  const limitaciones = {
+    1: 'Basado principalmente en población estadounidense. Criterios pueden ser conservadores para algunas poblaciones.',
+    2: 'Enfocado principalmente en desarrollo motor grueso. Limitada representación cultural en algunos dominios.',
+    3: 'Normas de 2005 pueden no reflejar cambios poblacionales actuales. Requiere entrenamiento específico.',
+    4: 'Normas de 1984 desactualizadas. Algunas subescalas con menor confiabilidad en edades tempranas.'
+  };
+  return limitaciones[fuenteId] || 'No especificadas';
+}
+
+function getConfiabilidad(fuenteId) {
+  const confiabilidades = {
+    1: 'Alta (basada en consenso de expertos)',
+    2: 'Alta (α > 0.85 en estudios de seguimiento)',
+    3: 'Alta (r = 0.83-0.93 test-retest)',
+    4: 'Moderada-Alta (r = 0.71-0.99 según dominio)'
+  };
+  return confiabilidades[fuenteId] || 'No especificada';
+}
+
+function getValidez(fuenteId) {
+  const valideces = {
+    1: 'Validez de contenido por panel de expertos',
+    2: 'Validez predictiva demostrada en estudios longitudinales',
+    3: 'Validez concurrente con escalas similares (r = 0.57-0.79)',
+    4: 'Validez de constructo y criterio establecida'
+  };
+  return valideces[fuenteId] || 'No especificada';
+}
+
+function getReferencias(fuenteId) {
+  const referencias = {
+    1: 'CDC. (2022). Developmental Milestones. Centers for Disease Control and Prevention.',
+    2: 'WHO. (2006). WHO Motor Development Study: Windows of achievement for six gross motor development milestones.',
+    3: 'Bayley, N. (2005). Bayley Scales of Infant and Toddler Development–Third Edition. Harcourt Assessment.',
+    4: 'Newborg, J., Stock, J. R., Wnek, L., Guidubaldi, J., & Svinicki, J. (1984). Battelle Developmental Inventory. DLM Teaching Resources.'
+  };
+  return referencias[fuenteId] || 'No disponible';
+}
+
+function getUrlOriginal(fuenteId) {
+  const urls = {
+    1: 'https://www.cdc.gov/ncbddd/actearly/milestones/index.html',
+    2: 'https://www.who.int/tools/child-growth-standards',
+    3: 'https://www.pearsonassessments.com/store/usassessments/en/Store/Professional-Assessments/Developmental-Early-Childhood/Bayley-Scales-of-Infant-and-Toddler-Development-%7C-Third-Edition/p/100000123.html',
+    4: 'https://www.riversidepublishing.com/products/bdi2/details.html'
+  };
+  return urls[fuenteId] || null;
+}
+
 // ==================== RUTAS DE HITOS NORMATIVOS ====================
 
 app.get('/api/hitos-normativos', (req, res) => {

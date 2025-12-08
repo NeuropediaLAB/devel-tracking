@@ -575,3 +575,277 @@
     padding: 10px;
   }
 }
+
+/* Estilos para Metodología */
+.seccion-metodologia {
+  margin-bottom: 2rem;
+}
+
+.protocolo-card, .herramienta-card, .interpretacion-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #4caf50;
+}
+
+.protocolo-contenido, .herramientas-grid {
+  margin-top: 1rem;
+}
+
+.dominios-evaluacion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.dominio-item {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.dominio-item h6 {
+  color: #2e7d32;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.dominio-item p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.frecuencia-tabla {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.frecuencia-tabla table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.frecuencia-tabla th,
+.frecuencia-tabla td {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.frecuencia-tabla th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.herramientas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.herramienta-item {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.herramienta-item h5 {
+  color: #2e7d32;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.herramienta-item p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.caracteristicas {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.escalas-comparacion {
+  overflow-x: auto;
+}
+
+.escalas-comparacion table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.escalas-comparacion th,
+.escalas-comparacion td {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.escalas-comparacion th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.umbrales-content {
+  margin-top: 1rem;
+}
+
+.umbral-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.umbral-categoria {
+  min-width: 150px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.desarrollo-tipico { background: #c8e6c9; color: #2e7d32; }
+.vigilancia { background: #fff3c4; color: #f57f17; }
+.intervencion { background: #ffcdd2; color: #c62828; }
+.derivacion { background: #f8bbd9; color: #880e4f; }
+
+.umbral-descripcion {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.consideraciones-especiales {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fff8e1;
+  border-radius: 6px;
+  border-left: 4px solid #ffc107;
+}
+
+.consideraciones-especiales h5 {
+  color: #f57f17;
+  margin: 0 0 1rem 0;
+}
+
+.consideraciones-especiales ul {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.trayectorias-interpretacion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.trayectoria-tipo {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.trayectoria-tipo h5 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.trayectoria-tipo p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.best-practices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.practice-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #2196f3;
+}
+
+.practice-card h4 {
+  color: #1976d2;
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+}
+
+.practice-card ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.practice-card li {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.fundamentos-fallback {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.fundamentos-fallback h2 {
+  color: #4caf50;
+  margin-bottom: 16px;
+}
+
+.fundamentos-fallback p {
+  font-size: 16px;
+  color: #888;
+}
+
+/* Responsividad adicional para metodología */
+@media (max-width: 768px) {
+  .dominios-evaluacion,
+  .herramientas-grid,
+  .trayectorias-interpretacion,
+  .best-practices-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .umbral-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .umbral-categoria {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

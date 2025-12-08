@@ -626,11 +626,9 @@ function HitosRegistro({ ninoId }) {
                     <div className="dominio-badge">Área de desarrollo: {hito.dominio_nombre}</div>
                   </div>
                   
-                  <p className="hito-descripcion">{hito.descripcion}</p>
-
                   <div className="hito-info">
-                    <span>📊 <strong>Desarrollo típico:</strong> La mayoría de niños logran este hito alrededor de los {hito.edad_media_meses} meses</span>
-                    <span>📅 <strong>Rango normal:</strong> Se considera dentro del desarrollo esperado entre los {hito.edad_minima_meses} y {hito.edad_maxima_meses} meses</span>
+                    <span>📊 Desarrollo típico: {hito.edad_media_meses} meses</span>
+                    <span>📅 Rango normal: {hito.edad_minima_meses}-{hito.edad_maxima_meses} meses</span>
                   </div>
 
                   {conseguido && (
@@ -1274,9 +1272,9 @@ function HitosRegistro({ ninoId }) {
                 </div>
               )}
               <div className="hito-info">
-                    <span>📊 <strong>Desarrollo típico:</strong> La mayoría de niños logran este hito alrededor de los {hito.edad_media_meses} meses</span>
-                    <span>👶 <strong>Evaluación realizada:</strong> Se evaluó cuando el niño tenía {Math.round(edadEvaluacion)} meses de edad</span>
-                    <span>📅 <strong>Fecha de registro:</strong> {fechaRegistro.toLocaleDateString('es-ES')}</span>
+                    <span>📊 Desarrollo típico: {hito.edad_media_meses} meses</span>
+                    <span>👶 Evaluación: {Math.round(edadEvaluacion)} meses</span>
+                    <span>📅 Fecha: {fechaRegistro.toLocaleDateString('es-ES')}</span>
                   </div>
 
                   <div className="hito-acciones">

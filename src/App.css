@@ -129,6 +129,44 @@ body {
   gap: 0.1rem;
 }
 
+/* Estilos para pestaña de investigación */
+.investigacion-name-tab {
+  padding: 0.6rem 1rem;
+  background: #f3e5f5;
+  border: 1px solid #9c27b0;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #6a1b9a;
+  margin-right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.investigacion-nombre {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Estilos para pestaña de fundamentos */
+.tutorial-name-tab {
+  padding: 0.6rem 1rem;
+  background: #e8f5e9;
+  border: 1px solid #4caf50;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #2e7d32;
+  margin-right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tutorial-nombre {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
 .nino-datos span {
   white-space: nowrap;
 }
