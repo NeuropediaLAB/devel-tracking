@@ -1307,11 +1307,29 @@ function GraficoDesarrollo({ ninoId, onDatosRegresionCalculados, modoAvanzado = 
       )}
       
       <div className="header-con-boton">
-        <h2>Gráficas del Desarrollo</h2>
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Gráficas del Desarrollo</h2>
         <button 
           className="btn-generar-informe"
           onClick={() => setMostrarGeneradorInforme(true)}
           title="Generar informe para imprimir o copiar a historia clínica"
+          style={{
+            fontSize: '1.1rem',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            letterSpacing: '0.03em',
+            padding: '12px 20px',
+            backgroundColor: '#0073AA',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px'
+          }}
         >
           📄 Generar Informe
         </button>

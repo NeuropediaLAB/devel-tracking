@@ -344,10 +344,22 @@ function AnalisisResultados() {
   return (
     <div className="investigacion-container">
       <div className="investigacion-header">
-        <h2>📊 Análisis de Resultados</h2>
-        <p className="investigacion-descripcion">
-          Analice datos de poblaciones simuladas para evaluar propiedades psicométricas, 
-          detectar puntos ciegos y optimizar criterios de evaluación.
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Análisis de Resultados</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Análisis de datos de poblaciones simuladas para evaluar propiedades psicométricas y optimizar criterios de evaluación.
         </p>
       </div>
 

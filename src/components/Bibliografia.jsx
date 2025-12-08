@@ -221,8 +221,21 @@ export default function Bibliografia() {
   return (
     <div className="bibliografia-container">
       <div className="bibliografia-header">
-        <h2>📖 Fundamentos Científicos</h2>
-        <p className="bibliografia-intro">
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Fundamentos Científicos</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
           Base científica y guías clínicas para la evaluación del desarrollo infantil mediante análisis de trayectorias.
         </p>
       </div>

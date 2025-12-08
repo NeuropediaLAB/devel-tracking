@@ -70,12 +70,25 @@ function RecursosPorEdad({ edad }) {
   return (
     <div className="recursos-por-edad">
       <div className="recursos-header">
-        <h2>📚 Recursos Educativos - {recursos.nombre}</h2>
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Recursos Educativos - {recursos.nombre}</h2>
         <a 
           href={recursos.url_pathways}
           target="_blank"
           rel="noopener noreferrer"
           className="link-pathways"
+          style={{
+            fontSize: '1.1rem',
+            color: '#0073AA',
+            textDecoration: 'none',
+            fontWeight: '500'
+          }}
         >
           Ver más en Pathways.org <ExternalLink size={14} />
         </a>

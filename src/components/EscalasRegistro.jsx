@@ -292,10 +292,22 @@ function EscalasRegistro({ ninoId }) {
   return (
     <div className="escalas-registro-container">
       <div className="escalas-header">
-        <h2>📋 Registro de Evaluaciones con Escalas Estandarizadas</h2>
-        <p className="escalas-descripcion">
-          Registre los resultados de evaluaciones realizadas con escalas estandarizadas de desarrollo.
-          Las puntuaciones se convertirán automáticamente a Z-scores para su análisis.
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Escalas Estandarizadas</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Registro de evaluaciones con escalas estandarizadas. Las puntuaciones se convierten automáticamente a Z-scores para análisis.
         </p>
       </div>
 

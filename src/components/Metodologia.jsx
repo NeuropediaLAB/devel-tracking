@@ -9,8 +9,21 @@ function Metodologia() {
   return (
     <div className="bibliografia-container">
       <div className="bibliografia-header">
-        <h2>🔬 Metodología de Evaluación</h2>
-        <p className="bibliografia-descripcion">
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Metodología de Evaluación</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
           Protocolos, métodos y herramientas para la evaluación sistemática del desarrollo infantil.
         </p>
       </div>

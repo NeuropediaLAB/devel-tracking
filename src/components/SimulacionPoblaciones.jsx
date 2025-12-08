@@ -146,10 +146,22 @@ function SimulacionPoblaciones() {
   return (
     <div className="investigacion-container">
       <div className="investigacion-header">
-        <h2>🧪 Simulación de Poblaciones Experimentales</h2>
-        <p className="investigacion-descripcion">
-          Genere conjuntos de datos experimentales para evaluar propiedades psicométricas de las escalas de desarrollo,
-          identificar puntos ciegos del sistema y analizar errores sistemáticos.
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Simulación de Poblaciones</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Generación de conjuntos de datos experimentales para evaluar propiedades psicométricas de las escalas de desarrollo.
         </p>
       </div>
 

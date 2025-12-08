@@ -319,10 +319,22 @@ function FuentesNormativas() {
   return (
     <div className="fuentes-normativas-container">
       <div className="fuentes-header">
-        <h2>📚 Fuentes Normativas del Desarrollo Infantil</h2>
-        <p className="fuentes-descripcion">
-          Acceda a información detallada de las fuentes normativas utilizadas en el sistema y compare 
-          sus características psicométricas para tomar decisiones informadas en la evaluación del desarrollo.
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Fuentes Normativas</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Información detallada de las fuentes normativas y sus características psicométricas para la evaluación del desarrollo infantil.
         </p>
       </div>
 

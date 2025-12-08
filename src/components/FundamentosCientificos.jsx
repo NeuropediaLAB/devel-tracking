@@ -9,9 +9,22 @@ function FundamentosCientificos() {
   return (
     <div className="investigacion-container">
       <div className="investigacion-header">
-        <h2>📚 Fundamentos Científicos</h2>
-        <p className="investigacion-descripcion">
-          Bases teóricas y metodológicas que sustentan las herramientas de investigación del desarrollo infantil.
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Limitaciones Estadísticas</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Análisis de las limitaciones estadísticas en la evaluación del desarrollo infantil y metodologías alternativas.
         </p>
       </div>
 

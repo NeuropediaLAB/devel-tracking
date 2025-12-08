@@ -218,7 +218,25 @@ const BibliotecaMedios = () => {
 
   return (
     <div className="biblioteca-medios">
-      <h2>📚 Biblioteca de Medios</h2>
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{
+          fontSize: '2.4rem',
+          fontWeight: '700',
+          color: '#111',
+          marginBottom: '1rem',
+          letterSpacing: '-0.01em',
+          lineHeight: '1.2'
+        }}>Biblioteca de Medios</h2>
+        <p style={{
+          fontSize: '1.2rem',
+          color: '#767676',
+          lineHeight: '1.8',
+          margin: '0',
+          fontWeight: '400'
+        }}>
+          Gestión de videos educativos y sus asociaciones con hitos del desarrollo infantil.
+        </p>
+      </div>
       
       {mensaje && (
         <div className={`mensaje mensaje-${mensaje.tipo}`}>
