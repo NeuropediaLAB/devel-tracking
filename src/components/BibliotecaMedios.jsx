@@ -9,6 +9,9 @@ const BibliotecaMedios = () => {
   const [busqueda, setBusqueda] = useState('');
   const [videoSeleccionado, setVideoSeleccionado] = useState(null);
   const [hitoSeleccionado, setHitoSeleccionado] = useState('');
+  const [hitosSeleccionados, setHitosSeleccionados] = useState([]);
+  const [modoAsociacion, setModoAsociacion] = useState('simple'); // 'simple' o 'multiple'
+  const [mostrarModalAsociaciones, setMostrarModalAsociaciones] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
@@ -26,7 +29,16 @@ const BibliotecaMedios = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const dataVideos = await resVideos.json();
-      setVideos(Array.isArray(dataVideos) ? dataVideos : []);
+      // Procesar hitosAsociados de string a array
+      const videosProcessed = Array.isArray(dataVideos) ? dataVideos.map(video => ({
+        ...video,
+        hitosAsociados: video.hitosAsociados ? 
+          (typeof video.hitosAsociados === 'string' ? 
+            video.hitosAsociados.split(',').filter(id => id) : 
+            Array.isArray(video.hitosAsociados) ? video.hitosAsociados : []
+          ) : []
+      })) : [];
+      setVideos(videosProcessed);
       
       // Cargar todos los hitos del sistema
       const resHitos = await fetch('/api/hitos-completos', {
@@ -132,6 +144,62 @@ const BibliotecaMedios = () => {
     }
   };
 
+  const abrirModalAsociaciones = (video) => {
+    setVideoSeleccionado(video);
+    setHitosSeleccionados([]);
+    setMostrarModalAsociaciones(true);
+  };
+
+  const cerrarModalAsociaciones = () => {
+    setVideoSeleccionado(null);
+    setHitosSeleccionados([]);
+    setMostrarModalAsociaciones(false);
+  };
+
+  const toggleHitoSeleccionado = (hitoId) => {
+    setHitosSeleccionados(prev => 
+      prev.includes(hitoId) 
+        ? prev.filter(id => id !== hitoId)
+        : [...prev, hitoId]
+    );
+  };
+
+  const asociarMultiplesHitos = async () => {
+    if (!videoSeleccionado || hitosSeleccionados.length === 0) {
+      mostrarMensaje('Selecciona al menos un hito', 'error');
+      return;
+    }
+
+    try {
+      setCargando(true);
+      const token = localStorage.getItem('token');
+      
+      // Asociar cada hito seleccionado
+      for (const hitoId of hitosSeleccionados) {
+        await fetch('/api/videos/asociar', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            videoId: videoSeleccionado.id,
+            hitoId: hitoId
+          })
+        });
+      }
+      
+      mostrarMensaje(`Video asociado a ${hitosSeleccionados.length} hito(s)`, 'success');
+      cerrarModalAsociaciones();
+      cargarDatos();
+    } catch (error) {
+      console.error('Error al asociar videos:', error);
+      mostrarMensaje('Error al asociar algunos videos', 'error');
+    } finally {
+      setCargando(false);
+    }
+  };
+
   const videosFiltrados = Array.isArray(videos) ? videos.filter(video => {
     const matchFuente = filtroFuente === 'todos' || video.fuente === filtroFuente;
     const matchEdad = filtroEdad === 'todos' || (video.hitoAsociado && video.hitoAsociado.edad === parseInt(filtroEdad));
@@ -144,7 +212,7 @@ const BibliotecaMedios = () => {
   }) : [];
 
   const obtenerNombreHito = (hitoId) => {
-    const hito = hitos.find(h => h._id === hitoId);
+    const hito = hitos.find(h => h.id === parseInt(hitoId));
     return hito ? `${hito.descripcion} (${hito.edad} meses)` : 'Hito no encontrado';
   };
 
@@ -208,7 +276,7 @@ const BibliotecaMedios = () => {
             >
               <option value="">-- Selecciona un hito --</option>
               {hitos.map(hito => (
-                <option key={hito._id} value={hito._id}>
+                <option key={hito.id} value={hito.id}>
                   {hito.edad} meses - {hito.area} - {hito.descripcion}
                 </option>
               ))}
@@ -237,14 +305,14 @@ const BibliotecaMedios = () => {
         ) : (
           <div className="videos-grid">
             {videosFiltrados.map(video => (
-              <div key={video._id} className="video-card">
+              <div key={video.id} className="video-card">
                 <div className="video-header">
                   <span className={`fuente-badge ${video.fuente.toLowerCase()}`}>
                     {video.fuente}
                   </span>
                   <button 
                     className="btn-eliminar"
-                    onClick={() => eliminarVideo(video._id)}
+                    onClick={() => eliminarVideo(video.id)}
                     title="Eliminar video"
                   >
                     🗑️
@@ -280,7 +348,7 @@ const BibliotecaMedios = () => {
                             {obtenerNombreHito(hitoId)}
                             <button 
                               className="btn-desasociar"
-                              onClick={() => desasociarVideo(video._id, hitoId)}
+                              onClick={() => desasociarVideo(video.id, hitoId)}
                             >
                               ✕
                             </button>
@@ -295,15 +363,119 @@ const BibliotecaMedios = () => {
 
                 <button 
                   className="btn-asociar-video"
-                  onClick={() => setVideoSeleccionado(video)}
+                  onClick={() => abrirModalAsociaciones(video)}
                 >
-                  + Asociar a Hito
+                  🔗 Gestionar Asociaciones
                 </button>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Modal de Asociaciones Múltiples */}
+      {mostrarModalAsociaciones && (
+        <div className="modal-overlay" onClick={cerrarModalAsociaciones}>
+          <div className="modal-asociaciones" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Gestionar Asociaciones</h3>
+              <button className="btn-cerrar" onClick={cerrarModalAsociaciones}>×</button>
+            </div>
+
+            <div className="modal-content">
+              <div className="video-info-modal">
+                <h4>{videoSeleccionado?.titulo || 'Sin título'}</h4>
+                <p className="fuente">{videoSeleccionado?.fuente}</p>
+              </div>
+
+              <div className="asociaciones-actuales">
+                <h5>Asociaciones actuales:</h5>
+                {videoSeleccionado?.hitosAsociados && videoSeleccionado.hitosAsociados.length > 0 ? (
+                  <div className="lista-asociados">
+                    {videoSeleccionado.hitosAsociados.map(hitoId => {
+                      const hito = hitos.find(h => h.id === parseInt(hitoId));
+                      return (
+                        <div key={hitoId} className="asociacion-actual">
+                          <span>{hito ? `${hito.nombre} (${hito.fuente_normativa_nombre})` : `Hito ID: ${hitoId}`}</span>
+                          <button 
+                            className="btn-desasociar-small"
+                            onClick={() => {
+                              desasociarVideo(videoSeleccionado.id, hitoId);
+                              // Actualizar el video seleccionado
+                              setVideoSeleccionado(prev => ({
+                                ...prev,
+                                hitosAsociados: prev.hitosAsociados.filter(id => id !== hitoId)
+                              }));
+                            }}
+                            title="Desasociar"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="sin-asociaciones">No tiene asociaciones actuales</p>
+                )}
+              </div>
+
+              <div className="nuevas-asociaciones">
+                <h5>Agregar nuevas asociaciones:</h5>
+                <div className="filtros-hitos">
+                  <input
+                    type="text"
+                    placeholder="Buscar hitos..."
+                    className="buscar-hitos"
+                    onChange={(e) => setBusqueda(e.target.value)}
+                  />
+                </div>
+                
+                <div className="lista-hitos">
+                  {hitos
+                    .filter(hito => 
+                      !videoSeleccionado?.hitosAsociados?.includes(hito.id.toString()) &&
+                      (hito.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+                       hito.fuente_normativa_nombre.toLowerCase().includes(busqueda.toLowerCase()))
+                    )
+                    .slice(0, 20) // Limitar a 20 resultados para mejor rendimiento
+                    .map(hito => (
+                      <div key={hito.id} className="hito-item">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={hitosSeleccionados.includes(hito.id)}
+                            onChange={() => toggleHitoSeleccionado(hito.id)}
+                          />
+                          <span className="hito-info">
+                            <strong>{hito.nombre}</strong>
+                            <small>{hito.fuente_normativa_nombre} - {hito.dominio_nombre} - {hito.edad_media_meses}m</small>
+                          </span>
+                        </label>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="btn-cancelar" 
+                onClick={cerrarModalAsociaciones}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="btn-asociar" 
+                onClick={asociarMultiplesHitos}
+                disabled={hitosSeleccionados.length === 0 || cargando}
+              >
+                {cargando ? 'Asociando...' : `Asociar ${hitosSeleccionados.length} hito(s)`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

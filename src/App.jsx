@@ -100,7 +100,8 @@ function App() {
 
   const handleNinoSeleccionado = (nino) => {
     setNinoSeleccionado(nino);
-    setVistaActual('grafico');
+    // Por defecto, abrir siempre Introducción de Datos
+    setVistaActual('introduccion');
   };
 
   const handleNinoEliminado = () => {
@@ -162,82 +163,91 @@ function App() {
       </header>
 
       <nav className="navigation">
-        <button 
-          className={vistaActual === 'lista' ? 'active' : ''}
-          onClick={() => setVistaActual('lista')}
-        >
-          👶 Niños
-        </button>
-        {!modoAvanzado && (
-          <>
+        {/* Pestañas principales de nivel superior */}
+        <div className="nav-level-1">
+          <button 
+            className={vistaActual === 'lista' || vistaActual === 'introduccion' || vistaActual === 'grafico' ? 'active' : ''}
+            onClick={() => setVistaActual('lista')}
+          >
+            👶 Niños
+          </button>
+          {!modoAvanzado && (
+            <>
+              <button 
+                className={vistaActual === 'bibliografia' ? 'active' : ''}
+                onClick={() => {
+                  setVistaActual('bibliografia');
+                  setNinoSeleccionado(null);
+                }}
+              >
+                📖 Fundamentos Científicos
+              </button>
+              <button 
+                className={vistaActual === 'ejemplos' ? 'active' : ''}
+                onClick={() => {
+                  setVistaActual('ejemplos');
+                  setNinoSeleccionado(null);
+                }}
+              >
+                📚 Ejemplos Prácticos
+              </button>
+            </>
+          )}
+          {modoAvanzado && (
             <button 
-              className={vistaActual === 'bibliografia' ? 'active' : ''}
+              className={vistaActual === 'investigacion' ? 'active' : ''}
               onClick={() => {
-                setVistaActual('bibliografia');
+                setVistaActual('investigacion');
                 setNinoSeleccionado(null);
               }}
             >
-              📖 Fundamentos Científicos
+              🔬 Investigación
             </button>
+          )}
+          {esAdmin() && (
             <button 
-              className={vistaActual === 'ejemplos' ? 'active' : ''}
+              className={vistaActual === 'medios' ? 'active' : ''}
               onClick={() => {
-                setVistaActual('ejemplos');
+                setVistaActual('medios');
                 setNinoSeleccionado(null);
               }}
             >
-              📚 Ejemplos Prácticos
+              🎬 Biblioteca de Medios
             </button>
-          </>
-        )}
-        {modoAvanzado && (
-          <button 
-            className={vistaActual === 'investigacion' ? 'active' : ''}
-            onClick={() => {
-              setVistaActual('investigacion');
-              setNinoSeleccionado(null);
-            }}
-          >
-            🔬 Investigación
-          </button>
-        )}
-        {esAdmin() && (
-          <button 
-            className={vistaActual === 'medios' ? 'active' : ''}
-            onClick={() => {
-              setVistaActual('medios');
-              setNinoSeleccionado(null);
-            }}
-          >
-            🎬 Biblioteca de Medios
-          </button>
-        )}
+          )}
+        </div>
+
+        {/* Sub-pestañas jerárquicas para el niño seleccionado */}
         {ninoSeleccionado && (
-          <>
-            <button 
-              className={vistaActual === 'introduccion' ? 'active' : ''}
-              onClick={() => setVistaActual('introduccion')}
-            >
-              📝 Introducción de Datos
-            </button>
-            <button 
-              className={vistaActual === 'grafico' ? 'active' : ''}
-              onClick={() => setVistaActual('grafico')}
-            >
-              📊 Gráficas
-            </button>
-          </>
+          <div className="nav-level-2">
+            <div className="sub-nav-buttons">
+              <div className="nino-name-tab">
+                <div className="nino-nombre">👶 {ninoSeleccionado.nombre}</div>
+                <div className="nino-datos">
+                  <span>Edad cronológica: {calcularEdad(ninoSeleccionado.fecha_nacimiento)}</span>
+                  {ninoSeleccionado.semanas_gestacion && ninoSeleccionado.semanas_gestacion < 37 && (
+                    <span>Edad corregida: {calcularEdadCorregida(ninoSeleccionado.fecha_nacimiento, ninoSeleccionado.semanas_gestacion)}</span>
+                  )}
+                </div>
+              </div>
+              <button 
+                className={`sub-nav-btn ${vistaActual === 'introduccion' ? 'active' : ''}`}
+                onClick={() => setVistaActual('introduccion')}
+              >
+                📝 Introducción de Datos
+              </button>
+              <button 
+                className={`sub-nav-btn ${vistaActual === 'grafico' ? 'active' : ''}`}
+                onClick={() => setVistaActual('grafico')}
+              >
+                📊 Gráficas
+              </button>
+            </div>
+          </div>
         )}
       </nav>
 
       <main className="main-content">
-        {ninoSeleccionado && vistaActual !== 'ejemplos' && (
-          <div className="nino-info">
-            <h2>{ninoSeleccionado.nombre}</h2>
-            <p>Fecha de nacimiento: {new Date(ninoSeleccionado.fecha_nacimiento).toLocaleDateString('es-ES')}</p>
-            <p>Edad: {calcularEdad(ninoSeleccionado.fecha_nacimiento)}</p>
-          </div>
-        )}
 
         {vistaActual === 'lista' && (
           <div>
@@ -297,6 +307,35 @@ function calcularEdad(fechaNacimiento) {
   const meses = Math.floor(diffDays / 30.44);
   const anos = Math.floor(meses / 12);
   const mesesRestantes = meses % 12;
+  
+  if (anos > 0) {
+    return `${anos} año${anos > 1 ? 's' : ''} y ${mesesRestantes} mes${mesesRestantes !== 1 ? 'es' : ''}`;
+  } else {
+    return `${meses} mes${meses !== 1 ? 'es' : ''}`;
+  }
+}
+
+function calcularEdadCorregida(fechaNacimiento, semanasGestacion) {
+  // Calcular semanas de prematuridad (40 semanas - semanas de gestación)
+  const semanasPrematuro = 40 - semanasGestacion;
+  const diasARestar = semanasPrematuro * 7;
+  
+  // Fecha de nacimiento corregida (como si hubiera nacido a término)
+  const fechaNacCorregida = new Date(fechaNacimiento);
+  fechaNacCorregida.setDate(fechaNacCorregida.getDate() + diasARestar);
+  
+  const hoy = new Date();
+  const diffTime = Math.abs(hoy - fechaNacCorregida);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  const meses = Math.floor(diffDays / 30.44);
+  const anos = Math.floor(meses / 12);
+  const mesesRestantes = meses % 12;
+  
+  // Si la edad corregida es negativa (todavía no ha llegado al término), mostrar 0
+  if (diffDays < 0) {
+    return '0 meses';
+  }
   
   if (anos > 0) {
     return `${anos} año${anos > 1 ? 's' : ''} y ${mesesRestantes} mes${mesesRestantes !== 1 ? 'es' : ''}`;

@@ -4,6 +4,26 @@ import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 
 import VideoModal from './VideoModal';
+
+// Helper function to extract YouTube video ID from URL
+const extractYouTubeId = (url) => {
+  if (!url) return '';
+  
+  // Handle youtu.be URLs
+  if (url.includes('youtu.be/')) {
+    return url.split('youtu.be/')[1]?.split('?')[0];
+  }
+  
+  // Handle youtube.com URLs
+  if (url.includes('youtube.com/watch')) {
+    const urlParams = new URLSearchParams(url.split('?')[1]);
+    return urlParams.get('v');
+  }
+  
+  // Handle direct video ID (fallback)
+  return url.split('/').pop().replace('watch?v=', '');
+};
+
 function HitosRegistro({ ninoId }) {
   const [dominios, setDominios] = useState([]);
   const [hitosNormativos, setHitosNormativos] = useState([]);
@@ -596,60 +616,163 @@ function HitosRegistro({ ninoId }) {
               key={hito.id} 
               className={`hito-card ${conseguido ? 'conseguido' : ''}`}
             >
-              <div className="hito-header">
-                <h4>{hito.nombre}</h4>
-                <span className="dominio-badge">{hito.dominio_nombre}</span>
-              </div>
-              
-              <p className="hito-descripcion">{hito.descripcion}</p>
+              {/* Contenedor de 2 columnas */}
+              <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                
+                {/* COLUMNA IZQUIERDA - Texto (40%) */}
+                <div style={{ flex: '0 0 40%' }}>
+                  <div className="hito-header">
+                    <h4>{hito.nombre}</h4>
+                    <div className="dominio-badge">Área de desarrollo: {hito.dominio_nombre}</div>
+                  </div>
+                  
+                  <p className="hito-descripcion">{hito.descripcion}</p>
+
+                  <div className="hito-info">
+                    <span>📊 <strong>Desarrollo típico:</strong> La mayoría de niños logran este hito alrededor de los {hito.edad_media_meses} meses</span>
+                    <span>📅 <strong>Rango normal:</strong> Se considera dentro del desarrollo esperado entre los {hito.edad_minima_meses} y {hito.edad_maxima_meses} meses</span>
+                  </div>
+
+                  {conseguido && (
+                    <div className="hito-conseguido-info">
+                      <div className="conseguido-detalles">
+                        <span><i className="fas fa-check-circle"></i> Conseguido a los {conseguido.edad_conseguido_meses} meses</span>
+                        {conseguido.edad_perdido_meses && (
+                          <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>
+                            <i className="fas fa-times-circle"></i> Perdido a los {conseguido.edad_perdido_meses} meses
+                          </span>
+                        )}
+                        <span className={`z-score ${zScore < -2 ? 'retraso' : zScore > 2 ? 'adelanto' : 'normal'}`}>
+                          Z-score: {zScore.toFixed(2)}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {!conseguido.edad_perdido_meses && (
+                          <button 
+                            className="btn-perdida"
+                            onClick={() => marcarHitoPerdido(conseguido.id, hito.nombre)}
+                            title="Marcar como perdido (regresión)"
+                            style={{
+                              backgroundColor: '#e74c3c',
+                              color: 'white',
+                              border: 'none',
+                              padding: '6px 12px',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.9em'
+                            }}
+                          >
+                            ✗ Pérdida
+                          </button>
+                        )}
+                        <button 
+                          className="btn-eliminar"
+                          onClick={() => eliminarHito(conseguido.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* COLUMNA DERECHA - Videos (60%) */}
+                <div style={{ flex: '0 0 60%' }}>
               
               {/* Enlaces a videos educativos desde la base de datos */}
               {(hito.video_url_cdc || hito.video_url_pathways) && (
                 <div className="hito-videos" style={{ 
                   display: 'flex', 
-                  gap: '8px', 
-                  marginTop: '8px',
-                  marginBottom: '8px',
-                  flexWrap: 'wrap'
+                  flexDirection: 'column',
+                  gap: '12px', 
+                  marginBottom: '15px'
                 }}>
+                  <div style={{
+                    fontSize: '0.9em',
+                    fontWeight: '600',
+                    color: '#666',
+                    marginBottom: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <i className="fas fa-graduation-cap" style={{ color: '#2196f3' }}></i>
+                    Videos educativos:
+                  </div>
+                  
                   {hito.video_url_cdc && (
                     <a 
                       href={hito.video_url_cdc}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '6px 12px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '12px',
                         backgroundColor: '#e8f5e9',
                         border: '2px solid #4caf50',
-                        borderRadius: '6px',
+                        borderRadius: '8px',
                         cursor: 'pointer',
                         color: '#2e7d32',
-                        fontSize: '0.85em',
+                        fontSize: '0.9em',
                         fontWeight: '600',
                         transition: 'all 0.2s',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                         textDecoration: 'none'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = '#4caf50';
                         e.currentTarget.style.color = 'white';
                         e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(76,175,80,0.3)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(76,175,80,0.3)';
                       }}
                       onMouseOut={(e) => {
                         e.currentTarget.style.backgroundColor = '#e8f5e9';
                         e.currentTarget.style.color = '#2e7d32';
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                       }}
                       title={`Ver video CDC de ${hito.nombre}`}
                     >
-                      <i className="fab fa-youtube" style={{ fontSize: '1.1em' }}></i>
-                      <span>🏛️ CDC</span>
-                      <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
+                      <div style={{
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        backgroundColor: '#f0f0f0',
+                        marginBottom: '8px'
+                      }}>
+                        <img 
+                          src={`https://img.youtube.com/vi/${extractYouTubeId(hito.video_url_cdc)}/mqdefault.jpg`}
+                          alt={`Thumbnail ${hito.nombre}`}
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover' 
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                        <div style={{
+                          display: 'none',
+                          width: '100%',
+                          height: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <i className="fab fa-youtube" style={{ fontSize: '2em', color: '#ff0000' }}></i>
+                        </div>
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center'
+                      }}>
+                        <div>🏛️ CDC</div>
+                        <i className="fas fa-external-link-alt" style={{ fontSize: '1em', opacity: 0.7 }}></i>
+                      </div>
                     </a>
                   )}
                   
@@ -659,38 +782,73 @@ function HitosRegistro({ ninoId }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '6px 12px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '12px',
                         backgroundColor: '#e3f2fd',
                         border: '2px solid #2196f3',
-                        borderRadius: '6px',
+                        borderRadius: '8px',
                         cursor: 'pointer',
                         color: '#1976d2',
-                        fontSize: '0.85em',
+                        fontSize: '0.9em',
                         fontWeight: '600',
                         transition: 'all 0.2s',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                         textDecoration: 'none'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = '#2196f3';
                         e.currentTarget.style.color = 'white';
                         e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(33,150,243,0.3)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(33,150,243,0.3)';
                       }}
                       onMouseOut={(e) => {
                         e.currentTarget.style.backgroundColor = '#e3f2fd';
                         e.currentTarget.style.color = '#1976d2';
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                       }}
                       title={`Ver video Pathways de ${hito.nombre}`}
                     >
-                      <i className="fab fa-youtube" style={{ fontSize: '1.1em' }}></i>
-                      <span>🎯 Pathways</span>
-                      <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
+                      <div style={{
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        backgroundColor: '#f0f0f0',
+                        marginBottom: '8px'
+                      }}>
+                        <img 
+                          src={`https://img.youtube.com/vi/${extractYouTubeId(hito.video_url_pathways)}/mqdefault.jpg`}
+                          alt={`Thumbnail ${hito.nombre}`}
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover' 
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                        <div style={{
+                          display: 'none',
+                          width: '100%',
+                          height: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <i className="fab fa-youtube" style={{ fontSize: '2em', color: '#ff0000' }}></i>
+                        </div>
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center'
+                      }}>
+                        <div>🎯 Pathways</div>
+                        <i className="fas fa-external-link-alt" style={{ fontSize: '1em', opacity: 0.7 }}></i>
+                      </div>
                     </a>
                   )}
                 </div>
@@ -784,53 +942,19 @@ function HitosRegistro({ ninoId }) {
                   </div>
                 </div>
               )}
-              <div className="hito-info">
-                <span>Edad esperada: {hito.edad_media_meses} meses (± {hito.desviacion_estandar})</span>
-                <span>Rango: {hito.edad_minima_meses}-{hito.edad_maxima_meses} meses</span>
+                </div>
               </div>
 
-              {conseguido ? (
-                <div className="hito-conseguido-info">
-                  <div className="conseguido-detalles">
-                    <span><i className="fas fa-check-circle"></i> Conseguido a los {conseguido.edad_conseguido_meses} meses</span>
-                    {conseguido.edad_perdido_meses && (
-                      <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>
-                        <i className="fas fa-times-circle"></i> Perdido a los {conseguido.edad_perdido_meses} meses
-                      </span>
-                    )}
-                    <span className={`z-score ${zScore < -2 ? 'retraso' : zScore > 2 ? 'adelanto' : 'normal'}`}>
-                      Z-score: {zScore.toFixed(2)}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    {!conseguido.edad_perdido_meses && (
-                      <button 
-                        className="btn-perdida"
-                        onClick={() => marcarHitoPerdido(conseguido.id, hito.nombre)}
-                        title="Marcar como perdido (regresión)"
-                        style={{
-                          backgroundColor: '#e74c3c',
-                          color: 'white',
-                          border: 'none',
-                          padding: '6px 12px',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '0.9em'
-                        }}
-                      >
-                        ✗ Pérdida
-                      </button>
-                    )}
-                    <button 
-                      className="btn-eliminar"
-                      onClick={() => eliminarHito(conseguido.id)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="hito-acciones" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {/* BOTONES DE EVALUACIÓN - Abarcan ambas columnas */}
+              {!conseguido && (
+                <div className="hito-acciones" style={{ 
+                  display: 'flex', 
+                  gap: '8px', 
+                  flexWrap: 'wrap', 
+                  justifyContent: 'center',
+                  paddingTop: '15px',
+                  borderTop: '1px solid #eee'
+                }}>
                   <button 
                     className="btn-registrar"
                     onClick={() => {
@@ -963,7 +1087,7 @@ function HitosRegistro({ ninoId }) {
                 >
                   <div className="hito-header">
                     <h4>{hito.nombre}</h4>
-                    <span className="dominio-badge">{hito.dominio_nombre}</span>
+                    <div className="dominio-badge">Área de desarrollo: {hito.dominio_nombre}</div>
                   </div>
                   
                   <p className="hito-descripcion">{hito.descripcion}</p>
@@ -1150,9 +1274,9 @@ function HitosRegistro({ ninoId }) {
                 </div>
               )}
               <div className="hito-info">
-                    <span>Edad esperada: {hito.edad_media_meses} meses (± {hito.desviacion_estandar})</span>
-                    <span>Evaluado a los: {Math.round(edadEvaluacion)} meses</span>
-                    <span>Fecha evaluación: {fechaRegistro.toLocaleDateString()}</span>
+                    <span>📊 <strong>Desarrollo típico:</strong> La mayoría de niños logran este hito alrededor de los {hito.edad_media_meses} meses</span>
+                    <span>👶 <strong>Evaluación realizada:</strong> Se evaluó cuando el niño tenía {Math.round(edadEvaluacion)} meses de edad</span>
+                    <span>📅 <strong>Fecha de registro:</strong> {fechaRegistro.toLocaleDateString('es-ES')}</span>
                   </div>
 
                   <div className="hito-acciones">
