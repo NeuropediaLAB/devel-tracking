@@ -1225,6 +1225,30 @@ app.delete('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
   });
 });
 
+const { fork } = require('child_process');
+
+// Check and populate videos if table is empty
+db.get('SELECT COUNT(*) AS count FROM videos', (err, row) => {
+  if (err) {
+    console.error('Error checking video table:', err.message);
+    return;
+  }
+  if (row.count === 0) {
+    console.log('No videos found. Populating video table...');
+    const populateProcess = fork('./server/populate_videos.js');
+    
+    populateProcess.on('exit', (code) => {
+      if (code === 0) {
+        console.log('Video population script finished successfully.');
+      } else {
+        console.error(`Video population script exited with code ${code}`);
+      }
+    });
+  } else {
+    console.log(`Video table already contains ${row.count} videos.`);
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor ejecutándose en http://0.0.0.0:${PORT}`);
 });
