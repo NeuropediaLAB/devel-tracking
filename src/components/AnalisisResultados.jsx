@@ -5,10 +5,17 @@ import './Investigacion.css';
  * Componente de Análisis de Resultados
  * Analiza datos de poblaciones simuladas y proporciona insights estadísticos
  */
-function AnalisisResultados() {
-  const [datosImportados, setDatosImportados] = useState(null);
+function AnalisisResultados({ datosSimulacion = null }) {
+  const [datosImportados, setDatosImportados] = useState(datosSimulacion);
   const [analisisGenerado, setAnalisisGenerado] = useState(null);
   const [cargandoAnalisis, setCargandoAnalisis] = useState(false);
+  
+  // Actualizar datos cuando cambien las props
+  useEffect(() => {
+    if (datosSimulacion) {
+      setDatosImportados(datosSimulacion);
+    }
+  }, [datosSimulacion]);
   
   const cargarDatosEjemplo = () => {
     // Datos de ejemplo para demostración

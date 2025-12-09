@@ -187,9 +187,9 @@
 }
 
 .fuentes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* Tarjeta de fuente */
@@ -440,7 +440,7 @@
   }
   
   .fuentes-grid {
-    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
   .fuente-header {
@@ -469,4 +469,166 @@
   .tabla-comparacion td {
     padding: 0.8rem 0.5rem;
   }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leyenda-items {
+    flex-direction: column;
+  }
+
+  .graficos-container {
+    padding: 1rem;
+  }
+}
+
+/* Sección de Gráficos */
+.seccion-graficos {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.graficos-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.graficos-header h3 {
+  color: #0073AA;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.graficos-header p {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.graficos-controles {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.graficos-container {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.grafico-seccion {
+  margin-bottom: 3rem;
+}
+
+.grafico-seccion h4 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.grafico-descripcion {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.grafico-wrapper {
+  margin-bottom: 2rem;
+}
+
+.leyenda-graficos {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.leyenda-graficos h5 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.leyenda-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.stats-resumidas {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.estadisticas-resumen {
+  margin-top: 2rem;
+}
+
+.estadisticas-resumen h5 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-fuente-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.stat-header {
+  padding: 1rem;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.stat-content {
+  padding: 1rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.cargando {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
 }

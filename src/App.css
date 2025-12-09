@@ -483,13 +483,18 @@ body {
 }
 
 .stat-card {
-  background: #0073AA;
-  color: white;
-  padding: 1.5rem;
-  border-radius: 0;
+  background: white;
+  color: #333;
+  padding: 2rem;
+  border-radius: 8px;
   text-align: center;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #005177;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-number {
@@ -774,6 +779,7 @@ body {
   font-size: 3rem;
   font-weight: bold;
   margin: 0.5rem 0;
+  color: #333;
 }
 
 .big-number.normal {
@@ -786,6 +792,23 @@ body {
 
 .big-number.adelanto {
   color: #2196f3;
+}
+
+.big-number.sin-datos {
+  color: #999;
+}
+
+.stat-card h3 {
+  color: #333 !important;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.stat-card p {
+  color: #666 !important;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .chart-container {
@@ -2004,13 +2027,15 @@ body {
 }
 
 .stat-card-destacado {
-  background: #0073AA !important;
-  color: white !important;
+  background: #f0f8ff !important;
+  color: #333 !important;
+  border-color: #2196f3 !important;
+  border-left: 4px solid #2196f3 !important;
 }
 
 .stat-card-destacado .stat-number,
 .stat-card-destacado .stat-label {
-  color: white !important;
+  color: #2196f3 !important;
 }
 
 /* Animación para indicar expansión automática */

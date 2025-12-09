@@ -849,3 +849,277 @@
     margin-bottom: 0.5rem;
   }
 }
+
+/* ============================================ */
+/* MEJORAS DE JERARQUÍA VISUAL PARA METODOLOGÍA */
+/* ============================================ */
+
+/* Mejorar títulos principales de secciones */
+.seccion-metodologia > h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 2.5rem 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #3498db;
+  line-height: 1.3;
+}
+
+.seccion-metodologia:first-child > h3 {
+  margin-top: 0;
+}
+
+/* Mejorar títulos de cards */
+.interpretacion-card h4,
+.protocolo-card h4,
+.herramienta-card h4 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #34495e;
+  margin: 0 0 1.2rem 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #ecf0f1;
+  line-height: 1.4;
+}
+
+/* Mejorar subtítulos dentro de cards */
+.interpretacion-card h5,
+.protocolo-card h5,
+.herramienta-card h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 1.5rem 0 0.8rem 0;
+  line-height: 1.4;
+}
+
+/* Mejorar párrafos */
+.interpretacion-card p,
+.protocolo-card p,
+.herramienta-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 0 0 1rem 0;
+}
+
+/* Mejorar listas */
+.interpretacion-card ul,
+.protocolo-card ul,
+.herramienta-card ul {
+  margin: 0.8rem 0 1.2rem 0;
+  padding-left: 1.5rem;
+}
+
+.interpretacion-card li,
+.protocolo-card li,
+.herramienta-card li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 0.6rem;
+}
+
+.interpretacion-card li strong,
+.protocolo-card li strong,
+.herramienta-card li strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Mejorar trayectorias de interpretación */
+.trayectorias-interpretacion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.trayectoria-tipo {
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  border-left: 4px solid #6c757d;
+  transition: all 0.2s ease;
+}
+
+.trayectoria-tipo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.trayectoria-tipo h5 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2c3e50;
+  line-height: 1.3;
+}
+
+.trayectoria-tipo p {
+  font-size: 0.88rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Colores específicos para diferentes trayectorias */
+.trayectoria-tipo:nth-child(1) { border-left-color: #28a745; } /* Verde - Típica */
+.trayectoria-tipo:nth-child(2) { border-left-color: #ffc107; } /* Amarillo - Inicio Retrasado */
+.trayectoria-tipo:nth-child(3) { border-left-color: #007bff; } /* Azul - Respuesta Intervención */
+.trayectoria-tipo:nth-child(4) { border-left-color: #fd7e14; } /* Naranja - Velocidad Reducida */
+.trayectoria-tipo:nth-child(5) { border-left-color: #dc3545; } /* Rojo - Plana */
+.trayectoria-tipo:nth-child(6) { border-left-color: #6c757d; } /* Gris - Regresión */
+
+/* Mejorar gráfica de trayectorias */
+.grafica-trayectorias h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 2rem 0 1rem 0;
+  text-align: center;
+}
+
+.grafica-explicacion {
+  background: #f8f9fa;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  margin-top: 1.5rem;
+}
+
+.grafica-explicacion p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #495057;
+  margin: 0 0 1rem 0;
+}
+
+.grafica-explicacion p:last-child {
+  margin-bottom: 0;
+}
+
+.grafica-explicacion ul {
+  margin: 0.8rem 0;
+  padding-left: 1.5rem;
+}
+
+.grafica-explicacion li {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.grafica-explicacion strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Mejorar umbrales de referencia */
+.umbrales-content {
+  margin: 1.2rem 0;
+}
+
+.umbral-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.umbral-categoria {
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  color: white;
+  margin-right: 1rem;
+  min-width: 160px;
+  text-align: center;
+}
+
+.umbral-descripcion {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.umbral-descripcion strong {
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* Colores para categorías de umbrales */
+.desarrollo-tipico { background-color: #28a745; }
+.vigilancia { background-color: #ffc107; color: #212529 !important; }
+.intervencion { background-color: #fd7e14; }
+.derivacion { background-color: #dc3545; }
+
+/* Mejorar consideraciones especiales */
+.consideraciones-especiales {
+  background: #e8f4fd;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  margin-top: 1.5rem;
+}
+
+.consideraciones-especiales h5 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0056b3;
+  margin: 0 0 1rem 0;
+}
+
+.consideraciones-especiales ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.consideraciones-especiales li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #495057;
+  margin-bottom: 0.8rem;
+}
+
+.consideraciones-especiales li strong {
+  color: #0056b3;
+  font-weight: 600;
+}
+
+/* Responsive mejoras */
+@media (max-width: 768px) {
+  .seccion-metodologia > h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 1.2rem 0;
+  }
+  
+  .interpretacion-card h4,
+  .protocolo-card h4,
+  .herramienta-card h4 {
+    font-size: 1.2rem;
+  }
+  
+  .trayectorias-interpretacion {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .umbral-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .umbral-categoria {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    min-width: auto;
+    width: 100%;
+  }
+}

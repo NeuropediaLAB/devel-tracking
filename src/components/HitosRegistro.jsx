@@ -273,10 +273,33 @@ function HitosRegistro({ ninoId }) {
     }
     
     if (videoId && videoId.length === 11) {
-      return `https://img.youtube.com/vi/${videoId}/default.jpg`;
+      // Usar máxima calidad disponible: maxresdefault (1280x720) con fallbacks
+      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
     }
     
     return null;
+  };
+
+  // Función para manejar fallbacks de thumbnails de YouTube
+  const handleThumbnailError = (e, videoId, styles) => {
+    const img = e.target;
+    const currentSrc = img.src;
+    
+    // Secuencia de fallbacks de mayor a menor calidad
+    if (currentSrc.includes('maxresdefault')) {
+      // Fallback a alta definición (1280x720 -> 640x480)
+      img.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    } else if (currentSrc.includes('hqdefault')) {
+      // Fallback a media calidad (640x480 -> 480x360)
+      img.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+    } else if (currentSrc.includes('mqdefault')) {
+      // Fallback a calidad estándar (480x360 -> 320x180)
+      img.src = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+    } else {
+      // Último fallback: ocultar imagen y mostrar icono
+      img.style.display = 'none';
+      img.parentNode.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f0f0f0;"><i class="fas fa-play-circle" style="font-size: 2em; color: ${styles.border.split(' ')[2]};"></i></div>`;
+    }
   };
 ;
 ;
@@ -677,8 +700,8 @@ function HitosRegistro({ ninoId }) {
                 {/* COLUMNA DERECHA - Videos (60%) */}
                 <div style={{ flex: '0 0 60%' }}>
               
-              {/* Enlaces a videos educativos desde la base de datos */}
-              {(hito.video_url_cdc || hito.video_url_pathways) && (
+              {/* Videos de la biblioteca de medios */}
+              {(hito.videos_asociados && hito.videos_asociados.length > 0) && (
                 <div className="hito-videos" style={{ 
                   display: 'flex', 
                   flexDirection: 'column',
@@ -694,250 +717,145 @@ function HitosRegistro({ ninoId }) {
                     alignItems: 'center',
                     gap: '6px'
                   }}>
-                    <i className="fas fa-graduation-cap" style={{ color: '#2196f3' }}></i>
+                    <i className="fas fa-video" style={{ color: '#666' }}></i>
                     Videos educativos:
                   </div>
                   
-                  {hito.video_url_cdc && (
-                    <a 
-                      href={hito.video_url_cdc}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        padding: '12px',
-                        backgroundColor: '#e8f5e9',
-                        border: '2px solid #4caf50',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        color: '#2e7d32',
-                        fontSize: '0.9em',
-                        fontWeight: '600',
-                        transition: 'all 0.2s',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        textDecoration: 'none'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#4caf50';
-                        e.currentTarget.style.color = 'white';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(76,175,80,0.3)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#e8f5e9';
-                        e.currentTarget.style.color = '#2e7d32';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                      }}
-                      title={`Ver video CDC de ${hito.nombre}`}
-                    >
-                      <div style={{
-                        width: '100%',
-                        aspectRatio: '16/9',
-                        borderRadius: '6px',
-                        overflow: 'hidden',
-                        backgroundColor: '#f0f0f0',
-                        marginBottom: '8px'
-                      }}>
-                        <img 
-                          src={`https://img.youtube.com/vi/${extractYouTubeId(hito.video_url_cdc)}/mqdefault.jpg`}
-                          alt={`Thumbnail ${hito.nombre}`}
-                          style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            objectFit: 'cover' 
+                  {/* Videos organizados por fuente */}
+                  {hito.videos_asociados && hito.videos_asociados.length > 0 && 
+                    hito.videos_asociados.map((video, index) => {
+                      // Determinar colores según la fuente
+                      const getVideoStyles = (fuente) => {
+                        if (fuente === 'CDC') {
+                          return {
+                            backgroundColor: '#e8f5e9',
+                            border: '2px solid #4caf50',
+                            color: '#2e7d32',
+                            hoverBg: '#4caf50',
+                            icon: '🏛️',
+                            shadowColor: 'rgba(76,175,80,0.3)'
+                          };
+                        } else if (fuente === 'Pathways') {
+                          return {
+                            backgroundColor: '#e3f2fd',
+                            border: '2px solid #2196f3',
+                            color: '#1976d2',
+                            hoverBg: '#2196f3',
+                            icon: '🎯',
+                            shadowColor: 'rgba(33,150,243,0.3)'
+                          };
+                        } else {
+                          // Fuente desconocida o personalizada
+                          return {
+                            backgroundColor: '#f5f5f5',
+                            border: '2px solid #757575',
+                            color: '#424242',
+                            hoverBg: '#757575',
+                            icon: '📹',
+                            shadowColor: 'rgba(117,117,117,0.3)'
+                          };
+                        }
+                      };
+
+                      const styles = getVideoStyles(video.fuente);
+
+                      return (
+                        <button
+                          key={video.id || index}
+                          onClick={() => abrirVideo(video)}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: '12px',
+                            backgroundColor: styles.backgroundColor,
+                            border: styles.border,
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '0.9em',
+                            fontWeight: '600',
+                            color: styles.color,
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            marginBottom: '12px'
                           }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = styles.hoverBg;
+                            e.currentTarget.style.color = 'white';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = `0 4px 12px ${styles.shadowColor}`;
                           }}
-                        />
-                        <div style={{
-                          display: 'none',
-                          width: '100%',
-                          height: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <i className="fab fa-youtube" style={{ fontSize: '2em', color: '#ff0000' }}></i>
-                        </div>
-                      </div>
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center'
-                      }}>
-                        <div>🏛️ CDC</div>
-                        <i className="fas fa-external-link-alt" style={{ fontSize: '1em', opacity: 0.7 }}></i>
-                      </div>
-                    </a>
-                  )}
-                  
-                  {hito.video_url_pathways && (
-                    <a 
-                      href={hito.video_url_pathways}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        padding: '12px',
-                        backgroundColor: '#e3f2fd',
-                        border: '2px solid #2196f3',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        color: '#1976d2',
-                        fontSize: '0.9em',
-                        fontWeight: '600',
-                        transition: 'all 0.2s',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        textDecoration: 'none'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#2196f3';
-                        e.currentTarget.style.color = 'white';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(33,150,243,0.3)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#e3f2fd';
-                        e.currentTarget.style.color = '#1976d2';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                      }}
-                      title={`Ver video Pathways de ${hito.nombre}`}
-                    >
-                      <div style={{
-                        width: '100%',
-                        aspectRatio: '16/9',
-                        borderRadius: '6px',
-                        overflow: 'hidden',
-                        backgroundColor: '#f0f0f0',
-                        marginBottom: '8px'
-                      }}>
-                        <img 
-                          src={`https://img.youtube.com/vi/${extractYouTubeId(hito.video_url_pathways)}/mqdefault.jpg`}
-                          alt={`Thumbnail ${hito.nombre}`}
-                          style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            objectFit: 'cover' 
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = styles.backgroundColor;
+                            e.currentTarget.style.color = styles.color;
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                           }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div style={{
-                          display: 'none',
-                          width: '100%',
-                          height: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <i className="fab fa-youtube" style={{ fontSize: '2em', color: '#ff0000' }}></i>
-                        </div>
-                      </div>
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center'
-                      }}>
-                        <div>🎯 Pathways</div>
-                        <i className="fas fa-external-link-alt" style={{ fontSize: '1em', opacity: 0.7 }}></i>
-                      </div>
-                    </a>
-                  )}
-                </div>
-              )}
-              
-              
-              {/* Videos asociados desde la biblioteca de medios */}
-              {hito.videos_asociados && hito.videos_asociados.length > 0 && (
-                <div className="videos-asociados" style={{
-                  marginTop: '8px',
-                  paddingTop: '8px',
-                  borderTop: '1px solid #eee'
-                }}>
-                  <div style={{
-                    fontSize: '0.85em',
-                    fontWeight: '600',
-                    color: '#666',
-                    marginBottom: '6px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    <i className="fas fa-video" style={{ color: '#ff6b35' }}></i>
-                    Videos de evaluación:
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    {hito.videos_asociados.map((video, index) => (
-                      <button
-                        key={video.id || index}
-                        onClick={() => abrirVideo(video)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          padding: '6px 10px',
-                          backgroundColor: '#fff3e0',
-                          border: '2px solid #ff9800',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '0.8em',
-                          fontWeight: '500',
-                          color: '#e65100',
-                          transition: 'all 0.2s ease'
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = '#ffe0b2';
-                          e.currentTarget.style.transform = 'translateY(-1px)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = '#fff3e0';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }}
-                      >
-                        {(() => {
-                          const thumbnail = getVideoThumbnail(video.url);
-                          return thumbnail ? (
+                        >
+                          <div style={{
+                            width: '100%',
+                            aspectRatio: '16/9',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: '#f0f0f0',
+                            marginBottom: '8px'
+                          }}>
+                            {(() => {
+                              const thumbnail = getVideoThumbnail(video.url);
+                              if (thumbnail) {
+                                // Extraer videoId para el manejo de errores
+                                const videoId = video.url.includes('youtube.com/watch?v=') 
+                                  ? video.url.split('v=')[1]?.split('&')[0]
+                                  : video.url.includes('youtu.be/')
+                                  ? video.url.split('youtu.be/')[1]?.split('?')[0]
+                                  : null;
+                                
+                                return (
+                                  <img 
+                                    src={thumbnail} 
+                                    alt={`Thumbnail ${video.titulo}`}
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'cover'
+                                    }}
+                                    onError={(e) => handleThumbnailError(e, videoId, styles)}
+                                  />
+                                );
+                              } else {
+                                return (
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    height: '100%',
+                                    background: '#f0f0f0'
+                                  }}>
+                                    <i className="fas fa-play-circle" style={{ fontSize: '2em', color: styles.border.split(' ')[2] }}></i>
+                                  </div>
+                                );
+                              }
+                            })()}
+                          </div>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: '100%'
+                          }}>
                             <div style={{
-                              width: '50px',
-                              height: '30px',
-                              marginRight: '8px',
-                              borderRadius: '4px',
-                              overflow: 'hidden',
                               display: 'flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: '#f0f0f0',
-                              border: '1px solid #ddd'
+                              gap: '8px'
                             }}>
-                              <img 
-                                src={thumbnail} 
-                                alt="Video"
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover'
-                                }}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.parentNode.innerHTML = '<i class="fas fa-play-circle" style="color: #ff9800; font-size: 1.2em;"></i>';
-                                }}
-                              />
+                              <i className="fab fa-youtube" style={{ fontSize: '1.2em' }}></i>
+                              <span>{styles.icon} {video.titulo}</span>
                             </div>
-                          ) : (
-                            <i className="fas fa-play-circle" style={{ fontSize: '1.1em', marginRight: '8px' }}></i>
-                          );
-                        })()}
-                        <span>{video.titulo}</span>
-                        <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
-                      </button>
-                    ))}
-                  </div>
+                            <i className="fas fa-external-link-alt" style={{ fontSize: '0.9em', opacity: 0.7 }}></i>
+                          </div>
+                        </button>
+                      );
+                    })
+                  }
                 </div>
               )}
                 </div>
@@ -1090,187 +1008,154 @@ function HitosRegistro({ ninoId }) {
                   
                   <p className="hito-descripcion">{hito.descripcion}</p>
                   
-                  {/* Enlaces a videos educativos desde la base de datos */}
-                  {(hito.video_url_cdc || hito.video_url_pathways) && (
+                  {/* Videos de la biblioteca de medios */}
+                  {(hito.videos_asociados && hito.videos_asociados.length > 0) && (
                     <div className="hito-videos" style={{ 
                       display: 'flex', 
-                      gap: '8px', 
-                      marginTop: '8px',
-                      marginBottom: '8px',
-                      flexWrap: 'wrap'
+                      flexDirection: 'column',
+                      gap: '12px', 
+                      marginTop: '12px',
+                      marginBottom: '12px'
                     }}>
-                      {hito.video_url_cdc && (
-                        <a 
-                          href={hito.video_url_cdc}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            padding: '6px 12px',
-                            backgroundColor: '#e8f5e9',
-                            border: '2px solid #4caf50',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            color: '#2e7d32',
-                            fontSize: '0.85em',
-                            fontWeight: '600',
-                            transition: 'all 0.2s',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                            textDecoration: 'none'
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#4caf50';
-                            e.currentTarget.style.color = 'white';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(76,175,80,0.3)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = '#e8f5e9';
-                            e.currentTarget.style.color = '#2e7d32';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                          }}
-                          title={`Ver video CDC de ${hito.nombre}`}
-                        >
-                          <i className="fab fa-youtube" style={{ fontSize: '1.1em' }}></i>
-                          <span>🏛️ CDC</span>
-                          <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
-                        </a>
-                      )}
-                      
-                      {hito.video_url_pathways && (
-                        <a 
-                          href={hito.video_url_pathways}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            padding: '6px 12px',
-                            backgroundColor: '#e3f2fd',
-                            border: '2px solid #2196f3',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            color: '#1976d2',
-                            fontSize: '0.85em',
-                            fontWeight: '600',
-                            transition: 'all 0.2s',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                            textDecoration: 'none'
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#2196f3';
-                            e.currentTarget.style.color = 'white';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(33,150,243,0.3)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = '#e3f2fd';
-                            e.currentTarget.style.color = '#1976d2';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                          }}
-                          title={`Ver video Pathways de ${hito.nombre}`}
-                        >
-                          <i className="fab fa-youtube" style={{ fontSize: '1.1em' }}></i>
-                          <span>🎯 Pathways</span>
-                          <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
-                        </a>
-                      )}
+                      {/* Videos organizados por fuente */}
+                      {hito.videos_asociados && hito.videos_asociados.length > 0 && 
+                        hito.videos_asociados.map((video, index) => {
+                          // Determinar colores según la fuente
+                          const getVideoStyles = (fuente) => {
+                            if (fuente === 'CDC') {
+                              return {
+                                backgroundColor: '#e8f5e9',
+                                border: '2px solid #4caf50',
+                                color: '#2e7d32',
+                                hoverBg: '#4caf50',
+                                icon: '🏛️',
+                                shadowColor: 'rgba(76,175,80,0.3)'
+                              };
+                            } else if (fuente === 'Pathways') {
+                              return {
+                                backgroundColor: '#e3f2fd',
+                                border: '2px solid #2196f3',
+                                color: '#1976d2',
+                                hoverBg: '#2196f3',
+                                icon: '🎯',
+                                shadowColor: 'rgba(33,150,243,0.3)'
+                              };
+                            } else {
+                              // Fuente desconocida o personalizada
+                              return {
+                                backgroundColor: '#f5f5f5',
+                                border: '2px solid #757575',
+                                color: '#424242',
+                                hoverBg: '#757575',
+                                icon: '📹',
+                                shadowColor: 'rgba(117,117,117,0.3)'
+                              };
+                            }
+                          };
+
+                          const styles = getVideoStyles(video.fuente);
+
+                          return (
+                            <button
+                              key={video.id || index}
+                              onClick={() => abrirVideo(video)}
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                padding: '12px',
+                                backgroundColor: styles.backgroundColor,
+                                border: styles.border,
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '0.9em',
+                                fontWeight: '600',
+                                color: styles.color,
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                textDecoration: 'none'
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.backgroundColor = styles.hoverBg;
+                                e.currentTarget.style.color = 'white';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = `0 4px 12px ${styles.shadowColor}`;
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.backgroundColor = styles.backgroundColor;
+                                e.currentTarget.style.color = styles.color;
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                              }}
+                              title={`Ver video: ${video.titulo}`}
+                            >
+                              <div style={{
+                                width: '100%',
+                                aspectRatio: '16/9',
+                                borderRadius: '6px',
+                                overflow: 'hidden',
+                                backgroundColor: '#f0f0f0',
+                                marginBottom: '8px'
+                              }}>
+                                {(() => {
+                                  const thumbnail = getVideoThumbnail(video.url);
+                                  if (thumbnail) {
+                                    // Extraer videoId para el manejo de errores
+                                    const videoId = video.url.includes('youtube.com/watch?v=') 
+                                      ? video.url.split('v=')[1]?.split('&')[0]
+                                      : video.url.includes('youtu.be/')
+                                      ? video.url.split('youtu.be/')[1]?.split('?')[0]
+                                      : null;
+                                    
+                                    return (
+                                      <img 
+                                        src={thumbnail} 
+                                        alt={`Thumbnail ${video.titulo}`}
+                                        style={{
+                                          width: '100%',
+                                          height: '100%',
+                                          objectFit: 'cover'
+                                        }}
+                                        onError={(e) => handleThumbnailError(e, videoId, styles)}
+                                      />
+                                    );
+                                  } else {
+                                    return (
+                                      <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: '100%',
+                                        background: '#f0f0f0'
+                                      }}>
+                                        <i className="fas fa-play-circle" style={{ fontSize: '2em', color: styles.border.split(' ')[2] }}></i>
+                                      </div>
+                                    );
+                                  }
+                                })()}
+                              </div>
+                              <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%'
+                              }}>
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px'
+                                }}>
+                                  <i className="fab fa-youtube" style={{ fontSize: '1.2em' }}></i>
+                                  <span>{styles.icon} {video.titulo}</span>
+                                </div>
+                                <i className="fas fa-external-link-alt" style={{ fontSize: '0.9em', opacity: 0.7 }}></i>
+                              </div>
+                            </button>
+                          );
+                        })
+                      }
                     </div>
                   )}
                   
-                  
-              {/* Videos asociados desde la biblioteca de medios */}
-              {hito.videos_asociados && hito.videos_asociados.length > 0 && (
-                <div className="videos-asociados" style={{
-                  marginTop: '8px',
-                  paddingTop: '8px',
-                  borderTop: '1px solid #eee'
-                }}>
-                  <div style={{
-                    fontSize: '0.85em',
-                    fontWeight: '600',
-                    color: '#666',
-                    marginBottom: '6px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    <i className="fas fa-video" style={{ color: '#ff6b35' }}></i>
-                    Videos de evaluación:
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    {hito.videos_asociados.map((video, index) => (
-                      <button
-                        key={video.id || index}
-                        onClick={() => abrirVideo(video)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          padding: '6px 10px',
-                          backgroundColor: '#fff3e0',
-                          border: '2px solid #ff9800',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '0.8em',
-                          fontWeight: '500',
-                          color: '#e65100',
-                          transition: 'all 0.2s ease'
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = '#ffe0b2';
-                          e.currentTarget.style.transform = 'translateY(-1px)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = '#fff3e0';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }}
-                      >
-                        {(() => {
-                          const thumbnail = getVideoThumbnail(video.url);
-                          return thumbnail ? (
-                            <div style={{
-                              width: '50px',
-                              height: '30px',
-                              marginRight: '8px',
-                              borderRadius: '4px',
-                              overflow: 'hidden',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: '#f0f0f0',
-                              border: '1px solid #ddd'
-                            }}>
-                              <img 
-                                src={thumbnail} 
-                                alt="Video"
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover'
-                                }}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.parentNode.innerHTML = '<i class="fas fa-play-circle" style="color: #ff9800; font-size: 1.2em;"></i>';
-                                }}
-                              />
-                            </div>
-                          ) : (
-                            <i className="fas fa-play-circle" style={{ fontSize: '1.1em', marginRight: '8px' }}></i>
-                          );
-                        })()}
-                        <span>{video.titulo}</span>
-                        <i className="fas fa-external-link-alt" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
               <div className="hito-info">
                     <span>📊 Desarrollo típico: {hito.edad_media_meses} meses</span>
                     <span>👶 Evaluación: {Math.round(edadEvaluacion)} meses</span>

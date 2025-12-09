@@ -145,6 +145,10 @@ const BibliotecaMedios = () => {
   };
 
   const abrirModalAsociaciones = (video) => {
+    if (!video) {
+      console.error('No se ha proporcionado un video válido');
+      return;
+    }
     setVideoSeleccionado(video);
     setHitosSeleccionados([]);
     setMostrarModalAsociaciones(true);
@@ -386,6 +390,7 @@ const BibliotecaMedios = () => {
                 </div>
 
                 <button 
+                  type="button"
                   className="btn-asociar-video"
                   onClick={() => abrirModalAsociaciones(video)}
                 >
@@ -398,7 +403,7 @@ const BibliotecaMedios = () => {
       </div>
 
       {/* Modal de Asociaciones Múltiples */}
-      {mostrarModalAsociaciones && (
+      {mostrarModalAsociaciones === true && (
         <div className="modal-overlay" onClick={cerrarModalAsociaciones}>
           <div className="modal-asociaciones" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">

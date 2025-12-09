@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Investigacion.css';
+import AnalisisResultados from './AnalisisResultados';
 
 /**
  * Componente de Simulación de Poblaciones
@@ -169,6 +170,33 @@ function SimulacionPoblaciones() {
         }}>
           Generación de conjuntos de datos experimentales para evaluar propiedades psicométricas de las escalas de desarrollo.
         </p>
+      </div>
+
+      {/* Justificación Teórica */}
+      <div className="fundamento-teorico-seccion">
+        <div className="teoria-card">
+          <h3>💡 Justificación Teórica</h3>
+          <p className="teoria-texto">
+            Las limitaciones estadísticas identificadas en el análisis del desarrollo infantil justifican el desarrollo de herramientas de simulación avanzadas:
+          </p>
+          
+          <ul className="implicaciones-lista">
+            <li><strong>🎲 Simulación de poblaciones</strong> permite evaluar el impacto de la heterocedasticidad</li>
+            <li><strong>📊 Análisis de trayectorias</strong> revela patrones que el CD puntual oculta</li>
+            <li><strong>🔍 Detección de puntos ciegos</strong> identifica áreas donde el sistema falla</li>
+            <li><strong>⚖️ Comparación de fuentes normativas</strong> evalúa diferencias metodológicas</li>
+            <li><strong>🎯 Optimización de umbrales</strong> mejora sensibilidad y especificidad</li>
+          </ul>
+
+          <div className="caja-resumen">
+            <h4>🎯 Objetivo Principal</h4>
+            <p>
+              Desarrollar herramientas que <strong>superen las limitaciones del análisis tradicional</strong> 
+              mediante simulación computacional, análisis longitudinal y comparación sistemática de 
+              diferentes aproximaciones metodológicas al desarrollo infantil.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Parámetros de Generación */}
@@ -359,6 +387,13 @@ function SimulacionPoblaciones() {
               y parámetros de generación para reproducibilidad.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Sección de Análisis de Resultados */}
+      {datosGenerados && (
+        <div style={{ marginTop: '3rem' }}>
+          <AnalisisResultados datosSimulacion={datosGenerados} />
         </div>
       )}
     </div>

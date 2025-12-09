@@ -3,7 +3,8 @@ import './App.css';
 import Login from './components/Login';
 import NinosList from './components/NinosList';
 import NinoForm from './components/NinoForm';
-import IntroduccionDatos from './components/IntroduccionDatos';
+import HitosRegistro from './components/HitosRegistro';
+import RedFlagsRegistro from './components/RedFlagsRegistro';
 import GraficoDesarrollo from './components/GraficoDesarrollo';
 import EjemplosPracticos from './components/EjemplosPracticos';
 import Bibliografia from './components/Bibliografia';
@@ -25,10 +26,10 @@ function App() {
   const [usuario, setUsuario] = useState(getUsuario());
   const [ninos, setNinos] = useState([]);
   const [ninoSeleccionado, setNinoSeleccionado] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // lista, introduccion, grafico, tutorial, investigacion, medios
+  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
-  const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'analisis', 'fuentes-normativas'
+  const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
   const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
 
   useEffect(() => {
@@ -98,13 +99,13 @@ function App() {
       cargarNinos();
     }
     setNinoSeleccionado(nuevoNino);
-    setVistaActual('introduccion');
+    setVistaActual('hitos');
   };
 
   const handleNinoSeleccionado = (nino) => {
     setNinoSeleccionado(nino);
-    // Por defecto, abrir siempre Introducción de Datos
-    setVistaActual('introduccion');
+    // Por defecto, abrir siempre Hitos del Desarrollo
+    setVistaActual('hitos');
   };
 
   const handleNinoEliminado = () => {
@@ -169,7 +170,7 @@ function App() {
         {/* Pestañas principales de nivel superior */}
         <div className="nav-level-1">
           <button 
-            className={vistaActual === 'lista' || vistaActual === 'introduccion' || vistaActual === 'grafico' ? 'active' : ''}
+            className={vistaActual === 'lista' || vistaActual === 'hitos' || vistaActual === 'redflags' || vistaActual === 'grafico' ? 'active' : ''}
             onClick={() => setVistaActual('lista')}
           >
             👶 Niños
@@ -223,10 +224,16 @@ function App() {
                 </div>
               </div>
               <button 
-                className={`sub-nav-btn ${vistaActual === 'introduccion' ? 'active' : ''}`}
-                onClick={() => setVistaActual('introduccion')}
+                className={`sub-nav-btn ${vistaActual === 'hitos' ? 'active' : ''}`}
+                onClick={() => setVistaActual('hitos')}
               >
-                📝 Introducción de Datos
+                ✅ Hitos del Desarrollo
+              </button>
+              <button 
+                className={`sub-nav-btn ${vistaActual === 'redflags' ? 'active' : ''}`}
+                onClick={() => setVistaActual('redflags')}
+              >
+                🚩 Señales de Alarma
               </button>
               <button 
                 className={`sub-nav-btn ${vistaActual === 'grafico' ? 'active' : ''}`}
@@ -280,12 +287,7 @@ function App() {
               >
                 🧪 Simulación de Poblaciones
               </button>
-              <button 
-                className={`sub-nav-btn ${subVistaInvestigacion === 'analisis' ? 'active' : ''}`}
-                onClick={() => setSubVistaInvestigacion('analisis')}
-              >
-                📊 Análisis de Resultados
-              </button>
+
               <button 
                 className={`sub-nav-btn ${subVistaInvestigacion === 'fuentes-normativas' ? 'active' : ''}`}
                 onClick={() => setSubVistaInvestigacion('fuentes-normativas')}
@@ -320,15 +322,19 @@ function App() {
                 onEjemploCreado={handleEjemploCreado}
                 onSeleccionarNino={(nino) => {
                   setNinoSeleccionado(nino);
-                  setVistaActual('introduccion');
+                  setVistaActual('hitos');
                 }}
               />
             )}
           </>
         )}
 
-        {vistaActual === 'introduccion' && ninoSeleccionado && (
-          <IntroduccionDatos ninoId={ninoSeleccionado.id} />
+        {vistaActual === 'hitos' && ninoSeleccionado && (
+          <HitosRegistro ninoId={ninoSeleccionado.id} />
+        )}
+
+        {vistaActual === 'redflags' && ninoSeleccionado && (
+          <RedFlagsRegistro ninoId={ninoSeleccionado.id} />
         )}
 
         {vistaActual === 'grafico' && ninoSeleccionado && (

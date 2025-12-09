@@ -3,7 +3,7 @@ import './Investigacion.css';
 import FuentesNormativas from './FuentesNormativas';
 import FundamentosCientificos from './FundamentosCientificos';
 import SimulacionPoblaciones from './SimulacionPoblaciones';
-import AnalisisResultados from './AnalisisResultados';
+
 
 /**
  * Componente de Investigación - Router principal
@@ -20,11 +20,11 @@ function Investigacion({ subVista }) {
       {/* Renderizado condicional según la subvista seleccionada */}
       {subVista === 'limitaciones' && <FundamentosCientificos />}
       {subVista === 'simulacion' && <SimulacionPoblaciones />}
-      {subVista === 'analisis' && <AnalisisResultados />}
+
       {subVista === 'fuentes-normativas' && <FuentesNormativas />}
       
       {/* Fallback por si no hay subvista válida */}
-      {!['limitaciones', 'simulacion', 'analisis', 'fuentes-normativas'].includes(subVista) && (
+      {!['limitaciones', 'simulacion', 'fuentes-normativas'].includes(subVista) && (
         <div className="investigacion-fallback">
           <h2>🔬 Módulo de Investigación</h2>
           <p>Seleccione una herramienta de investigación desde el menú superior.</p>

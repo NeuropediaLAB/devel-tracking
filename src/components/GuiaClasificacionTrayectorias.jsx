@@ -332,7 +332,7 @@ export default function GuiaClasificacionTrayectorias() {
         >
           {Object.entries(tiposTrayectorias).map(([key, tipo]) => (
             <option key={key} value={key}>
-              {tipo.nombre} — Figura {tipo.figura}
+              {tipo.nombre}
             </option>
           ))}
         </select>
@@ -365,18 +365,16 @@ export default function GuiaClasificacionTrayectorias() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="edad" 
+                type="number"
+                domain={[6, 36]}
                 label={{ value: 'Edad Cronológica (meses)', position: 'insideBottom', offset: -5 }}
               />
               <YAxis 
+                domain={[0, 40]}
                 label={{ value: 'Edad de Desarrollo (meses)', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip />
               <Legend />
-              <ReferenceLine 
-                stroke="#999" 
-                strokeDasharray="5 5" 
-                segment={[{ x: 6, y: 6 }, { x: 36, y: 36 }]}
-              />
               <Line 
                 type="monotone" 
                 dataKey="tipico" 
@@ -393,6 +391,7 @@ export default function GuiaClasificacionTrayectorias() {
                 name="Trayectoria Atípica"
                 dot={{ fill: '#F44336', r: 5 }}
                 strokeDasharray={tipoSeleccionado === 'no-systematic' ? "5 5" : "0"}
+                connectNulls={false}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -502,58 +501,56 @@ export default function GuiaClasificacionTrayectorias() {
             Tres niños con el mismo CD (70%) pero trayectorias muy diferentes. Solo el análisis longitudinal revela el verdadero patrón.
           </p>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <LineChart 
+              data={[
+                {edad: 12, tipico: 12, ninoA: 8.4, ninoB: 11, ninoC: 6},
+                {edad: 18, tipico: 18, ninoA: 12.6, ninoB: 14.5, ninoC: 8.5},
+                {edad: 24, tipico: 24, ninoA: 16.8, ninoB: 16.8, ninoC: 16.8},
+                {edad: 30, tipico: 30, ninoA: 21, ninoB: 18, ninoC: 26},
+                {edad: 36, tipico: 36, ninoA: 25.2, ninoB: 18.5, ninoC: 34}
+              ]}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
+                dataKey="edad"
                 type="number"
                 domain={[12, 36]}
                 label={{ value: 'Edad Cronológica (meses)', position: 'insideBottom', offset: -5 }}
               />
               <YAxis 
+                domain={[0, 40]}
                 label={{ value: 'Edad de Desarrollo (meses)', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip formatter={(value, name) => [`${value.toFixed(1)} meses`, name]} />
               <Legend />
-              <ReferenceLine 
-                stroke="#999" 
-                strokeDasharray="5 5"
-                segment={[{ x: 12, y: 12 }, { x: 36, y: 36 }]}
-              />
-              {/* Línea típica */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[{x: 12, y: 12}, {x: 18, y: 18}, {x: 24, y: 24}, {x: 30, y: 30}, {x: 36, y: 36}]}
+                dataKey="tipico"
                 stroke="#4CAF50" 
                 strokeWidth={3}
                 name="Desarrollo Típico"
                 dot={false}
               />
-              {/* Niño A: Retraso estable (CD = 70%) */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[{x: 12, y: 8.4}, {x: 18, y: 12.6}, {x: 24, y: 16.8}, {x: 30, y: 21}, {x: 36, y: 25.2}]}
+                dataKey="ninoA"
                 stroke="#2196F3" 
                 strokeWidth={3}
                 name="Niño A: Retraso Estable"
                 dot={{ fill: '#2196F3', r: 4 }}
               />
-              {/* Niño B: Desaceleración progresiva */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[{x: 12, y: 11}, {x: 18, y: 14.5}, {x: 24, y: 16.8}, {x: 30, y: 18}, {x: 36, y: 18.5}]}
+                dataKey="ninoB"
                 stroke="#F44336" 
                 strokeWidth={3}
                 name="Niño B: Desaceleración"
                 dot={{ fill: '#F44336', r: 4 }}
               />
-              {/* Niño C: Recuperación tras intervención */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[{x: 12, y: 6}, {x: 18, y: 8.5}, {x: 24, y: 16.8}, {x: 30, y: 26}, {x: 36, y: 34}]}
+                dataKey="ninoC"
                 stroke="#9C27B0" 
                 strokeWidth={3}
                 name="Niño C: Recuperación"
@@ -584,40 +581,42 @@ export default function GuiaClasificacionTrayectorias() {
             La variabilidad del desarrollo no es constante: aumenta con la edad, especialmente en poblaciones atípicas.
           </p>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 60 }}>
+            <LineChart 
+              data={[
+                {edad: 6, mediaTipica: 6, plusDETipico: 7.5, menosDETipico: 4.5, mediaAtipica: 4.2, plusDEAtipico: 5.5, menosDEAtipico: 2.9},
+                {edad: 12, mediaTipica: 12, plusDETipico: 15.5, menosDETipico: 8.5, mediaAtipica: 8.4, plusDEAtipico: 13, menosDEAtipico: 3.8},
+                {edad: 18, mediaTipica: 18, plusDETipico: 24, menosDETipico: 12, mediaAtipica: 12.6, plusDEAtipico: 22, menosDEAtipico: 3.2},
+                {edad: 24, mediaTipica: 24, plusDETipico: 33, menosDETipico: 15, mediaAtipica: 16.8, plusDEAtipico: 32.5, menosDEAtipico: 1.1},
+                {edad: 30, mediaTipica: 30, plusDETipico: 42.5, menosDETipico: 17.5, mediaAtipica: 21, plusDEAtipico: 44, menosDEAtipico: -2},
+                {edad: 36, mediaTipica: 36, plusDETipico: 52.5, menosDETipico: 19.5, mediaAtipica: 25.2, plusDEAtipico: 57, menosDEAtipico: -6.6}
+              ]}
+              margin={{ top: 5, right: 30, left: 20, bottom: 60 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
+                dataKey="edad"
                 type="number"
                 domain={[6, 36]}
                 label={{ value: 'Edad Cronológica (meses)', position: 'insideBottom', offset: -5 }}
               />
               <YAxis 
+                domain={[-10, 60]}
                 label={{ value: 'Edad de Desarrollo (meses)', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip formatter={(value, name) => [`${value.toFixed(1)} meses`, name]} />
               <Legend />
               
-              {/* Banda de desarrollo típico (± 1 DE) */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 6}, {x: 12, y: 12}, {x: 18, y: 18}, 
-                  {x: 24, y: 24}, {x: 30, y: 30}, {x: 36, y: 36}
-                ]}
+                dataKey="mediaTipica"
                 stroke="#4CAF50" 
                 strokeWidth={3}
                 name="Media Típica"
                 dot={false}
               />
-              {/* Límites superiores e inferiores (heterocedasticidad) */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 7.5}, {x: 12, y: 15.5}, {x: 18, y: 24}, 
-                  {x: 24, y: 33}, {x: 30, y: 42.5}, {x: 36, y: 52.5}
-                ]}
+                dataKey="plusDETipico"
                 stroke="#81C784" 
                 strokeWidth={2}
                 strokeDasharray="5 5"
@@ -626,26 +625,16 @@ export default function GuiaClasificacionTrayectorias() {
               />
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 4.5}, {x: 12, y: 8.5}, {x: 18, y: 12}, 
-                  {x: 24, y: 15}, {x: 30, y: 17.5}, {x: 36, y: 19.5}
-                ]}
+                dataKey="menosDETipico"
                 stroke="#81C784" 
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 name="-1 DE Típico"
                 dot={false}
               />
-              
-              {/* Población atípica con mayor heterocedasticidad */}
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 4.2}, {x: 12, y: 8.4}, {x: 18, y: 12.6}, 
-                  {x: 24, y: 16.8}, {x: 30, y: 21}, {x: 36, y: 25.2}
-                ]}
+                dataKey="mediaAtipica"
                 stroke="#F44336" 
                 strokeWidth={3}
                 name="Media Atípica"
@@ -653,11 +642,7 @@ export default function GuiaClasificacionTrayectorias() {
               />
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 5.5}, {x: 12, y: 13}, {x: 18, y: 22}, 
-                  {x: 24, y: 32.5}, {x: 30, y: 44}, {x: 36, y: 57}
-                ]}
+                dataKey="plusDEAtipico"
                 stroke="#FFCDD2" 
                 strokeWidth={2}
                 strokeDasharray="3 3"
@@ -666,11 +651,7 @@ export default function GuiaClasificacionTrayectorias() {
               />
               <Line 
                 type="monotone"
-                dataKey="y"
-                data={[
-                  {x: 6, y: 2.9}, {x: 12, y: 3.8}, {x: 18, y: 3.2}, 
-                  {x: 24, y: 1.1}, {x: 30, y: -2}, {x: 36, y: -6.6}
-                ]}
+                dataKey="menosDEAtipico"
                 stroke="#FFCDD2" 
                 strokeWidth={2}
                 strokeDasharray="3 3"

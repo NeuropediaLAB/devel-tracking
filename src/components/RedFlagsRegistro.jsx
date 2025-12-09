@@ -15,26 +15,33 @@ function RedFlagsRegistro({ ninoId }) {
   const cargarDatos = async () => {
     try {
       const [redFlagsRes, redFlagsObsRes, ninoRes] = await Promise.all([
-        fetch(`${API_URL}/red-flags`),
-        fetch(`${API_URL}/red-flags-observadas/${ninoId}`),
-        fetch(`${API_URL}/ninos/${ninoId}`)
+        fetchConAuth(`${API_URL}/red-flags`),
+        fetchConAuth(`${API_URL}/red-flags-observadas/${ninoId}`),
+        fetchConAuth(`${API_URL}/ninos/${ninoId}`)
       ]);
 
       const redFlagsData = await redFlagsRes.json();
       const redFlagsObsData = await redFlagsObsRes.json();
       const ninoData = await ninoRes.json();
 
-      setRedFlags(redFlagsData);
-      setRedFlagsObservadas(redFlagsObsData);
+      // Asegurar que los datos sean arrays válidos
+      setRedFlags(Array.isArray(redFlagsData) ? redFlagsData : []);
+      setRedFlagsObservadas(Array.isArray(redFlagsObsData) ? redFlagsObsData : []);
       setNino(ninoData);
 
-      // Calcular edad actual
-      const fechaNac = new Date(ninoData.fecha_nacimiento);
-      const hoy = new Date();
-      const edadMeses = (hoy - fechaNac) / (1000 * 60 * 60 * 24 * 30.44);
-      setEdadActualMeses(edadMeses);
+      // Calcular edad actual si tenemos datos del niño
+      if (ninoData && ninoData.fecha_nacimiento) {
+        const fechaNac = new Date(ninoData.fecha_nacimiento);
+        const hoy = new Date();
+        const edadMeses = (hoy - fechaNac) / (1000 * 60 * 60 * 24 * 30.44);
+        setEdadActualMeses(edadMeses);
+      }
     } catch (error) {
       console.error('Error al cargar red flags:', error);
+      // En caso de error, establecer arrays vacíos para evitar errores
+      setRedFlags([]);
+      setRedFlagsObservadas([]);
+      setNino(null);
     }
   };
 
@@ -72,6 +79,10 @@ function RedFlagsRegistro({ ninoId }) {
   };
 
   const redFlagObservada = (redFlagId) => {
+    // Asegurar que redFlagsObservadas sea un array antes de usar find
+    if (!Array.isArray(redFlagsObservadas)) {
+      return null;
+    }
     return redFlagsObservadas.find(rfo => rfo.red_flag_id === redFlagId);
   };
 
@@ -124,11 +135,11 @@ function RedFlagsRegistro({ ninoId }) {
         </div>
       </div>
 
-      {redFlagsObservadas.length > 0 && (
+      {Array.isArray(redFlagsObservadas) && redFlagsObservadas.length > 0 && (
         <div className="red-flags-observadas">
           <h3>Señales Observadas</h3>
           <div className="red-flags-lista">
-            {redFlagsObservadas.map(rfo => (
+            {Array.isArray(redFlagsObservadas) && redFlagsObservadas.map(rfo => (
               <div key={rfo.id} className={`red-flag-card observada ${getSeveridadColor(rfo.severidad)}`}>
                 <div className="red-flag-header">
                   <h4>🚩 {rfo.flag_nombre}</h4>
@@ -159,7 +170,7 @@ function RedFlagsRegistro({ ninoId }) {
         <p className="info">Haga clic en "Registrar" si observa alguna de estas señales:</p>
         
         <div className="red-flags-lista">
-          {redFlags.map(rf => {
+          {Array.isArray(redFlags) && redFlags.map(rf => {
             const observada = redFlagObservada(rf.id);
             
             return (
