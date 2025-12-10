@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-const dbPath = path.join(__dirname, 'neurodesarrollo_dev.db');
+const dbPath = path.join(__dirname, 'neurodesarrollo_dev_new.db');
 const db = new sqlite3.Database(dbPath);
 
 // Inicializar la base de datos
@@ -64,7 +64,7 @@ db.serialize(() => {
         ['admin@neuropedialab.org', adminPassword, 'Administrador', 'admin'],
         (err) => {
           if (err) {
-            console.error('Error creating admin user:', err);
+            console.error('Error creating admin user (database may be read-only):', err.message);
           }
         }
       );

@@ -272,6 +272,172 @@ app.get('/api/admin/ninos', verificarToken, verificarAdmin, (req, res) => {
   );
 });
 
+// ==================== RUTAS DE BIBLIOTECA DE DATOS (solo admin en modo avanzado) ====================
+
+// Endpoint de prueba para verificar conexión a la base de datos
+app.get('/api/admin/test-db', verificarToken, verificarAdmin, (req, res) => {
+  db.get('SELECT COUNT(*) as count FROM hitos_normativos LIMIT 1', [], (err, row) => {
+    if (err) {
+      console.error('Database test error:', err);
+      return res.status(500).json({ error: 'Database connection failed', message: err.message });
+    }
+    res.json({ status: 'ok', message: 'Database connection successful', count: row.count });
+  });
+});
+
+// Endpoint temporal sin autenticación para probar
+app.get('/api/test-escalas', (req, res) => {
+  db.all('SELECT COUNT(*) as total FROM hitos_normativos', [], (err, result) => {
+    if (err) {
+      console.error('Database test error:', err);
+      return res.status(500).json({ error: 'Database connection failed', message: err.message });
+    }
+    res.json({ status: 'ok', escalas: result[0].total });
+  });
+});
+
+// Obtener todas las escalas normativas del sistema
+app.get('/api/admin/escalas-normativas', verificarToken, verificarAdmin, (req, res) => {
+  const query = `
+    SELECT h.id, h.nombre, h.descripcion, h.edad_media_meses, h.desviacion_estandar, 
+           h.edad_minima_meses, h.edad_maxima_meses,
+           -- Calcular percentiles aproximados basados en distribución normal
+           ROUND(h.edad_media_meses - (0.674 * h.desviacion_estandar), 1) as percentil_25,
+           ROUND(h.edad_media_meses, 1) as percentil_50,
+           ROUND(h.edad_media_meses + (0.674 * h.desviacion_estandar), 1) as percentil_75,
+           f.nombre as fuente_normativa_nombre, 
+           d.nombre as dominio_nombre
+    FROM hitos_normativos h
+    LEFT JOIN fuentes_normativas f ON h.fuente_normativa_id = f.id
+    LEFT JOIN dominios d ON h.dominio_id = d.id
+    ORDER BY h.edad_media_meses, d.nombre, f.nombre
+  `;
+  
+  db.all(query, [], (err, escalas) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(escalas);
+  });
+});
+
+// Obtener cohortes personalizadas de usuarios
+app.get('/api/admin/cohortes-personalizadas', verificarToken, verificarAdmin, (req, res) => {
+  const query = `
+    SELECT 
+      u.id as usuario_id,
+      u.nombre as usuario_nombre,
+      u.email as usuario_email,
+      'Cohorte de ' || u.nombre as nombre,
+      'Datos normativos personalizados del usuario ' || u.nombre as descripcion,
+      COUNT(DISTINCT n.id) as total_ninos,
+      COUNT(DISTINCT hc.id) as total_evaluaciones,
+      MIN(n.creado_en) as fecha_creacion,
+      COALESCE(MAX(hc.fecha_registro), MAX(n.creado_en)) as fecha_actualizacion
+    FROM usuarios u
+    LEFT JOIN ninos n ON u.id = n.usuario_id
+    LEFT JOIN hitos_conseguidos hc ON n.id = hc.nino_id
+    WHERE u.rol != 'admin' AND u.rol != 'invitado' AND u.activo = 1
+    GROUP BY u.id, u.nombre, u.email
+    HAVING COUNT(DISTINCT n.id) > 0
+    ORDER BY total_evaluaciones DESC, total_ninos DESC
+  `;
+  
+  db.all(query, [], (err, cohortes) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(cohortes.map(c => ({
+      id: c.usuario_id,
+      usuario_id: c.usuario_id,
+      usuario_nombre: c.usuario_nombre,
+      nombre: c.nombre,
+      descripcion: c.descripcion,
+      total_ninos: c.total_ninos || 0,
+      total_evaluaciones: c.total_evaluaciones || 0,
+      fecha_creacion: c.fecha_creacion,
+      fecha_actualizacion: c.fecha_actualizacion
+    })));
+  });
+});
+
+// Obtener estadísticas de uso del sistema
+app.get('/api/admin/estadisticas-uso', verificarToken, verificarAdmin, (req, res) => {
+  const query = `
+    SELECT 
+      u.id as usuario_id,
+      u.nombre as usuario_nombre,
+      u.email as usuario_email,
+      u.ultimo_acceso,
+      u.creado_en as fecha_registro,
+      u.rol,
+      u.activo,
+      COUNT(DISTINCT n.id) as ninos_registrados,
+      COUNT(DISTINCT hc.id) as evaluaciones_realizadas,
+      COUNT(DISTINCT rfo.id) as red_flags_observadas,
+      COUNT(DISTINCT ee.id) as escalas_aplicadas,
+      COALESCE(
+        ROUND((
+          COUNT(DISTINCT hc.id) * 3 + 
+          COUNT(DISTINCT n.id) * 10 + 
+          COUNT(DISTINCT rfo.id) * 2 +
+          COUNT(DISTINCT ee.id) * 15
+        ), 0), 0
+      ) as tiempo_total_minutos
+    FROM usuarios u
+    LEFT JOIN ninos n ON u.id = n.usuario_id
+    LEFT JOIN hitos_conseguidos hc ON n.id = hc.nino_id
+    LEFT JOIN red_flags_observadas rfo ON n.id = rfo.nino_id
+    LEFT JOIN escalas_evaluaciones ee ON n.id = ee.nino_id
+    WHERE u.rol != 'invitado'
+    GROUP BY u.id, u.nombre, u.email, u.ultimo_acceso, u.creado_en, u.rol, u.activo
+    ORDER BY evaluaciones_realizadas DESC, ninos_registrados DESC
+  `;
+  
+  db.all(query, [], (err, estadisticas) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(estadisticas);
+  });
+});
+
+// Obtener metadatos generales del sistema
+app.get('/api/admin/metadatos-sistema', verificarToken, verificarAdmin, (req, res) => {
+  const queries = {
+    total_usuarios: "SELECT COUNT(*) as count FROM usuarios WHERE rol != 'invitado'",
+    usuarios_activos_30d: "SELECT COUNT(*) as count FROM usuarios WHERE ultimo_acceso > datetime('now', '-30 days') AND rol != 'invitado'",
+    total_evaluaciones: "SELECT COUNT(*) as count FROM hitos_conseguidos",
+    total_graficas: "SELECT COUNT(DISTINCT nino_id) as count FROM hitos_conseguidos WHERE nino_id IS NOT NULL",
+    total_ninos: "SELECT COUNT(*) as count FROM ninos",
+    total_red_flags: "SELECT COUNT(*) as count FROM red_flags_observadas",
+    total_escalas_normativas: "SELECT COUNT(*) as count FROM hitos_normativos",
+    total_fuentes_normativas: "SELECT COUNT(*) as count FROM fuentes_normativas WHERE activa = 1",
+    total_dominios: "SELECT COUNT(*) as count FROM dominios",
+    total_videos: "SELECT COUNT(*) as count FROM videos",
+    usuarios_con_datos: "SELECT COUNT(DISTINCT usuario_id) as count FROM ninos",
+    promedio_ninos_por_usuario: `SELECT ROUND(AVG(ninos_count), 1) as count FROM (
+      SELECT COUNT(*) as ninos_count FROM ninos GROUP BY usuario_id
+    )`,
+    promedio_evaluaciones_por_nino: `SELECT ROUND(AVG(eval_count), 1) as count FROM (
+      SELECT COUNT(*) as eval_count FROM hitos_conseguidos GROUP BY nino_id
+    )`
+  };
+  
+  const metadatos = {};
+  let completed = 0;
+  const totalQueries = Object.keys(queries).length;
+  
+  Object.keys(queries).forEach(key => {
+    db.get(queries[key], [], (err, row) => {
+      if (!err && row) {
+        metadatos[key] = row.count || 0;
+      } else {
+        metadatos[key] = 0;
+      }
+      
+      completed++;
+      if (completed === totalQueries) {
+        res.json(metadatos);
+      }
+    });
+  });
+});
+
 // ==================== RUTAS DE NIÑOS ====================
 
 // Obtener todos los niños del usuario actual
@@ -1426,28 +1592,30 @@ app.delete('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
 
 const { fork } = require('child_process');
 
-// Check and populate videos if table is empty
-db.get('SELECT COUNT(*) AS count FROM videos', (err, row) => {
-  if (err) {
-    console.error('Error checking video table:', err.message);
-    return;
-  }
-  if (row.count === 0) {
-    console.log('No videos found. Populating video table...');
-    const populateProcess = fork('./server/populate_videos.js');
-    
-    populateProcess.on('exit', (code) => {
-      if (code === 0) {
-        console.log('Video population script finished successfully.');
-      } else {
-        console.error(`Video population script exited with code ${code}`);
-      }
-    });
-  } else {
-    console.log(`Video table already contains ${row.count} videos.`);
-  }
-});
-
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor ejecutándose en http://0.0.0.0:${PORT}`);
+  
+  // Check and populate videos if table is empty (después de iniciar el servidor)
+  setTimeout(() => {
+    db.get('SELECT COUNT(*) AS count FROM videos', (err, row) => {
+      if (err) {
+        console.error('Error checking video table:', err.message);
+        return;
+      }
+      if (row.count === 0) {
+        console.log('No videos found. Populating video table...');
+        const populateProcess = fork('./server/populate_videos.js');
+        
+        populateProcess.on('exit', (code) => {
+          if (code === 0) {
+            console.log('Video population script finished successfully.');
+          } else {
+            console.error(`Video population script exited with code ${code}`);
+          }
+        });
+      } else {
+        console.log(`Video table already contains ${row.count} videos.`);
+      }
+    });
+  }, 1000);
 });

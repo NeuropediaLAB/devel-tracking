@@ -11,6 +11,7 @@ import Bibliografia from './components/Bibliografia';
 import Fundamentos from './components/Fundamentos';
 import Investigacion from './components/Investigacion';
 import BibliotecaMedios from './components/BibliotecaMedios';
+import BibliotecaDatos from './components/BibliotecaDatos';
 import { API_URL } from './config';
 import { 
   estaAutenticado, 
@@ -26,7 +27,7 @@ function App() {
   const [usuario, setUsuario] = useState(getUsuario());
   const [ninos, setNinos] = useState([]);
   const [ninoSeleccionado, setNinoSeleccionado] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios
+  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios, datos
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
@@ -198,15 +199,26 @@ function App() {
             </button>
           )}
           {esAdmin() && (
-            <button 
-              className={vistaActual === 'medios' ? 'active' : ''}
-              onClick={() => {
-                setVistaActual('medios');
-                setNinoSeleccionado(null);
-              }}
-            >
-              🎬 Biblioteca de Medios
-            </button>
+            <>
+              <button 
+                className={vistaActual === 'medios' ? 'active' : ''}
+                onClick={() => {
+                  setVistaActual('medios');
+                  setNinoSeleccionado(null);
+                }}
+              >
+                🎬 Biblioteca de Medios
+              </button>
+              <button 
+                className={vistaActual === 'datos' ? 'active' : ''}
+                onClick={() => {
+                  setVistaActual('datos');
+                  setNinoSeleccionado(null);
+                }}
+              >
+                🗄️ Biblioteca de Datos
+              </button>
+            </>
           )}
         </div>
 
@@ -351,6 +363,10 @@ function App() {
         
         {vistaActual === 'medios' && esAdmin() && (
           <BibliotecaMedios />
+        )}
+        
+        {vistaActual === 'datos' && esAdmin() && (
+          <BibliotecaDatos />
         )}
       </main>
     </div>

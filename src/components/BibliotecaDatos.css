@@ -1,0 +1,838 @@
+.biblioteca-datos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.biblioteca-datos.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.header-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.header-section h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.header-section p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin: 0;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.tabs-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tabs-nav {
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  overflow-x: auto;
+}
+
+.tabs-nav button {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tabs-nav button:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.tabs-nav button.tab-active {
+  background: white;
+  color: #007bff;
+  border-bottom: 3px solid #007bff;
+  font-weight: 600;
+}
+
+.tab-content {
+  padding: 2rem;
+}
+
+.datos-section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.btn-export {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-export:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.resumen-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.card-resumen {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  text-align: center;
+}
+
+.card-resumen h4 {
+  margin: 0 0 0.5rem 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.numero-grande {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.numero-detalle {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.tabla-container {
+  overflow-x: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background: white;
+}
+
+.datos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.datos-tabla th {
+  background: #f8f9fa;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.datos-tabla td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.datos-tabla tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.descripcion-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabla-nota {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.85rem;
+  margin: 0;
+  border-top: 1px solid #dee2e6;
+}
+
+.graficas-uso {
+  display: grid;
+  gap: 2rem;
+}
+
+.grafica-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.grafica-card h4 {
+  background: #f8f9fa;
+  padding: 1rem;
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 600;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.analisis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.analisis-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.analisis-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.analisis-card h4 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.distribucion-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.distribucion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.fuente-nombre,
+.dominio-nombre {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.fuente-count,
+.dominio-count {
+  font-weight: 600;
+  color: #007bff;
+  font-size: 0.9rem;
+}
+
+.hito-nombre {
+  font-weight: 500;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.hito-count {
+  font-weight: 600;
+  color: #dc3545;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.calidad-metricas {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.metrica {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.metrica-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.metrica-valor {
+  font-weight: 600;
+  color: #007bff;
+}
+
+/* Badges para roles y estados */
+.rol-badge, .estado-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.rol-badge.admin {
+  background: #dc3545;
+  color: white;
+}
+
+.rol-badge.usuario {
+  background: #007bff;
+  color: white;
+}
+
+.estado-badge.activo {
+  background: #28a745;
+  color: white;
+}
+
+.estado-badge.inactivo {
+  background: #6c757d;
+  color: white;
+}
+
+/* Mejoras adicionales para los datos */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn-refresh {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Estilos para filtros y ordenación */
+.filtros-tabla {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 150px;
+}
+
+.filtro-grupo label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.filtro-grupo select,
+.filtro-grupo input {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.filtro-grupo select:focus,
+.filtro-grupo input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Estilos para cabeceras ordenables */
+.datos-tabla th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.datos-tabla th.sortable:hover {
+  background: #e9ecef;
+}
+
+.datos-tabla th.sortable:active {
+  background: #dee2e6;
+}
+
+/* Mejorar tooltips */
+.descripcion-cell[title] {
+  cursor: help;
+}
+
+/* Estilos para badges de repetición */
+.repeticion-badge {
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.repeticion-badge.unico {
+  background: #28a745;
+  color: white;
+}
+
+.repeticion-badge.duplicado {
+  background: #ffc107;
+  color: #212529;
+}
+
+.fuentes-tooltip {
+  font-size: 0.6rem;
+  color: #6c757d;
+  margin-top: 0.1rem;
+  cursor: help;
+}
+
+/* Estilos para subtabs */
+.subtabs-container {
+  margin-bottom: 2rem;
+}
+
+.subtabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0;
+  margin-bottom: 1.5rem;
+}
+
+.subtabs button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subtabs button:hover {
+  color: #495057;
+  background: #f8f9fa;
+}
+
+.subtabs button.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  background: #f8f9fa;
+}
+
+/* Estilos para hitos duplicados expandibles */
+.duplicados-analisis {
+  width: 100%;
+}
+
+.duplicados-tabla {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hito-duplicado-item {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hito-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hito-header:hover {
+  background: #e9ecef;
+}
+
+.hito-nombre-expandible {
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.hito-stats {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.expand-icon {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.hito-detalles {
+  padding: 0;
+}
+
+.tabla-incrustada {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.tabla-incrustada th {
+  background: #e9ecef;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tabla-incrustada td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  color: #495057;
+}
+
+.tabla-incrustada tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.tabla-incrustada tbody tr:hover {
+  background: #e7f3ff;
+}
+
+/* Estilos adicionales para mejor UX */
+.subtab-description {
+  color: #6c757d;
+  font-style: italic;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+}
+
+.no-datos {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.no-datos p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Mejorar la visualización de los hitos expandibles */
+.hito-nombre-expandible {
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Estilos para la tabla integrada con anidadas */
+.tabla-descripcion {
+  background: #e7f3ff;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  font-size: 0.9rem;
+}
+
+.fila-duplicada {
+  background: #fff3cd !important;
+  transition: background-color 0.3s ease;
+}
+
+.fila-duplicada:hover {
+  background: #ffeaa7 !important;
+}
+
+.fila-expandida {
+  background: #f8f9fa !important;
+}
+
+.fila-expandida td {
+  padding: 0 !important;
+}
+
+.tabla-anidada-container {
+  padding: 1rem;
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  margin: 0.5rem;
+}
+
+.tabla-anidada-container h5 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tabla-anidada {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabla-anidada th,
+.tabla-anidada td {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.tabla-anidada th {
+  background: #f1f3f4;
+  font-weight: 600;
+  color: #495057;
+}
+
+.tabla-anidada tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.tabla-anidada tbody tr:hover {
+  background: #e7f3ff;
+}
+
+.expand-indicator {
+  color: #007bff;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+/* Vista agrupada */
+.tabla-agrupada {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grupo-hito {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hito-header-tabla {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.hito-header-tabla:hover {
+  background: #e9ecef;
+}
+
+.hito-nombre-grupo {
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.hito-stats-grupo {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.tabla-expandida {
+  padding: 0;
+}
+
+.datos-tabla-incrustada {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.datos-tabla-incrustada th,
+.datos-tabla-incrustada td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.datos-tabla-incrustada th {
+  background: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+}
+
+.datos-tabla-incrustada tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.datos-tabla-incrustada tbody tr:hover {
+  background: #e7f3ff;
+}
+
+.resumen-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .biblioteca-datos {
+    padding: 10px;
+  }
+  
+  .header-section {
+    padding: 1.5rem;
+  }
+  
+  .header-section h2 {
+    font-size: 2rem;
+  }
+  
+  .header-section p {
+    font-size: 1rem;
+  }
+  
+  .tab-content {
+    padding: 1rem;
+  }
+  
+  .resumen-cards {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .analisis-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metrica {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 0.25rem;
+  }
+}
