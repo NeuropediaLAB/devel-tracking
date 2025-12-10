@@ -3,10 +3,9 @@ import './BibliotecaDatos.css';
 import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 
-const BibliotecaDatos = () => {
+const BibliotecaDatos = ({ subVista = 'escalas-normativas' }) => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('escalas-normativas');
-  const [activeSubTab, setActiveSubTab] = useState('resumen'); // Nueva subtab
+  const [activeSubTab, setActiveSubTab] = useState('resumen'); // Nueva subtab para escalas normativas
   const [data, setData] = useState({
     escalasNormativas: [],
     cohortesPersonalizadas: [],
@@ -255,12 +254,24 @@ const BibliotecaDatos = () => {
     <div className="seccion-datos">
       <div className="section-header">
         <h3>📊 Escalas Normativas del Sistema</h3>
-        <button 
-          className="btn-exportar"
-          onClick={() => exportarDatos('escalas-normativas')}
-        >
-          📥 Exportar JSON
-        </button>
+        <div className="header-buttons">
+          <button 
+            className="btn-refresh"
+            onClick={() => {
+              console.log('🔄 Actualizando datos manualmente...');
+              cargarDatos();
+            }}
+            disabled={loading}
+          >
+            {loading ? '🔄 Cargando...' : '🔄 Actualizar Datos'}
+          </button>
+          <button 
+            className="btn-exportar"
+            onClick={() => exportarDatos('escalas-normativas')}
+          >
+            📥 Exportar JSON
+          </button>
+        </div>
       </div>
 
       {/* Subtabs para escalas normativas */}
@@ -657,12 +668,24 @@ const BibliotecaDatos = () => {
     <div className="datos-section">
       <div className="section-header">
         <h3>👥 Cohortes Personalizadas</h3>
-        <button 
-          className="btn-export"
-          onClick={() => exportarDatos('cohortes')}
-        >
-          📥 Exportar JSON
-        </button>
+        <div className="header-buttons">
+          <button 
+            className="btn-refresh"
+            onClick={() => {
+              console.log('🔄 Actualizando datos manualmente...');
+              cargarDatos();
+            }}
+            disabled={loading}
+          >
+            {loading ? '🔄 Cargando...' : '🔄 Actualizar Datos'}
+          </button>
+          <button 
+            className="btn-export"
+            onClick={() => exportarDatos('cohortes')}
+          >
+            📥 Exportar JSON
+          </button>
+        </div>
       </div>
       
       <div className="resumen-cards">
@@ -777,12 +800,24 @@ const BibliotecaDatos = () => {
     <div className="datos-section">
       <div className="section-header">
         <h3>📈 Estadísticas de Uso</h3>
-        <button 
-          className="btn-export"
-          onClick={() => exportarDatos('estadisticas')}
-        >
-          📥 Exportar JSON
-        </button>
+        <div className="header-buttons">
+          <button 
+            className="btn-refresh"
+            onClick={() => {
+              console.log('🔄 Actualizando datos manualmente...');
+              cargarDatos();
+            }}
+            disabled={loading}
+          >
+            {loading ? '🔄 Cargando...' : '🔄 Actualizar Datos'}
+          </button>
+          <button 
+            className="btn-export"
+            onClick={() => exportarDatos('estadisticas')}
+          >
+            📥 Exportar JSON
+          </button>
+        </div>
       </div>
       
       <div className="resumen-cards">
@@ -926,73 +961,7 @@ const BibliotecaDatos = () => {
     </div>
   );
 
-  const renderAnalisisAvanzado = () => (
-    <div className="datos-section">
-      <div className="section-header">
-        <h3>🔬 Análisis Avanzado</h3>
-      </div>
-      
-      <div className="analisis-grid">
 
-
-
-
-        <div className="analisis-card full-width">
-          <h4>Calidad de Datos y Métricas del Sistema</h4>
-          <div className="calidad-metricas">
-            <div className="metrica">
-              <span className="metrica-label">Total registros de hitos:</span>
-              <span className="metrica-valor">{data.escalasNormativas.length}</span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Hitos únicos (por nombre):</span>
-              <span className="metrica-valor">
-                {new Set(data.escalasNormativas.map(e => e.nombre)).size}
-              </span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Tasa de duplicación:</span>
-              <span className="metrica-valor">
-                {data.escalasNormativas.length > 0 ? 
-                  `${(((data.escalasNormativas.length - new Set(data.escalasNormativas.map(e => e.nombre)).size) / data.escalasNormativas.length) * 100).toFixed(1)}%`
-                  : '0%'
-                }
-              </span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Escalas con datos completos:</span>
-              <span className="metrica-valor">
-                {data.escalasNormativas.filter(e => 
-                  e.edad_media_meses && e.desviacion_estandar && e.percentil_25 && e.percentil_50 && e.percentil_75
-                ).length} / {data.escalasNormativas.length}
-              </span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Rango de edades cubierto:</span>
-              <span className="metrica-valor">
-                {data.escalasNormativas.length > 0 ? 
-                  `${Math.min(...data.escalasNormativas.map(e => e.edad_media_meses || 999))} - ${Math.max(...data.escalasNormativas.map(e => e.edad_media_meses || 0))} meses`
-                  : 'No hay datos'
-                }
-              </span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Promedio niños por usuario:</span>
-              <span className="metrica-valor">
-                {data.metadatos.promedio_ninos_por_usuario || 0}
-              </span>
-            </div>
-            <div className="metrica">
-              <span className="metrica-label">Promedio evaluaciones por niño:</span>
-              <span className="metrica-valor">
-                {data.metadatos.promedio_evaluaciones_por_nino || 0}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   if (loading) {
     return (
@@ -1007,57 +976,10 @@ const BibliotecaDatos = () => {
 
   return (
     <div className="biblioteca-datos">
-      <div className="header-section">
-        <div>
-          <h2>🗄️ Biblioteca de Datos</h2>
-          <p>Visualización y análisis de todas las bases de datos del sistema - Actualización automática cada 30s</p>
-        </div>
-        <button 
-          className="btn-refresh"
-          onClick={() => {
-            console.log('🔄 Actualizando datos manualmente...');
-            cargarDatos();
-          }}
-          disabled={loading}
-        >
-          {loading ? '🔄 Cargando...' : '🔄 Actualizar Datos'}
-        </button>
-      </div>
-
-      <div className="tabs-container">
-        <div className="tabs-nav">
-          <button 
-            className={activeTab === 'escalas-normativas' ? 'tab-active' : ''}
-            onClick={() => setActiveTab('escalas-normativas')}
-          >
-            📊 Escalas Normativas
-          </button>
-          <button 
-            className={activeTab === 'cohortes-personalizadas' ? 'tab-active' : ''}
-            onClick={() => setActiveTab('cohortes-personalizadas')}
-          >
-            👥 Cohortes Personalizadas
-          </button>
-          <button 
-            className={activeTab === 'estadisticas-uso' ? 'tab-active' : ''}
-            onClick={() => setActiveTab('estadisticas-uso')}
-          >
-            📈 Estadísticas de Uso
-          </button>
-          <button 
-            className={activeTab === 'analisis-avanzado' ? 'tab-active' : ''}
-            onClick={() => setActiveTab('analisis-avanzado')}
-          >
-            🔬 Análisis Avanzado
-          </button>
-        </div>
-
-        <div className="tab-content">
-          {activeTab === 'escalas-normativas' && renderEscalasNormativas()}
-          {activeTab === 'cohortes-personalizadas' && renderCohortesPersonalizadas()}
-          {activeTab === 'estadisticas-uso' && renderEstadisticasUso()}
-          {activeTab === 'analisis-avanzado' && renderAnalisisAvanzado()}
-        </div>
+      <div className="content-container">
+        {subVista === 'escalas-normativas' && renderEscalasNormativas()}
+        {subVista === 'cohortes-personalizadas' && renderCohortesPersonalizadas()}
+        {subVista === 'estadisticas-uso' && renderEstadisticasUso()}
       </div>
     </div>
   );

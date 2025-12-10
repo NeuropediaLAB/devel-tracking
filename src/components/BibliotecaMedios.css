@@ -256,19 +256,7 @@
   line-height: 1.4;
 }
 
-.video-url {
-  margin: 10px 0;
-}
 
-.video-url a {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.video-url a:hover {
-  text-decoration: underline;
-}
 
 .hitos-asociados {
   margin-top: 15px;
@@ -369,7 +357,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .modal-asociaciones {

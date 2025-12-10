@@ -96,16 +96,30 @@
   padding: 2rem;
 }
 
+.content-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 2rem;
+}
+
 .datos-section {
   margin-bottom: 2rem;
 }
 
 .section-header {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
   gap: 1rem;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .section-header h3 {
@@ -115,7 +129,7 @@
   font-weight: 600;
 }
 
-.btn-export {
+.btn-export, .btn-exportar {
   background: #28a745;
   color: white;
   border: none;
@@ -127,7 +141,7 @@
   transition: all 0.3s ease;
 }
 
-.btn-export:hover {
+.btn-export:hover, .btn-exportar:hover {
   background: #218838;
   transform: translateY(-1px);
 }
@@ -382,27 +396,29 @@
 }
 
 .btn-refresh {
-  background: rgba(255, 255, 255, 0.2);
+  background: #17a2b8;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border: 2px solid #17a2b8;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.3s ease;
   white-space: nowrap;
 }
 
 .btn-refresh:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: #138496;
+  border-color: #138496;
   transform: translateY(-1px);
 }
 
 .btn-refresh:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background: #6c757d;
+  border-color: #6c757d;
 }
 
 /* Estilos para filtros y ordenación */

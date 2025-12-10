@@ -167,6 +167,25 @@ body {
   font-size: 0.8rem;
 }
 
+/* Estilos para pestaña de biblioteca de datos */
+.biblioteca-name-tab {
+  padding: 0.6rem 1rem;
+  background: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #1976d2;
+  margin-right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.biblioteca-nombre {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
 .nino-datos span {
   white-space: nowrap;
 }

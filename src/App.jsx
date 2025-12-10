@@ -32,6 +32,7 @@ function App() {
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
   const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
+  const [subVistaBibliotecaDatos, setSubVistaBibliotecaDatos] = useState('escalas-normativas'); // 'escalas-normativas', 'cohortes-personalizadas', 'estadisticas-uso'
 
   useEffect(() => {
     if (autenticado) {
@@ -309,6 +310,35 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Sub-pestañas jerárquicas para biblioteca de datos */}
+        {esAdmin() && vistaActual === 'datos' && (
+          <div className="nav-level-2">
+            <div className="sub-nav-buttons">
+              <div className="biblioteca-name-tab">
+                <div className="biblioteca-nombre">🗄️ Biblioteca de Datos</div>
+              </div>
+              <button 
+                className={`sub-nav-btn ${subVistaBibliotecaDatos === 'escalas-normativas' ? 'active' : ''}`}
+                onClick={() => setSubVistaBibliotecaDatos('escalas-normativas')}
+              >
+                📊 Escalas Normativas
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaBibliotecaDatos === 'cohortes-personalizadas' ? 'active' : ''}`}
+                onClick={() => setSubVistaBibliotecaDatos('cohortes-personalizadas')}
+              >
+                👥 Cohortes Personalizadas
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaBibliotecaDatos === 'estadisticas-uso' ? 'active' : ''}`}
+                onClick={() => setSubVistaBibliotecaDatos('estadisticas-uso')}
+              >
+                📈 Estadísticas de Uso
+              </button>
+            </div>
+          </div>
+        )}
       </nav>
 
       <main className="main-content">
@@ -366,7 +396,7 @@ function App() {
         )}
         
         {vistaActual === 'datos' && esAdmin() && (
-          <BibliotecaDatos />
+          <BibliotecaDatos subVista={subVistaBibliotecaDatos} />
         )}
       </main>
     </div>

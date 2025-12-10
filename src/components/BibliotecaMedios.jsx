@@ -145,13 +145,28 @@ const BibliotecaMedios = () => {
   };
 
   const abrirModalAsociaciones = (video) => {
+    console.log('=== DEBUGGING MODAL ===');
+    console.log('Video recibido:', video);
+    console.log('Hitos disponibles:', hitos.length);
+    console.log('Estado actual modal:', mostrarModalAsociaciones);
+    
     if (!video) {
       console.error('No se ha proporcionado un video válido');
       return;
     }
+    
+    if (hitos.length === 0) {
+      console.warn('No hay hitos cargados todavía');
+      mostrarMensaje('Cargando hitos, intenta de nuevo en un momento', 'warning');
+      return;
+    }
+    
     setVideoSeleccionado(video);
     setHitosSeleccionados([]);
     setMostrarModalAsociaciones(true);
+    
+    console.log('Modal debería abrirse ahora');
+    console.log('Video seleccionado:', video);
   };
 
   const cerrarModalAsociaciones = () => {
@@ -361,11 +376,7 @@ const BibliotecaMedios = () => {
                   <h4>{video.titulo || 'Sin título'}</h4>
                   {video.descripcion && <p className="video-descripcion">{video.descripcion}</p>}
                   
-                  <div className="video-url">
-                    <a href={video.url} target="_blank" rel="noopener noreferrer">
-                      Ver en YouTube →
-                    </a>
-                  </div>
+
 
                   {video.hitosAsociados && video.hitosAsociados.length > 0 ? (
                     <div className="hitos-asociados">
@@ -392,7 +403,12 @@ const BibliotecaMedios = () => {
                 <button 
                   type="button"
                   className="btn-asociar-video"
-                  onClick={() => abrirModalAsociaciones(video)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Botón clickeado para video:', video.id);
+                    abrirModalAsociaciones(video);
+                  }}
                 >
                   🔗 Gestionar Asociaciones
                 </button>
@@ -402,16 +418,66 @@ const BibliotecaMedios = () => {
         )}
       </div>
 
+      {/* DEBUG: Estado del modal */}
+      {console.log('Estado renderizado:', { mostrarModalAsociaciones, videoSeleccionado: !!videoSeleccionado, hitosLength: hitos.length })}
+      
       {/* Modal de Asociaciones Múltiples */}
-      {mostrarModalAsociaciones === true && (
-        <div className="modal-overlay" onClick={cerrarModalAsociaciones}>
-          <div className="modal-asociaciones" onClick={(e) => e.stopPropagation()}>
+      {mostrarModalAsociaciones && videoSeleccionado && (
+        <div 
+          className="modal-overlay" 
+          onClick={cerrarModalAsociaciones}
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999
+          }}
+        >
+          <div 
+            className="modal-asociaciones" 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '20px',
+              width: '90%',
+              maxWidth: '800px',
+              maxHeight: '90vh',
+              overflow: 'auto'
+            }}
+          >
             <div className="modal-header">
-              <h3>Gestionar Asociaciones</h3>
-              <button className="btn-cerrar" onClick={cerrarModalAsociaciones}>×</button>
+              <h3>Gestionar Asociaciones para: {videoSeleccionado.titulo}</h3>
+              <button 
+                className="btn-cerrar" 
+                onClick={cerrarModalAsociaciones}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  float: 'right'
+                }}
+              >
+                ×
+              </button>
             </div>
 
             <div className="modal-content">
+              {/* DEBUG INFO */}
+              <div style={{ backgroundColor: '#f0f0f0', padding: '10px', margin: '10px 0', fontSize: '12px' }}>
+                <strong>DEBUG:</strong><br/>
+                Video ID: {videoSeleccionado?.id}<br/>
+                Hitos totales: {hitos.length}<br/>
+                Asociaciones actuales: {videoSeleccionado?.hitosAsociados?.length || 0}
+              </div>
+              
               <div className="video-info-modal">
                 <h4>{videoSeleccionado?.titulo || 'Sin título'}</h4>
                 <p className="fuente">{videoSeleccionado?.fuente}</p>
