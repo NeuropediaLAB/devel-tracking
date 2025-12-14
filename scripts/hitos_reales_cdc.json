@@ -1,0 +1,212 @@
+[
+  {
+    "edad": 2,
+    "area": "Social-Emocional",
+    "descripcion": "Sonrisa social",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 2,
+    "area": "Motor Grueso",
+    "descripcion": "Mantiene la cabeza erguida cuando está boca abajo",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 2,
+    "area": "Motor Fino",
+    "descripcion": "Abre y cierra las manos",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 2,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Se tranquiliza cuando le hablan o lo cargan",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 2,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Hace sonidos distintos al llanto",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 4,
+    "area": "Social-Emocional", 
+    "descripcion": "Sonríe espontáneamente, especialmente a las personas",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 4,
+    "area": "Motor Grueso",
+    "descripcion": "Mantiene la cabeza firme sin apoyo cuando lo cargan",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 4,
+    "area": "Motor Fino",
+    "descripcion": "Sostiene la cabeza erguida y se apoya en los antebrazos cuando está boca abajo",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 4,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Observa las caras de cerca",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 4,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Hace sonidos como 'ooh', 'aah'",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 6,
+    "area": "Social-Emocional",
+    "descripcion": "Conoce a personas familiares y comienza a saber si alguien es extraño",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 6,
+    "area": "Motor Grueso",
+    "descripcion": "Se voltea de boca abajo a boca arriba",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 6,
+    "area": "Motor Fino",
+    "descripcion": "Se lleva las manos a la boca",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 6,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Responde a sonidos haciendo sonidos",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 6,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Hace sonidos cuando está feliz o molesto",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 9,
+    "area": "Social-Emocional",
+    "descripcion": "Puede tener miedo de los extraños",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 9,
+    "area": "Motor Grueso",
+    "descripcion": "Se sienta sin apoyo",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 9,
+    "area": "Motor Fino",
+    "descripcion": "Se pasa objetos de una mano a la otra",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 9,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Entiende el 'no'",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 9,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Hace muchos sonidos diferentes como 'mamamama' y 'bababababa'",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 12,
+    "area": "Social-Emocional",
+    "descripcion": "Juega juegos como 'peek-a-boo' y 'pat-a-cake'",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 12,
+    "area": "Motor Grueso",
+    "descripcion": "Se pone de pie sosteniéndose",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 12,
+    "area": "Motor Fino",
+    "descripcion": "Usa el agarre de pinza (pulgar e índice) para levantar objetos",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 12,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Viene cuando le dicen",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 12,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice 'mama' y 'dada' y exclama como '¡oh-oh!'",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 15,
+    "area": "Social-Emocional",
+    "descripcion": "Copia a otros, especialmente a adultos y niños mayores",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 15,
+    "area": "Motor Grueso",
+    "descripcion": "Camina solo",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 15,
+    "area": "Motor Fino",
+    "descripcion": "Puede construir torres de 2 bloques",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 15,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Señala para mostrar a otros algo interesante",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 15,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice varias palabras sueltas",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 18,
+    "area": "Social-Emocional",
+    "descripcion": "Muestra afecto por personas familiares",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 18,
+    "area": "Motor Grueso",
+    "descripcion": "Camina solo",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 18,
+    "area": "Motor Fino",
+    "descripcion": "Come con cuchara",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 18,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Señala una parte del cuerpo cuando se le pregunta",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  },
+  {
+    "edad": 18,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice al menos 3 palabras",
+    "fuente_normativa": "CDC - Centros para el Control y Prevención de Enfermedades"
+  }
+]

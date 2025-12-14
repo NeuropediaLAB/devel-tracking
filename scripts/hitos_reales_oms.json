@@ -1,0 +1,182 @@
+[
+  {
+    "edad": 1,
+    "area": "Motor Grueso",
+    "descripcion": "Mueve brazos y piernas vigorosamente",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 1,
+    "area": "Social-Emocional",
+    "descripcion": "Mira las caras y establece contacto visual",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 2,
+    "area": "Motor Grueso", 
+    "descripcion": "Mantiene la cabeza erguida brevemente cuando está en posición prona",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 2,
+    "area": "Social-Emocional",
+    "descripcion": "Sonrisa social",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 3.2,
+    "area": "Motor Grueso",
+    "descripcion": "Mantiene la cabeza erguida cuando se sienta con apoyo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 3.2,
+    "area": "Motor Fino",
+    "descripcion": "Mantiene las manos abiertas al menos la mitad del tiempo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 4.7,
+    "area": "Motor Grueso",
+    "descripcion": "Se sostiene en los antebrazos cuando está boca abajo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 4.7,
+    "area": "Motor Fino",
+    "descripcion": "Agarra objetos",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 5.9,
+    "area": "Motor Grueso",
+    "descripcion": "Se sienta sin apoyo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 5.9,
+    "area": "Motor Fino", 
+    "descripcion": "Transfiere objetos de una mano a la otra",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 7.6,
+    "area": "Motor Grueso",
+    "descripcion": "Gatea con manos y rodillas",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 7.6,
+    "area": "Motor Fino",
+    "descripcion": "Usa agarre de pinza superior",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 8.5,
+    "area": "Motor Grueso",
+    "descripcion": "Se pone de pie con apoyo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 8.5,
+    "area": "Social-Emocional",
+    "descripcion": "Juega peek-a-boo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 9.2,
+    "area": "Motor Grueso",
+    "descripcion": "Camina con apoyo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 9.2,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice 'dada' y 'mama'",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 11.1,
+    "area": "Motor Grueso",
+    "descripcion": "Se pone de pie solo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 11.1,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Entiende instrucciones simples",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 12.1,
+    "area": "Motor Grueso",
+    "descripcion": "Camina solo",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 12.1,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice primera palabra significativa",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 16.1,
+    "area": "Motor Grueso",
+    "descripcion": "Camina hacia atrás",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 16.1,
+    "area": "Motor Fino",
+    "descripcion": "Hace garabatos espontáneamente",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 18.1,
+    "area": "Motor Grueso",
+    "descripcion": "Corre",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 18.1,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Tiene un vocabulario de 10 palabras",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 20.1,
+    "area": "Motor Grueso",
+    "descripcion": "Camina subiendo escalones",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 20.1,
+    "area": "Social-Emocional",
+    "descripcion": "Juego simbólico",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 23.4,
+    "area": "Motor Grueso",
+    "descripcion": "Patea una pelota",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 23.4,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Combina dos palabras",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 24,
+    "area": "Motor Grueso",
+    "descripcion": "Salta en el lugar",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  },
+  {
+    "edad": 24,
+    "area": "Motor Fino",
+    "descripcion": "Construye torre de 6 bloques",
+    "fuente_normativa": "OMS - Organización Mundial de la Salud"
+  }
+]
