@@ -1,0 +1,107 @@
+[
+  {
+    "edad": 36,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Identifica o nombra al menos 10 letras del alfabeto",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 literacy-numeracy domain"
+  },
+  {
+    "edad": 36,
+    "area": "Cognitivo",
+    "descripcion": "Identifica números del 1 al 10",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 literacy-numeracy domain"
+  },
+  {
+    "edad": 36,
+    "area": "Cognitivo",
+    "descripcion": "Lee al menos 4 palabras simples y populares",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 literacy-numeracy domain"
+  },
+  {
+    "edad": 36,
+    "area": "Motor Fino",
+    "descripcion": "Usa un lápiz, bolígrafo o marcador para escribir o dibujar",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 physical domain"
+  },
+  {
+    "edad": 36,
+    "area": "Motor Grueso", 
+    "descripcion": "Puede caminar 500 metros sin cansarse",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 physical domain"
+  },
+  {
+    "edad": 36,
+    "area": "Motor Grueso",
+    "descripcion": "Puede recoger un objeto pequeño con dos dedos",
+    "fuente_normativa": "ECDI2030 - UNICEF", 
+    "notas": "Basado en ECDI2030 physical domain - precisión más bien motor fino"
+  },
+  {
+    "edad": 36,
+    "area": "Social-Emocional",
+    "descripcion": "Se lleva bien con otros niños",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 social-emotional domain"
+  },
+  {
+    "edad": 36,
+    "area": "Social-Emocional",
+    "descripcion": "No patea, muerde o golpea a otros niños o adultos",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 social-emotional domain"
+  },
+  {
+    "edad": 36,
+    "area": "Social-Emocional",
+    "descripcion": "No se distrae fácilmente",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 social-emotional domain"
+  },
+  {
+    "edad": 48,
+    "area": "Cognitivo",
+    "descripcion": "Sigue instrucciones simples sobre cómo hacer algo",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 learning domain"
+  },
+  {
+    "edad": 48,
+    "area": "Cognitivo", 
+    "descripcion": "Cuando se le da algo que hacer, es capaz de hacerlo independientemente",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Basado en ECDI2030 learning domain"
+  },
+  {
+    "edad": 59,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Puede leer al menos 10 palabras simples y populares",
+    "fuente_normativa": "ECDI2030 - UNICEF", 
+    "notas": "Progresión del hito de 36 meses"
+  },
+  {
+    "edad": 59,
+    "area": "Cognitivo",
+    "descripcion": "Conoce el nombre y reconoce los símbolos de todos los números del 1-10",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Progresión del hito de 36 meses"
+  },
+  {
+    "edad": 59,
+    "area": "Motor Fino",
+    "descripcion": "Puede dibujar o copiar formas simples",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Progresión del hito de motor fino"
+  },
+  {
+    "edad": 59,
+    "area": "Social-Emocional",
+    "descripcion": "Trabaja bien de forma independiente",
+    "fuente_normativa": "ECDI2030 - UNICEF",
+    "notas": "Combinación de dominios social-emocional y aprendizaje"
+  }
+]

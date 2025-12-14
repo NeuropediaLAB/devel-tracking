@@ -19,7 +19,7 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
   - 15m: "Dice varias palabras sueltas"
 
 #### OMS - Organización Mundial de la Salud  
-- **30 hitos reales** basados en el WHO Motor Development Study
+- **110 hitos reales** basados en el WHO Motor Development Study
 - **Edades**: 1-24 meses
 - **Áreas cubiertas**: Motor Grueso, Motor Fino, Lenguaje Expresivo, Lenguaje Receptivo, Social-Emocional
 - **Ejemplos**:
@@ -27,6 +27,26 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
   - 7.6m: "Gatea con manos y rodillas" 
   - 12.1m: "Camina solo"
   - 18.1m: "Corre"
+
+#### ECDI2030 - UNICEF
+- **15 hitos reales** basados en Early Childhood Development Index 2030
+- **Edades**: 36-59 meses
+- **Áreas cubiertas**: Lenguaje Receptivo, Cognitivo, Motor Fino, Motor Grueso, Social-Emocional
+- **Ejemplos**:
+  - 36m: "Identifica números del 1 al 10"
+  - 36m: "Lee al menos 4 palabras simples" 
+  - 48m: "Sigue instrucciones simples independientemente"
+  - 59m: "Conoce símbolos de números 1-10"
+
+#### Denver II - DDM Inc
+- **26 hitos reales** basados en Denver Developmental Screening Test II
+- **Edades**: 1-48 meses 
+- **Áreas cubiertas**: Motor Grueso, Motor Fino, Lenguaje Expresivo, Lenguaje Receptivo, Social-Emocional
+- **Ejemplos**:
+  - 1m: "Levanta la cabeza cuando está boca abajo"
+  - 7m: "Se sienta sin apoyo"
+  - 14m: "Camina bien" 
+  - 24m: "Patea una pelota hacia adelante"
 
 ### ⚠️ EN CUARENTENA - PENDIENTE DATOS REALES
 
@@ -51,11 +71,13 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
 - Bayley: 80 hitos falsos ❌
 
 === DESPUÉS ===
-- Total: 225 hitos 
-- CDC: 35 hitos reales ✅
-- OMS: 30 hitos reales ✅
-- Battelle: 80 hitos en cuarentena ⚠️
-- Bayley: 80 hitos en cuarentena ⚠️
+- Total: 585 hitos 
+- CDC: 114 hitos reales ✅
+- OMS: 110 hitos reales ✅
+- ECDI2030: 15 hitos reales ✅
+- Denver II: 26 hitos reales ✅
+- Battelle: 160 hitos en cuarentena ⚠️
+- Bayley: 160 hitos en cuarentena ⚠️
 ```
 
 ## 🔧 Archivos Creados/Modificados
@@ -63,7 +85,11 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
 ### Scripts y Datos
 - `scripts/hitos_reales_cdc.json` - Hitos reales CDC
 - `scripts/hitos_reales_oms.json` - Hitos reales OMS  
-- `scripts/update_hitos_reales.js` - Script de actualización
+- `scripts/hitos_ecdi2030.json` - Hitos reales ECDI2030 UNICEF
+- `scripts/hitos_denver.json` - Hitos reales Denver II
+- `scripts/fuentes_publicas_hitos.md` - Investigación de fuentes públicas
+- `scripts/update_hitos_reales.js` - Script de actualización inicial
+- `scripts/add_new_sources.js` - Script para nuevas fuentes
 
 ### Base de Datos
 - **Tabla modificada**: `hitos_normativos`

@@ -1,0 +1,184 @@
+[
+  {
+    "edad": 1,
+    "area": "Motor Grueso",
+    "descripcion": "Levanta la cabeza cuando está boca abajo",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Hito temprano de control cefálico"
+  },
+  {
+    "edad": 2,
+    "area": "Social-Emocional", 
+    "descripcion": "Sonríe responsivamente",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Interacción social temprana"
+  },
+  {
+    "edad": 2,
+    "area": "Motor Fino",
+    "descripcion": "Sigue objetos pasando la línea media",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Desarrollo visual-motor"
+  },
+  {
+    "edad": 3,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Se voltea hacia sonidos",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Respuesta auditiva"
+  },
+  {
+    "edad": 4,
+    "area": "Motor Grueso",
+    "descripcion": "Mantiene la cabeza firme cuando se sienta",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Control cefálico en posición sentada"
+  },
+  {
+    "edad": 4,
+    "area": "Social-Emocional",
+    "descripcion": "Se ríe",
+    "fuente_normativa": "Denver II - DDM Inc", 
+    "notas": "Expresión emocional"
+  },
+  {
+    "edad": 6,
+    "area": "Motor Fino",
+    "descripcion": "Agarra objetos",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Desarrollo de prensión voluntaria"
+  },
+  {
+    "edad": 6,
+    "area": "Motor Grueso",
+    "descripcion": "Se voltea (prono a supino)",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Movilidad temprana"
+  },
+  {
+    "edad": 7,
+    "area": "Motor Grueso",
+    "descripcion": "Se sienta sin apoyo",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Control postural"
+  },
+  {
+    "edad": 8,
+    "area": "Motor Fino",
+    "descripcion": "Transfiere objetos de mano a mano",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Coordinación bimanual"
+  },
+  {
+    "edad": 9,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice 'mama' o 'dada' inespecíficamente",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Balbuceo avanzado"
+  },
+  {
+    "edad": 10,
+    "area": "Motor Fino",
+    "descripcion": "Usa agarre de pinza (pulgar-índice)",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Agarre preciso"
+  },
+  {
+    "edad": 11,
+    "area": "Motor Grueso",
+    "descripcion": "Se pone de pie sosteniéndose",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Preparación para caminar"
+  },
+  {
+    "edad": 12,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Dice 'mama' o 'dada' específicamente",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Primera palabra significativa"
+  },
+  {
+    "edad": 12,
+    "area": "Social-Emocional",
+    "descripcion": "Juega peek-a-boo",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Juego social interactivo"
+  },
+  {
+    "edad": 14,
+    "area": "Motor Grueso",
+    "descripcion": "Camina bien",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Locomoción independiente"
+  },
+  {
+    "edad": 15,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Tiene 3-6 palabras",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Expansión del vocabulario"
+  },
+  {
+    "edad": 18,
+    "area": "Motor Fino",
+    "descripcion": "Garabatea espontáneamente",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Habilidades pre-escritura"
+  },
+  {
+    "edad": 18,
+    "area": "Motor Grueso",
+    "descripcion": "Corre",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Locomoción avanzada"
+  },
+  {
+    "edad": 20,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Combina 2 palabras",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Inicio de gramática"
+  },
+  {
+    "edad": 24,
+    "area": "Motor Grueso",
+    "descripcion": "Patea una pelota hacia adelante",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Coordinación y equilibrio"
+  },
+  {
+    "edad": 24,
+    "area": "Lenguaje Receptivo",
+    "descripcion": "Señala 6 partes del cuerpo",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Comprensión del lenguaje"
+  },
+  {
+    "edad": 30,
+    "area": "Motor Grueso",
+    "descripcion": "Salta con ambos pies",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Habilidad motora compleja"
+  },
+  {
+    "edad": 36,
+    "area": "Motor Fino",
+    "descripcion": "Copia un círculo",
+    "fuente_normativa": "Denver II - DDM Inc", 
+    "notas": "Habilidades de copia visual-motora"
+  },
+  {
+    "edad": 42,
+    "area": "Lenguaje Expresivo",
+    "descripcion": "Usa oraciones de 4+ palabras",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Desarrollo sintáctico"
+  },
+  {
+    "edad": 48,
+    "area": "Motor Grueso",
+    "descripcion": "Salta en un pie",
+    "fuente_normativa": "Denver II - DDM Inc",
+    "notas": "Equilibrio y coordinación avanzada"
+  }
+]
