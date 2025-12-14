@@ -8,10 +8,11 @@ const BibliotecaMedios = () => {
   const [filtroEdad, setFiltroEdad] = useState('todos');
   const [busqueda, setBusqueda] = useState('');
   const [videoSeleccionado, setVideoSeleccionado] = useState(null);
-  const [hitoSeleccionado, setHitoSeleccionado] = useState('');
+
   const [hitosSeleccionados, setHitosSeleccionados] = useState([]);
   const [modoAsociacion, setModoAsociacion] = useState('simple'); // 'simple' o 'multiple'
   const [mostrarModalAsociaciones, setMostrarModalAsociaciones] = useState(false);
+  const [busquedaModal, setBusquedaModal] = useState('');
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
@@ -62,38 +63,7 @@ const BibliotecaMedios = () => {
     setTimeout(() => setMensaje(''), 3000);
   };
 
-  const asociarVideo = async () => {
-    if (!videoSeleccionado || !hitoSeleccionado) {
-      mostrarMensaje('Selecciona un video y un hito', 'error');
-      return;
-    }
 
-    try {
-      setCargando(true);
-      const token = localStorage.getItem('token');
-      await fetch('/api/videos/asociar', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          videoId: videoSeleccionado._id,
-          hitoId: hitoSeleccionado
-        })
-      });
-      
-      mostrarMensaje('Video asociado correctamente', 'success');
-      setVideoSeleccionado(null);
-      setHitoSeleccionado('');
-      cargarDatos();
-    } catch (error) {
-      console.error('Error al asociar video:', error);
-      mostrarMensaje('Error al asociar el video', 'error');
-    } finally {
-      setCargando(false);
-    }
-  };
 
   const desasociarVideo = async (videoId, hitoId) => {
     if (!confirm('¿Deseas desasociar este video del hito?')) return;
@@ -163,6 +133,7 @@ const BibliotecaMedios = () => {
     
     setVideoSeleccionado(video);
     setHitosSeleccionados([]);
+    setBusquedaModal('');
     setMostrarModalAsociaciones(true);
     
     console.log('Modal debería abrirse ahora');
@@ -170,9 +141,10 @@ const BibliotecaMedios = () => {
   };
 
   const cerrarModalAsociaciones = () => {
-    setVideoSeleccionado(null);
     setHitosSeleccionados([]);
+    setBusquedaModal('');
     setMostrarModalAsociaciones(false);
+    // No limpiar videoSeleccionado aquí para evitar conflictos
   };
 
   const toggleHitoSeleccionado = (hitoId) => {
@@ -301,41 +273,7 @@ const BibliotecaMedios = () => {
         </div>
       </div>
 
-      {/* Panel de asociación */}
-      {videoSeleccionado && (
-        <div className="panel-asociacion">
-          <h3>Asociar Video a Hito</h3>
-          <div className="video-preview">
-            <p><strong>Video seleccionado:</strong> {videoSeleccionado.titulo || videoSeleccionado.url}</p>
-            <p><strong>Fuente:</strong> {videoSeleccionado.fuente}</p>
-          </div>
-          
-          <div className="hito-selector">
-            <label>Seleccionar hito:</label>
-            <select 
-              value={hitoSeleccionado} 
-              onChange={(e) => setHitoSeleccionado(e.target.value)}
-              className="select-hito"
-            >
-              <option value="">-- Selecciona un hito --</option>
-              {hitos.map(hito => (
-                <option key={hito.id} value={hito.id}>
-                  {hito.edad} meses - {hito.area} - {hito.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          <div className="botones-asociacion">
-            <button onClick={asociarVideo} disabled={cargando} className="btn-asociar">
-              {cargando ? 'Guardando...' : 'Asociar'}
-            </button>
-            <button onClick={() => setVideoSeleccionado(null)} className="btn-cancelar">
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Lista de videos */}
       <div className="videos-lista">
@@ -522,7 +460,8 @@ const BibliotecaMedios = () => {
                     type="text"
                     placeholder="Buscar hitos..."
                     className="buscar-hitos"
-                    onChange={(e) => setBusqueda(e.target.value)}
+                    value={busquedaModal}
+                    onChange={(e) => setBusquedaModal(e.target.value)}
                   />
                 </div>
                 
@@ -530,8 +469,8 @@ const BibliotecaMedios = () => {
                   {hitos
                     .filter(hito => 
                       !videoSeleccionado?.hitosAsociados?.includes(hito.id.toString()) &&
-                      ((hito.nombre && hito.nombre.toLowerCase().includes(busqueda.toLowerCase())) ||
-                       (hito.fuente_normativa_nombre && hito.fuente_normativa_nombre.toLowerCase().includes(busqueda.toLowerCase())))
+                      ((hito.nombre && hito.nombre.toLowerCase().includes(busquedaModal.toLowerCase())) ||
+                       (hito.fuente_normativa_nombre && hito.fuente_normativa_nombre.toLowerCase().includes(busquedaModal.toLowerCase())))
                     )
                     .slice(0, 20) // Limitar a 20 resultados para mejor rendimiento
                     .map(hito => (
