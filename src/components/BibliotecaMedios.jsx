@@ -530,8 +530,8 @@ const BibliotecaMedios = () => {
                   {hitos
                     .filter(hito => 
                       !videoSeleccionado?.hitosAsociados?.includes(hito.id.toString()) &&
-                      (hito.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-                       hito.fuente_normativa_nombre.toLowerCase().includes(busqueda.toLowerCase()))
+                      ((hito.nombre && hito.nombre.toLowerCase().includes(busqueda.toLowerCase())) ||
+                       (hito.fuente_normativa_nombre && hito.fuente_normativa_nombre.toLowerCase().includes(busqueda.toLowerCase())))
                     )
                     .slice(0, 20) // Limitar a 20 resultados para mejor rendimiento
                     .map(hito => (
@@ -543,8 +543,8 @@ const BibliotecaMedios = () => {
                             onChange={() => toggleHitoSeleccionado(hito.id)}
                           />
                           <span className="hito-info">
-                            <strong>{hito.nombre}</strong>
-                            <small>{hito.fuente_normativa_nombre} - {hito.dominio_nombre} - {hito.edad_media_meses}m</small>
+                            <strong>{hito.nombre || 'Sin nombre'}</strong>
+                            <small>{hito.fuente_normativa_nombre || 'Sin fuente'} - {hito.dominio_nombre || 'Sin dominio'} - {hito.edad_media_meses || 0}m</small>
                           </span>
                         </label>
                       </div>
