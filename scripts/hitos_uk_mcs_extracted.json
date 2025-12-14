@@ -1,0 +1,495 @@
+{
+  "metadata": {
+    "nombre": "UK Millennium Cohort Study (MCS)",
+    "organizacion": "Centre for Longitudinal Studies, UCL Institute of Education",
+    "poblacion": 19244,
+    "paises": [
+      "Inglaterra",
+      "Escocia",
+      "Gales",
+      "Irlanda del Norte"
+    ],
+    "inicio": 2001,
+    "seguimientos": [
+      "9 meses",
+      "3 años",
+      "5 años",
+      "7 años",
+      "11 años",
+      "14 años",
+      "17 años"
+    ],
+    "instrumentos": [
+      "Bayley Scales",
+      "Bracken School Readiness",
+      "British Ability Scales",
+      "Strengths and Difficulties"
+    ],
+    "acceso_datos": "UK Data Service - Registro requerido pero gratuito",
+    "url": "https://cls.ucl.ac.uk/cls-studies/millennium-cohort-study/",
+    "referencias": [
+      "Connelly, R., & Platt, L. (2014). Cohort profile: UK Millennium Cohort Study. International Journal of Epidemiology",
+      "Hansen, K., et al. (2012). Millennium Cohort Study: First, Second, Third and Fourth Surveys",
+      "Ketende, S., & Jones, E. (2011). The Millennium Cohort Study: Technical report on response"
+    ]
+  },
+  "muestra_caracteristicas": {
+    "total_inicial": 19244,
+    "seguimiento_9m": 15590,
+    "seguimiento_3a": 15460,
+    "seguimiento_5a": 15246,
+    "retencion_5a": "79%",
+    "sobremuestreo": "Familias en pobreza, minorías étnicas, áreas rurales de Escocia",
+    "representatividad": "Nacionalmente representativo del Reino Unido"
+  },
+  "evaluaciones_desarrollo": {
+    "9_meses": {
+      "instrumentos": [
+        "Observaciones maternas",
+        "Desarrollo físico",
+        "Temperamento"
+      ],
+      "dominios": [
+        "Motor",
+        "Social",
+        "Comunicación temprana"
+      ],
+      "n_evaluados": 15590
+    },
+    "3_años": {
+      "instrumentos": [
+        "Bracken School Readiness",
+        "Naming Vocabulary",
+        "Reynell Developmental Language"
+      ],
+      "dominios": [
+        "Vocabulario",
+        "Conocimiento escolar",
+        "Comprensión auditiva"
+      ],
+      "n_evaluados": 15460
+    },
+    "5_años": {
+      "instrumentos": [
+        "British Ability Scales (BAS)",
+        "Strengths and Difficulties"
+      ],
+      "dominios": [
+        "Habilidades cognitivas",
+        "Vocabulario",
+        "Problemas conductuales"
+      ],
+      "n_evaluados": 15246
+    }
+  },
+  "normas_sociodemograficas": {
+    "Quintil_Ingresos_Altos": {
+      "descripcion": "Familias en quintil superior de ingresos",
+      "proporcion_muestra": 0.2,
+      "vocabulario_3a_media": 47.8,
+      "vocabulario_5a_media": 62.1,
+      "problemas_conducta_5a_media": 4.2
+    },
+    "Quintil_Ingresos_Bajos": {
+      "descripcion": "Familias en quintil inferior de ingresos",
+      "proporcion_muestra": 0.2,
+      "vocabulario_3a_media": 35.2,
+      "vocabulario_5a_media": 51.7,
+      "problemas_conducta_5a_media": 6.8
+    },
+    "Minorías_Étnicas": {
+      "descripcion": "Familias de minorías étnicas",
+      "proporcion_muestra": 0.19,
+      "vocabulario_3a_media": 38.4,
+      "vocabulario_5a_media": 54.3,
+      "seguimiento_5a": 0.74
+    },
+    "Madres_Educacion_Superior": {
+      "descripcion": "Madres con educación universitaria",
+      "proporcion_muestra": 0.24,
+      "vocabulario_3a_media": 46.9,
+      "vocabulario_5a_media": 61.8,
+      "problemas_conducta_5a_media": 4
+    }
+  },
+  "hitos": [
+    {
+      "id": 1,
+      "code": "mcs_9m_motor_grueso_1",
+      "descripcion": "Se sienta sin apoyo por al menos 30 segundos",
+      "area": "Motor Grueso",
+      "edad_esperada": 9,
+      "prevalencia": 0.78,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 2,
+      "code": "mcs_9m_motor_grueso_2",
+      "descripcion": "Se arrastra o gatea hacia adelante",
+      "area": "Motor Grueso",
+      "edad_esperada": 9,
+      "prevalencia": 0.45,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 3,
+      "code": "mcs_9m_motor_fino_3",
+      "descripcion": "Usa pulgar e índice para coger objetos pequeños",
+      "area": "Motor Fino",
+      "edad_esperada": 9,
+      "prevalencia": 0.65,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 4,
+      "code": "mcs_9m_motor_fino_4",
+      "descripcion": "Transfiere objetos de una mano a otra deliberadamente",
+      "area": "Motor Fino",
+      "edad_esperada": 9,
+      "prevalencia": 0.82,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 5,
+      "code": "mcs_9m_comunicaci_n_5",
+      "descripcion": "Balbucea usando consonantes (ba, da, ga)",
+      "area": "Comunicación",
+      "edad_esperada": 9,
+      "prevalencia": 0.89,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 6,
+      "code": "mcs_9m_social_emocional_6",
+      "descripcion": "Muestra ansiedad ante extraños",
+      "area": "Social-Emocional",
+      "edad_esperada": 9,
+      "prevalencia": 0.52,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 7,
+      "code": "mcs_36m_lenguaje_expresivo_7",
+      "descripcion": "Nombra objetos familiares en láminas (Naming Vocabulary)",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 36,
+      "prevalencia": null,
+      "percentil_50": 42.5,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 8,
+      "code": "mcs_36m_cognitivo_8",
+      "descripcion": "Identifica colores básicos (Bracken)",
+      "area": "Cognitivo",
+      "edad_esperada": 36,
+      "prevalencia": null,
+      "percentil_50": 8.2,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 9,
+      "code": "mcs_36m_cognitivo_9",
+      "descripcion": "Cuenta hasta 5 con comprensión (Bracken)",
+      "area": "Cognitivo",
+      "edad_esperada": 36,
+      "prevalencia": null,
+      "percentil_50": 4.1,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 10,
+      "code": "mcs_36m_lenguaje_receptivo_10",
+      "descripcion": "Comprende instrucciones de dos partes (Reynell)",
+      "area": "Lenguaje Receptivo",
+      "edad_esperada": 36,
+      "prevalencia": null,
+      "percentil_50": 38.7,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 11,
+      "code": "mcs_36m_social_emocional_11",
+      "descripcion": "Juega cooperativamente con otros niños",
+      "area": "Social-Emocional",
+      "edad_esperada": 36,
+      "prevalencia": 0.73,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 12,
+      "code": "mcs_36m_personal_social_12",
+      "descripcion": "Usa el baño independientemente",
+      "area": "Personal-Social",
+      "edad_esperada": 36,
+      "prevalencia": 0.81,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 13,
+      "code": "mcs_60m_cognitivo_13",
+      "descripcion": "Vocabulario receptivo (BAS Naming Vocabulary)",
+      "area": "Cognitivo",
+      "edad_esperada": 60,
+      "prevalencia": null,
+      "percentil_50": 58.3,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 14,
+      "code": "mcs_60m_cognitivo_14",
+      "descripcion": "Reconocimiento de patrones (BAS Pattern Construction)",
+      "area": "Cognitivo",
+      "edad_esperada": 60,
+      "prevalencia": null,
+      "percentil_50": 45.2,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 15,
+      "code": "mcs_60m_cognitivo_15",
+      "descripcion": "Similitudes verbales (BAS Verbal Similarities)",
+      "area": "Cognitivo",
+      "edad_esperada": 60,
+      "prevalencia": null,
+      "percentil_50": 12.7,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 16,
+      "code": "mcs_60m_lenguaje_expresivo_16",
+      "descripcion": "Cuenta una historia coherente",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 60,
+      "prevalencia": 0.67,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 17,
+      "code": "mcs_60m_social_emocional_17",
+      "descripcion": "Problemas de conducta (SDQ) - puntaje bajo",
+      "area": "Social-Emocional",
+      "edad_esperada": 60,
+      "prevalencia": null,
+      "percentil_50": null,
+      "percentil_25": 3,
+      "percentil_75": null,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    },
+    {
+      "id": 18,
+      "code": "mcs_60m_social_emocional_18",
+      "descripcion": "Comportamiento prosocial (SDQ) - puntaje alto",
+      "area": "Social-Emocional",
+      "edad_esperada": 60,
+      "prevalencia": null,
+      "percentil_50": null,
+      "percentil_25": null,
+      "percentil_75": 8.5,
+      "fuente_normativa": "UK Millennium Cohort Study",
+      "poblacion_total": 19244,
+      "paises_incluidos": [
+        "Inglaterra",
+        "Escocia",
+        "Gales",
+        "Irlanda del Norte"
+      ],
+      "representatividad": "Nacionalmente representativo del Reino Unido",
+      "notas": "UK MCS - Estudio longitudinal con 19244 niños del Reino Unido. Datos disponibles via UK Data Service."
+    }
+  ]
+}

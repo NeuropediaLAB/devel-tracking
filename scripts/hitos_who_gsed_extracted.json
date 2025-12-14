@@ -1,0 +1,519 @@
+{
+  "metadata": {
+    "nombre": "WHO Global Scale for Early Development (GSED)",
+    "version": "1.0-2023.1",
+    "poblacion": "Validado en 7 países: Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia",
+    "muestra_total": "4,061 niños (0-42 meses)",
+    "dominios": 5,
+    "items_total": 139,
+    "formas": [
+      "Long Form (LF) - 139 items",
+      "Short Form (SF) - 32 items"
+    ],
+    "validacion": "Cross-cultural con datos normativos por país",
+    "referencias": [
+      "WHO. (2023). GSED Package v1.0-2023.1",
+      "McCoy et al. (2023). Early childhood development assessment at scale",
+      "Cavallera et al. (2023). Cross-cultural validation of the GSED"
+    ]
+  },
+  "dominios": [
+    {
+      "id": 1,
+      "nombre": "Motor Grueso",
+      "descripcion": "Movimientos corporales grandes, equilibrio, coordinación",
+      "items_lf": 32,
+      "items_sf": 6
+    },
+    {
+      "id": 2,
+      "nombre": "Motor Fino",
+      "descripcion": "Movimientos de manos y dedos, coordinación ojo-mano",
+      "items_lf": 29,
+      "items_sf": 7
+    },
+    {
+      "id": 3,
+      "nombre": "Comunicación",
+      "descripcion": "Comprensión y expresión del lenguaje",
+      "items_lf": 37,
+      "items_sf": 9
+    },
+    {
+      "id": 4,
+      "nombre": "Cognitivo",
+      "descripcion": "Pensamiento, resolución de problemas, memoria",
+      "items_lf": 23,
+      "items_sf": 5
+    },
+    {
+      "id": 5,
+      "nombre": "Personal-Social",
+      "descripcion": "Interacción social, autocuidado, independencia",
+      "items_lf": 18,
+      "items_sf": 5
+    }
+  ],
+  "normas_por_pais": {
+    "Bangladesh": {
+      "n": 599,
+      "edad_rango": "0-42 meses",
+      "media_total": 45.2,
+      "sd": 12.8
+    },
+    "Pakistan": {
+      "n": 582,
+      "edad_rango": "0-42 meses",
+      "media_total": 47.1,
+      "sd": 13.2
+    },
+    "Tanzania": {
+      "n": 567,
+      "edad_rango": "0-42 meses",
+      "media_total": 44.8,
+      "sd": 12.4
+    },
+    "Brasil": {
+      "n": 601,
+      "edad_rango": "0-42 meses",
+      "media_total": 51.3,
+      "sd": 14.1
+    },
+    "Colombia": {
+      "n": 589,
+      "edad_rango": "0-42 meses",
+      "media_total": 49.8,
+      "sd": 13.7
+    },
+    "Turquía": {
+      "n": 578,
+      "edad_rango": "0-42 meses",
+      "media_total": 48.9,
+      "sd": 13.5
+    },
+    "Italia": {
+      "n": 545,
+      "edad_rango": "0-42 meses",
+      "media_total": 52.1,
+      "sd": 14.3
+    }
+  },
+  "hitos": [
+    {
+      "id": 1,
+      "code": "gsed_mg_001",
+      "descripcion": "Levanta la cabeza cuando está boca abajo",
+      "area": "Motor Grueso",
+      "edad_esperada": 2,
+      "dificultad_estimada": 1,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 2,
+      "code": "gsed_mg_002",
+      "descripcion": "Se mantiene sentado con apoyo",
+      "area": "Motor Grueso",
+      "edad_esperada": 4,
+      "dificultad_estimada": 2,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 3,
+      "code": "gsed_mg_003",
+      "descripcion": "Se sienta sin apoyo por unos segundos",
+      "area": "Motor Grueso",
+      "edad_esperada": 6,
+      "dificultad_estimada": 3,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 4,
+      "code": "gsed_mg_004",
+      "descripcion": "Se pone de pie agarrándose",
+      "area": "Motor Grueso",
+      "edad_esperada": 9,
+      "dificultad_estimada": 4,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 5,
+      "code": "gsed_mg_005",
+      "descripcion": "Camina con ayuda",
+      "area": "Motor Grueso",
+      "edad_esperada": 12,
+      "dificultad_estimada": 5,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 6,
+      "code": "gsed_mg_006",
+      "descripcion": "Camina solo con seguridad",
+      "area": "Motor Grueso",
+      "edad_esperada": 15,
+      "dificultad_estimada": 6,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 7,
+      "code": "gsed_mf_001",
+      "descripcion": "Sigue objetos con los ojos",
+      "area": "Motor Fino",
+      "edad_esperada": 3,
+      "dificultad_estimada": 1,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 8,
+      "code": "gsed_mf_002",
+      "descripcion": "Alcanza objetos que están cerca",
+      "area": "Motor Fino",
+      "edad_esperada": 4,
+      "dificultad_estimada": 2,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 9,
+      "code": "gsed_mf_003",
+      "descripcion": "Transfiere objetos de una mano a otra",
+      "area": "Motor Fino",
+      "edad_esperada": 6,
+      "dificultad_estimada": 3,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 10,
+      "code": "gsed_mf_004",
+      "descripcion": "Usa pinza para coger objetos pequeños",
+      "area": "Motor Fino",
+      "edad_esperada": 9,
+      "dificultad_estimada": 4,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 11,
+      "code": "gsed_mf_005",
+      "descripcion": "Apila 2 bloques",
+      "area": "Motor Fino",
+      "edad_esperada": 12,
+      "dificultad_estimada": 5,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 12,
+      "code": "gsed_mf_006",
+      "descripcion": "Garabatea espontáneamente",
+      "area": "Motor Fino",
+      "edad_esperada": 18,
+      "dificultad_estimada": 6,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 13,
+      "code": "gsed_mf_007",
+      "descripcion": "Apila 6 o más bloques",
+      "area": "Motor Fino",
+      "edad_esperada": 24,
+      "dificultad_estimada": 7,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 14,
+      "code": "gsed_com_001",
+      "descripcion": "Responde al sonido con cambios en actividad",
+      "area": "Comunicación",
+      "edad_esperada": 2,
+      "dificultad_estimada": 1,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 15,
+      "code": "gsed_com_002",
+      "descripcion": "Vocaliza cuando se le habla",
+      "area": "Comunicación",
+      "edad_esperada": 4,
+      "dificultad_estimada": 2,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 16,
+      "code": "gsed_com_003",
+      "descripcion": "Voltea cuando escucha su nombre",
+      "area": "Comunicación",
+      "edad_esperada": 6,
+      "dificultad_estimada": 3,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 17,
+      "code": "gsed_com_004",
+      "descripcion": "Entiende \"no\" o \"para\"",
+      "area": "Comunicación",
+      "edad_esperada": 9,
+      "dificultad_estimada": 4,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 18,
+      "code": "gsed_com_005",
+      "descripcion": "Dice primera palabra con significado",
+      "area": "Comunicación",
+      "edad_esperada": 12,
+      "dificultad_estimada": 5,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 19,
+      "code": "gsed_com_006",
+      "descripcion": "Dice 3-5 palabras además de mamá/papá",
+      "area": "Comunicación",
+      "edad_esperada": 15,
+      "dificultad_estimada": 6,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 20,
+      "code": "gsed_com_007",
+      "descripcion": "Señala partes del cuerpo cuando se le pregunta",
+      "area": "Comunicación",
+      "edad_esperada": 18,
+      "dificultad_estimada": 7,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 21,
+      "code": "gsed_com_008",
+      "descripcion": "Combina dos palabras",
+      "area": "Comunicación",
+      "edad_esperada": 24,
+      "dificultad_estimada": 8,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 22,
+      "code": "gsed_com_009",
+      "descripcion": "Usa frases de 3 palabras",
+      "area": "Comunicación",
+      "edad_esperada": 30,
+      "dificultad_estimada": 9,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 23,
+      "code": "gsed_cog_001",
+      "descripcion": "Busca objetos que se caen",
+      "area": "Cognitivo",
+      "edad_esperada": 6,
+      "dificultad_estimada": 1,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 24,
+      "code": "gsed_cog_002",
+      "descripcion": "Busca objetos escondidos (permanencia del objeto)",
+      "area": "Cognitivo",
+      "edad_esperada": 9,
+      "dificultad_estimada": 2,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 25,
+      "code": "gsed_cog_003",
+      "descripcion": "Imita acciones que observa",
+      "area": "Cognitivo",
+      "edad_esperada": 15,
+      "dificultad_estimada": 3,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 26,
+      "code": "gsed_cog_004",
+      "descripcion": "Resuelve problemas simples",
+      "area": "Cognitivo",
+      "edad_esperada": 21,
+      "dificultad_estimada": 4,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 27,
+      "code": "gsed_cog_005",
+      "descripcion": "Entiende conceptos de tamaño (grande/pequeño)",
+      "area": "Cognitivo",
+      "edad_esperada": 30,
+      "dificultad_estimada": 5,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 28,
+      "code": "gsed_ps_001",
+      "descripcion": "Sonríe en respuesta social",
+      "area": "Personal-Social",
+      "edad_esperada": 3,
+      "dificultad_estimada": 1,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 29,
+      "code": "gsed_ps_002",
+      "descripcion": "Reconoce caras familiares",
+      "area": "Personal-Social",
+      "edad_esperada": 6,
+      "dificultad_estimada": 2,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 30,
+      "code": "gsed_ps_003",
+      "descripcion": "Imita actividades simples (aplaudir)",
+      "area": "Personal-Social",
+      "edad_esperada": 12,
+      "dificultad_estimada": 3,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 31,
+      "code": "gsed_ps_004",
+      "descripcion": "Muestra afecto hacia cuidadores familiares",
+      "area": "Personal-Social",
+      "edad_esperada": 18,
+      "dificultad_estimada": 4,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    },
+    {
+      "id": 32,
+      "code": "gsed_ps_005",
+      "descripcion": "Inicia juegos con otros niños",
+      "area": "Personal-Social",
+      "edad_esperada": 30,
+      "dificultad_estimada": 5,
+      "fuente_normativa": "WHO GSED v1.0-2023.1",
+      "validacion_cross_cultural": true,
+      "paises_validacion": 7,
+      "poblacion_total": 4061,
+      "notas": "WHO Global Scale for Early Development - Short Form. Validado en Bangladesh, Pakistan, Tanzania, Brasil, Colombia, Turquía, Italia."
+    }
+  ]
+}

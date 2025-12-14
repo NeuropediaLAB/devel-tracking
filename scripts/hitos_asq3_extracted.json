@@ -1,0 +1,858 @@
+{
+  "metadata": {
+    "nombre": "Ages & Stages Questionnaires, Third Edition (ASQ-3)",
+    "version": "3.0",
+    "desarrollador": "Paul H. Brookes Publishing Co.",
+    "descripcion": "Sistema de cribado del desarrollo para niños de 1-66 meses",
+    "dominios": 5,
+    "intervalos_edad": 21,
+    "items_por_cuestionario": 30,
+    "paises_validacion": 60,
+    "referencias": [
+      "Squires, J., & Bricker, D. (2009). Ages & Stages Questionnaires, Third Edition (ASQ-3)",
+      "Singh, A., et al. (2017). ASQ-3 validation studies worldwide - Systematic review",
+      "Kapci, E. G., et al. (2010). ASQ-3 Turkish validation study"
+    ]
+  },
+  "dominios": [
+    {
+      "id": 1,
+      "nombre": "Comunicación",
+      "descripcion": "Comprensión y expresión del lenguaje, vocalización",
+      "items_por_edad": 6
+    },
+    {
+      "id": 2,
+      "nombre": "Motor Grueso",
+      "descripcion": "Movimientos corporales, coordinación, equilibrio",
+      "items_por_edad": 6
+    },
+    {
+      "id": 3,
+      "nombre": "Motor Fino",
+      "descripcion": "Movimientos de manos y dedos, coordinación ojo-mano",
+      "items_por_edad": 6
+    },
+    {
+      "id": 4,
+      "nombre": "Resolución de Problemas",
+      "descripcion": "Pensamiento, aprendizaje, resolución de problemas",
+      "items_por_edad": 6
+    },
+    {
+      "id": 5,
+      "nombre": "Personal-Social",
+      "descripcion": "Autocuidado, relación con otros, juego",
+      "items_por_edad": 6
+    }
+  ],
+  "estudios_validacion": {
+    "Turquía_2010": {
+      "referencia": "Kapci, E. G., et al. (2010). ASQ-3 Turkish validation",
+      "poblacion": 1832,
+      "edad_rango": "2-60 meses",
+      "intervalos_evaluados": 18,
+      "sensibilidad": 0.85,
+      "especificidad": 0.84,
+      "cutoff_points": "Adaptados culturalmente"
+    },
+    "Brasil_2012": {
+      "referencia": "Filgueiras, A., et al. (2012). ASQ-3 Brazilian validation",
+      "poblacion": 1676,
+      "edad_rango": "4-60 meses",
+      "intervalos_evaluados": 16,
+      "sensibilidad": 0.78,
+      "especificidad": 0.82,
+      "cutoff_points": "Establecidos localmente"
+    },
+    "Korea_2013": {
+      "referencia": "Heo, K. H., et al. (2013). ASQ-3 Korean validation",
+      "poblacion": 2254,
+      "edad_rango": "3-66 meses",
+      "intervalos_evaluados": 19,
+      "sensibilidad": 0.82,
+      "especificidad": 0.81,
+      "cutoff_points": "Normas coreanas"
+    },
+    "España_2015": {
+      "referencia": "Schonhaut, L., et al. (2015). ASQ-3 Spanish validation",
+      "poblacion": 1567,
+      "edad_rango": "8-48 meses",
+      "intervalos_evaluados": 12,
+      "sensibilidad": 0.73,
+      "especificidad": 0.81,
+      "cutoff_points": "Adaptación española"
+    },
+    "Noruega_2016": {
+      "referencia": "Richter, J., et al. (2016). ASQ-3 Norwegian validation",
+      "poblacion": 2987,
+      "edad_rango": "2-60 meses",
+      "intervalos_evaluados": 19,
+      "sensibilidad": 0.87,
+      "especificidad": 0.85,
+      "cutoff_points": "Normas noruegas"
+    }
+  },
+  "hitos": [
+    {
+      "id": 1,
+      "code": "asq3_4m_comunicaci_n",
+      "descripcion": "Se tranquiliza cuando escucha una voz familiar",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 4,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 2,
+      "code": "asq3_4m_motor_grueso",
+      "descripcion": "Cuando está boca abajo, levanta la cabeza",
+      "area": "Motor Grueso",
+      "edad_esperada": 4,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 3,
+      "code": "asq3_4m_motor_fino",
+      "descripcion": "Abre y cierra las manos",
+      "area": "Motor Fino",
+      "edad_esperada": 4,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 4,
+      "code": "asq3_4m_resoluci_n_de_problemas",
+      "descripcion": "Mira los objetos atentamente",
+      "area": "Cognitivo",
+      "edad_esperada": 4,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 5,
+      "code": "asq3_4m_personal_social",
+      "descripcion": "Sonríe cuando usted le sonríe",
+      "area": "Social-Emocional",
+      "edad_esperada": 4,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 6,
+      "code": "asq3_6m_comunicaci_n",
+      "descripcion": "Hace sonidos como \"da\", \"ga\", \"ka\" y \"ba\"",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 6,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 7,
+      "code": "asq3_6m_motor_grueso",
+      "descripcion": "Se sienta apoyándose en las manos",
+      "area": "Motor Grueso",
+      "edad_esperada": 6,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 8,
+      "code": "asq3_6m_motor_fino",
+      "descripcion": "Pasa un juguete de una mano a la otra",
+      "area": "Motor Fino",
+      "edad_esperada": 6,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 9,
+      "code": "asq3_6m_resoluci_n_de_problemas",
+      "descripcion": "Busca un juguete que se le cae",
+      "area": "Cognitivo",
+      "edad_esperada": 6,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 10,
+      "code": "asq3_6m_personal_social",
+      "descripcion": "Reconoce a las personas conocidas",
+      "area": "Social-Emocional",
+      "edad_esperada": 6,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 11,
+      "code": "asq3_9m_comunicaci_n",
+      "descripcion": "Voltea la cabeza cuando le dicen su nombre",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 9,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 12,
+      "code": "asq3_9m_motor_grueso",
+      "descripcion": "Se mantiene de pie agarrándose de algo",
+      "area": "Motor Grueso",
+      "edad_esperada": 9,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 13,
+      "code": "asq3_9m_motor_fino",
+      "descripcion": "Recoge objetos pequeños con el pulgar y el índice",
+      "area": "Motor Fino",
+      "edad_esperada": 9,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 14,
+      "code": "asq3_9m_resoluci_n_de_problemas",
+      "descripcion": "Busca objetos que esconde parcialmente",
+      "area": "Cognitivo",
+      "edad_esperada": 9,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 15,
+      "code": "asq3_9m_personal_social",
+      "descripcion": "Juega palmaditas u otros juegos con las manos",
+      "area": "Social-Emocional",
+      "edad_esperada": 9,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 16,
+      "code": "asq3_12m_comunicaci_n",
+      "descripcion": "Dice \"mamá\" o \"papá\" cuando se refiere a sus padres",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 12,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 17,
+      "code": "asq3_12m_motor_grueso",
+      "descripcion": "Camina agarrándose de los muebles",
+      "area": "Motor Grueso",
+      "edad_esperada": 12,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 18,
+      "code": "asq3_12m_motor_fino",
+      "descripcion": "Recoge objetos pequeños rápida y fácilmente",
+      "area": "Motor Fino",
+      "edad_esperada": 12,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 19,
+      "code": "asq3_12m_resoluci_n_de_problemas",
+      "descripcion": "Imita o trata de imitar lo que usted hace",
+      "area": "Cognitivo",
+      "edad_esperada": 12,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 20,
+      "code": "asq3_12m_personal_social",
+      "descripcion": "Bebe de una taza sin ayuda",
+      "area": "Social-Emocional",
+      "edad_esperada": 12,
+      "cutoff_contribution": 10,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 10 puntos al cutoff del dominio."
+    },
+    {
+      "id": 21,
+      "code": "asq3_18m_comunicaci_n",
+      "descripcion": "Dice ocho palabras o más además de \"mamá\" y \"papá\"",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 18,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 22,
+      "code": "asq3_18m_motor_grueso",
+      "descripcion": "Camina solo",
+      "area": "Motor Grueso",
+      "edad_esperada": 18,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 23,
+      "code": "asq3_18m_motor_fino",
+      "descripcion": "Hace garabatos",
+      "area": "Motor Fino",
+      "edad_esperada": 18,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 24,
+      "code": "asq3_18m_resoluci_n_de_problemas",
+      "descripcion": "Señala al menos una parte del cuerpo cuando se le pregunta",
+      "area": "Cognitivo",
+      "edad_esperada": 18,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 25,
+      "code": "asq3_18m_personal_social",
+      "descripcion": "Ayuda con tareas simples como guardar juguetes",
+      "area": "Social-Emocional",
+      "edad_esperada": 18,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 26,
+      "code": "asq3_24m_comunicaci_n",
+      "descripcion": "Junta dos palabras para hacer frases",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 24,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 27,
+      "code": "asq3_24m_motor_grueso",
+      "descripcion": "Patea una pelota",
+      "area": "Motor Grueso",
+      "edad_esperada": 24,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 28,
+      "code": "asq3_24m_motor_fino",
+      "descripcion": "Apila seis o más bloques",
+      "area": "Motor Fino",
+      "edad_esperada": 24,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 29,
+      "code": "asq3_24m_resoluci_n_de_problemas",
+      "descripcion": "Encuentra objetos escondidos debajo de dos o tres capas",
+      "area": "Cognitivo",
+      "edad_esperada": 24,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 30,
+      "code": "asq3_24m_personal_social",
+      "descripcion": "Come con cuchara",
+      "area": "Social-Emocional",
+      "edad_esperada": 24,
+      "cutoff_contribution": 15,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 15 puntos al cutoff del dominio."
+    },
+    {
+      "id": 31,
+      "code": "asq3_30m_comunicaci_n",
+      "descripcion": "Hace frases de tres a cuatro palabras",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 30,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 32,
+      "code": "asq3_30m_motor_grueso",
+      "descripcion": "Salta hacia adelante con los dos pies",
+      "area": "Motor Grueso",
+      "edad_esperada": 30,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 33,
+      "code": "asq3_30m_motor_fino",
+      "descripcion": "Pasa las páginas de un libro una por una",
+      "area": "Motor Fino",
+      "edad_esperada": 30,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 34,
+      "code": "asq3_30m_resoluci_n_de_problemas",
+      "descripcion": "Cuando mira en libros de cuentos, nombra objetos familiares",
+      "area": "Cognitivo",
+      "edad_esperada": 30,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 35,
+      "code": "asq3_30m_personal_social",
+      "descripcion": "Come con tenedor",
+      "area": "Social-Emocional",
+      "edad_esperada": 30,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 36,
+      "code": "asq3_36m_comunicaci_n",
+      "descripcion": "Habla lo suficientemente claro para que extraños entiendan",
+      "area": "Lenguaje Expresivo",
+      "edad_esperada": 36,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 37,
+      "code": "asq3_36m_motor_grueso",
+      "descripcion": "Salta hacia adelante al menos 6 pulgadas con ambos pies",
+      "area": "Motor Grueso",
+      "edad_esperada": 36,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 38,
+      "code": "asq3_36m_motor_fino",
+      "descripcion": "Dibuja una línea vertical después de verle hacerlo",
+      "area": "Motor Fino",
+      "edad_esperada": 36,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 39,
+      "code": "asq3_36m_resoluci_n_de_problemas",
+      "descripcion": "Pone objetos en orden por tamaño",
+      "area": "Cognitivo",
+      "edad_esperada": 36,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    },
+    {
+      "id": 40,
+      "code": "asq3_36m_personal_social",
+      "descripcion": "Se pone los zapatos",
+      "area": "Social-Emocional",
+      "edad_esperada": 36,
+      "cutoff_contribution": 20,
+      "fuente_normativa": "ASQ-3 Validation Studies",
+      "estudios_soporte": 5,
+      "poblacion_total": 10316,
+      "paises_validacion": [
+        "Turquía",
+        "Brasil",
+        "Corea",
+        "España",
+        "Noruega"
+      ],
+      "notas": "ASQ-3 item representativo validado en múltiples países. Contribuye 20 puntos al cutoff del dominio."
+    }
+  ]
+}
