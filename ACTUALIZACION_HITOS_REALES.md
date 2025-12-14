@@ -48,6 +48,17 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
   - 14m: "Camina bien" 
   - 24m: "Patea una pelota hacia adelante"
 
+#### GCDG - Global Child Development Group ⭐⭐⭐⭐⭐
+- **1,336 hitos reales** de múltiples estudios internacionales
+- **Países**: Chile, China, Colombia, Ecuador
+- **Edades**: 0-72 meses (cobertura completa)
+- **Instrumentos**: Bayley, ASQ, Denver, otros estandarizados
+- **Ejemplos**:
+  - Chile: "Inspecciona su propia mano", "Gira cabeza al sonido"
+  - Colombia: "Alcanza el cubo", "Coordina ojo-mano"
+  - China: "Retiene 2 cubos", "Juego exploratorio"
+  - Ecuador: "Discrimina extraños", "Vocaliza actitudes"
+
 ### ⚠️ EN CUARENTENA - PENDIENTE DATOS REALES
 
 #### Battelle Developmental Inventory
@@ -71,11 +82,16 @@ Esta actualización ha reemplazado los datos inventados/duplicados de hitos del 
 - Bayley: 80 hitos falsos ❌
 
 === DESPUÉS ===
-- Total: 585 hitos 
+- Total: 1,921 hitos 
 - CDC: 114 hitos reales ✅
 - OMS: 110 hitos reales ✅
 - ECDI2030: 15 hitos reales ✅
 - Denver II: 26 hitos reales ✅
+- GCDG Chile: 212 hitos reales ✅
+- GCDG China: 152 hitos reales ✅
+- GCDG Colombia <42m: 688 hitos reales ✅
+- GCDG Colombia <45m: 262 hitos reales ✅
+- GCDG Ecuador: 22 hitos reales ✅
 - Battelle: 160 hitos en cuarentena ⚠️
 - Bayley: 160 hitos en cuarentena ⚠️
 ```
