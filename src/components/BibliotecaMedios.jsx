@@ -12,6 +12,7 @@ const BibliotecaMedios = () => {
   const [hitosSeleccionados, setHitosSeleccionados] = useState([]);
   const [modoAsociacion, setModoAsociacion] = useState('simple'); // 'simple' o 'multiple'
   const [mostrarModalAsociaciones, setMostrarModalAsociaciones] = useState(false);
+  const [modalMaximizado, setModalMaximizado] = useState(false);
   const [busquedaModal, setBusquedaModal] = useState('');
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
@@ -134,6 +135,7 @@ const BibliotecaMedios = () => {
     setVideoSeleccionado(video);
     setHitosSeleccionados([]);
     setBusquedaModal('');
+    setModalMaximizado(false);
     setMostrarModalAsociaciones(true);
     
     console.log('Modal debería abrirse ahora');
@@ -144,7 +146,12 @@ const BibliotecaMedios = () => {
     setHitosSeleccionados([]);
     setBusquedaModal('');
     setMostrarModalAsociaciones(false);
+    setModalMaximizado(false);
     // No limpiar videoSeleccionado aquí para evitar conflictos
+  };
+
+  const toggleMaximizar = () => {
+    setModalMaximizado(!modalMaximizado);
   };
 
   const toggleHitoSeleccionado = (hitoId) => {
@@ -382,46 +389,79 @@ const BibliotecaMedios = () => {
             onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor: 'white',
-              borderRadius: '12px',
+              borderRadius: modalMaximizado ? '0' : '12px',
               padding: '20px',
-              width: '90%',
-              maxWidth: '800px',
-              maxHeight: '90vh',
-              overflow: 'auto'
+              width: modalMaximizado ? '100vw' : '95%',
+              maxWidth: modalMaximizado ? 'none' : '1200px',
+              height: modalMaximizado ? '100vh' : 'auto',
+              maxHeight: modalMaximizado ? 'none' : '95vh',
+              overflow: 'auto',
+              position: modalMaximizado ? 'fixed' : 'relative',
+              top: modalMaximizado ? '0' : 'auto',
+              left: modalMaximizado ? '0' : 'auto',
+              margin: modalMaximizado ? '0' : 'auto',
+              transition: 'all 0.3s ease'
             }}
           >
-            <div className="modal-header">
-              <h3>Gestionar Asociaciones para: {videoSeleccionado.titulo}</h3>
-              <button 
-                className="btn-cerrar" 
-                onClick={cerrarModalAsociaciones}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  float: 'right'
-                }}
-              >
-                ×
-              </button>
+            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: '0', flex: '1' }}>Gestionar Asociaciones para: {videoSeleccionado.titulo}</h3>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  className="btn-maximizar" 
+                  onClick={toggleMaximizar}
+                  title={modalMaximizado ? "Restaurar" : "Maximizar"}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    hover: { backgroundColor: '#f0f0f0' }
+                  }}
+                >
+                  {modalMaximizado ? '🗗' : '🗖'}
+                </button>
+                <button 
+                  className="btn-cerrar" 
+                  onClick={cerrarModalAsociaciones}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    padding: '5px 10px',
+                    borderRadius: '4px'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
-            <div className="modal-content">
-              {/* DEBUG INFO */}
-              <div style={{ backgroundColor: '#f0f0f0', padding: '10px', margin: '10px 0', fontSize: '12px' }}>
-                <strong>DEBUG:</strong><br/>
-                Video ID: {videoSeleccionado?.id}<br/>
-                Hitos totales: {hitos.length}<br/>
-                Asociaciones actuales: {videoSeleccionado?.hitosAsociados?.length || 0}
-              </div>
-              
-              <div className="video-info-modal">
-                <h4>{videoSeleccionado?.titulo || 'Sin título'}</h4>
-                <p className="fuente">{videoSeleccionado?.fuente}</p>
-              </div>
+            <div className="modal-content" style={{ 
+              display: modalMaximizado ? 'grid' : 'block',
+              gridTemplateColumns: modalMaximizado ? '1fr 1fr' : '1fr',
+              gap: modalMaximizado ? '30px' : '0',
+              height: modalMaximizado ? 'calc(100vh - 120px)' : 'auto',
+              overflow: 'auto'
+            }}>
+              {/* Primera columna: Info del video y asociaciones actuales */}
+              <div className="columna-izquierda" style={{ minHeight: modalMaximizado ? '100%' : 'auto' }}>
+                {/* DEBUG INFO */}
+                <div style={{ backgroundColor: '#f0f0f0', padding: '10px', margin: '10px 0', fontSize: '12px' }}>
+                  <strong>DEBUG:</strong><br/>
+                  Video ID: {videoSeleccionado?.id}<br/>
+                  Hitos totales: {hitos.length}<br/>
+                  Asociaciones actuales: {videoSeleccionado?.hitosAsociados?.length || 0}
+                </div>
+                
+                <div className="video-info-modal">
+                  <h4>{videoSeleccionado?.titulo || 'Sin título'}</h4>
+                  <p className="fuente">{videoSeleccionado?.fuente}</p>
+                </div>
 
-              <div className="asociaciones-actuales">
+                <div className="asociaciones-actuales">
                 <h5>Asociaciones actuales:</h5>
                 {videoSeleccionado?.hitosAsociados && videoSeleccionado.hitosAsociados.length > 0 ? (
                   <div className="lista-asociados">
@@ -451,9 +491,12 @@ const BibliotecaMedios = () => {
                 ) : (
                   <p className="sin-asociaciones">No tiene asociaciones actuales</p>
                 )}
+                </div>
               </div>
 
-              <div className="nuevas-asociaciones">
+              {/* Segunda columna: Nuevas asociaciones */}
+              <div className="columna-derecha" style={{ minHeight: modalMaximizado ? '100%' : 'auto' }}>
+                <div className="nuevas-asociaciones">
                 <h5>Agregar nuevas asociaciones:</h5>
                 <div className="filtros-hitos">
                   <input
@@ -490,10 +533,18 @@ const BibliotecaMedios = () => {
                       </div>
                     ))}
                 </div>
+                </div>
               </div>
             </div>
 
-            <div className="modal-footer">
+            <div className="modal-footer" style={{ 
+              marginTop: '20px', 
+              paddingTop: '20px', 
+              borderTop: '1px solid #eee',
+              display: 'flex',
+              gap: '10px',
+              justifyContent: 'flex-end'
+            }}>
               <button 
                 className="btn-cancelar" 
                 onClick={cerrarModalAsociaciones}
