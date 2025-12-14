@@ -13,9 +13,5 @@ COPY . .
 # Exponer puertos (3000 frontend, 8001 backend)
 EXPOSE 3000 8001
 
-# Script de inicio
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["both"]
+# Comando por defecto
+CMD ["npm", "run", "dev"]

@@ -3,7 +3,7 @@ services:
   backend:
     build: .
     container_name: neurodesarrollo-backend
-    command: server
+    command: sh -c "npm install && npm run server"
     ports:
       - "8001:8001"
     volumes:
@@ -21,9 +21,9 @@ services:
   frontend:
     build: .
     container_name: neurodesarrollo-frontend
-    command: dev
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
     ports:
-      - "3000:3000"
+      - "5173:3000"
     volumes:
       - ./src:/app/src
       - ./public:/app/public
