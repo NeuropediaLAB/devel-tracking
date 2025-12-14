@@ -632,3 +632,219 @@
   color: #666;
   font-style: italic;
 }
+
+/* Estilos para Poder Estadístico */
+.poder-estadistico-info {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.poder-estadistico-info h5 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.poder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.poder-categoria {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.poder-categoria.muy-alto {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.poder-categoria.alto {
+  background: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.poder-categoria.moderado {
+  background: #fce4d6;
+  border-color: #f0ad4e;
+}
+
+.poder-categoria.bajo {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.poder-nivel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.poder-rango {
+  font-size: 0.8rem;
+  color: #666;
+  font-family: monospace;
+}
+
+.poder-desc {
+  font-size: 0.8rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* Estilos para Box Plot */
+.boxplot-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.boxplot-fuente {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.boxplot-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.fuente-nombre {
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.muestra-info {
+  font-size: 0.9rem;
+  color: #666;
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.boxplot-visual {
+  --color: #666;
+}
+
+.box-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.stat-line.main-stat {
+  background: var(--color);
+  color: white;
+  font-weight: 600;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+.stat-value {
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.box-visual {
+  margin-top: 1rem;
+}
+
+.quartile-lines {
+  position: relative;
+  height: 100%;
+}
+
+.q1-line, .median-line, .q3-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid;
+  transform: translateX(-50%);
+}
+
+.median-line {
+  border-width: 3px !important;
+}
+
+/* Estilos para leyenda mejorada */
+.leyenda-item-completa {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.leyenda-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fuente-info {
+  font-size: 1.1rem;
+}
+
+.leyenda-detalles {
+  margin-left: 1.5rem;
+}
+
+.poblacion-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.muestra-poder {
+  font-size: 0.9rem;
+  color: #333;
+  font-family: system-ui;
+}
+
+/* Tooltip personalizado */
+.custom-tooltip {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 0.9rem;
+}
+
+.custom-tooltip p {
+  margin: 0.25rem 0;
+}
+
+.custom-tooltip strong {
+  color: #333;
+}

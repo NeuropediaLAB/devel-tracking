@@ -1,0 +1,426 @@
+{
+  "dscore": {
+    "source": "D-score.org",
+    "description": "D-score algorithm for child development assessment",
+    "datasets": [
+      {
+        "url": "https://github.com/d-score/childdevdata/",
+        "title": ""
+      },
+      {
+        "url": "https://d-score.org/childdevdata/#childdevdata",
+        "title": ""
+      },
+      {
+        "url": "https://github.com",
+        "title": "GitHub"
+      },
+      {
+        "url": "https://remotes.r-lib.org/reference/install_github.html",
+        "title": "install_github"
+      },
+      {
+        "url": "https://github.com/d-score/childdevdata",
+        "title": "childdevdata"
+      },
+      {
+        "url": "https://rdrr.io/r/base/data.frame.html",
+        "title": "data.frame"
+      },
+      {
+        "url": "https://d-score.org/childdevdata/#overview-of-available-dataset-and-documentation",
+        "title": ""
+      },
+      {
+        "url": "https://rdrr.io/r/utils/data.html",
+        "title": "data"
+      },
+      {
+        "url": "https://d-score.org/childdevdata/#combining-data",
+        "title": ""
+      },
+      {
+        "url": "https://github.com/d-score/dscore",
+        "title": "dscore"
+      },
+      {
+        "url": "https://d-score.github.io/dscore/reference/dscore.html",
+        "title": "dscore"
+      },
+      {
+        "url": "https://d-score.org/childdevdata/#how-to-use-the-data",
+        "title": ""
+      },
+      {
+        "url": "https://cloud.r-project.org/package=childdevdata",
+        "title": "View on CRAN"
+      },
+      {
+        "url": "https://github.com/d-score/childdevdata/",
+        "title": "Browse source code"
+      },
+      {
+        "url": "https://CRAN.R-project.org/package=childdevdata",
+        "title": ""
+      }
+    ],
+    "sample_size": "Variable by dataset",
+    "age_range": "0-48 months",
+    "domains": [
+      "Cognitive",
+      "Language",
+      "Motor",
+      "Social-emotional"
+    ]
+  },
+  "cdc": {
+    "source": "CDC Learn the Signs. Act Early.",
+    "description": "CDC developmental milestones",
+    "sample_size": "Population-based surveillance",
+    "age_range": "2 months - 5 years",
+    "domains": [
+      "Social/Emotional",
+      "Language/Communication",
+      "Cognitive",
+      "Movement/Physical"
+    ],
+    "resources": [
+      {
+        "url": "https://www.cdc.gov/child-development/index.html",
+        "title": "Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/data-research/index.html",
+        "title": "Data and Statistics"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/resources/index.html",
+        "title": "Resources for Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/index.html",
+        "title": "Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/data-research/index.html",
+        "title": "Data and Statistics"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/resources/index.html",
+        "title": "Resources for Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/index.html",
+        "title": "Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/data-research/index.html",
+        "title": "Data and Statistics"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/resources/index.html",
+        "title": "Resources for Child Development"
+      },
+      {
+        "url": "http://datacenter.kidscount.org/",
+        "title": "Kids Count U.S. Census Data"
+      },
+      {
+        "url": "https://www.cdc.gov/ncbddd/actearly/features/developmental-milestones-matter.html",
+        "title": "Developmental Milestones Matter!"
+      },
+      {
+        "url": "https://www.cdc.gov/#cdc_generic_section_1-child-development-data-and-statistics",
+        "title": "Child development data and statistics"
+      },
+      {
+        "url": "https://www.cdc.gov/#cdc_generic_section_2-data-tools",
+        "title": "Data tools"
+      },
+      {
+        "url": "https://www.cdc.gov/ncbddd/index.html",
+        "title": "National Center on Birth Defects and Developmental Disabilities"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/index.html",
+        "title": "Child Development"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/data-research/index.html",
+        "title": "Data and Statistics"
+      },
+      {
+        "url": "https://www.cdc.gov/child-development/resources/index.html",
+        "title": "Resources for Child Development"
+      }
+    ]
+  },
+  "pathways": {
+    "source": "Pathways.org",
+    "description": "Early intervention and developmental resources",
+    "focus": "Physical therapy perspective on child development",
+    "domains": [
+      "Motor",
+      "Cognitive",
+      "Language",
+      "Social"
+    ],
+    "resources": [
+      {
+        "url": "https://pathways.org/milestone-guide",
+        "title": "Baby’s 1st Year Milestone Guide"
+      },
+      {
+        "url": "https://pathways.org/play",
+        "title": "300+Baby Development Games"
+      },
+      {
+        "url": "https://pathways.org/videos",
+        "title": "Watch Videos About Baby's Development"
+      },
+      {
+        "url": "https://pathways.org/milestones",
+        "title": "All milestones are supported by Center for Disease Control (CDC) and American Academy of Pediatrics (AAP) materials."
+      },
+      {
+        "url": "https://pathways.org/explore",
+        "title": "Areas of Development"
+      },
+      {
+        "url": "https://pathways.org/mobile-app",
+        "title": "Baby Milestones App"
+      },
+      {
+        "url": "https://pathways.org/milestone-guide",
+        "title": "Baby’s 1st Year Milestone Guide"
+      }
+    ]
+  },
+  "who_gsed": {
+    "source": "WHO Global Scales for Early Development (GSED)",
+    "description": "WHO standardized assessment tool for early child development",
+    "sample_size": "Multi-country validation study (>5000 children)",
+    "age_range": "0-42 months",
+    "countries": [
+      "Bangladesh",
+      "Pakistan",
+      "Tanzania"
+    ],
+    "domains": [
+      "Cognitive",
+      "Language and Communication",
+      "Motor",
+      "Social-emotional"
+    ],
+    "url": "https://www.who.int/publications/i/item/WHO-MSD-GSED-package-v1.0-2023.1",
+    "validation": "Cross-cultural validation completed 2023"
+  },
+  "ecdi2030": {
+    "source": "Early Childhood Development Index 2030 (ECDI2030)",
+    "description": "Global indicator for SDG 4.2.1 on early childhood development",
+    "sample_size": "Population surveys (MICS, DHS)",
+    "age_range": "24-59 months",
+    "domains": [
+      "Literacy-numeracy",
+      "Physical",
+      "Social-emotional",
+      "Learning"
+    ],
+    "countries": "100+ countries with MICS/DHS data",
+    "validation": "UNICEF validated across multiple countries",
+    "url": "https://data.unicef.org/topic/early-childhood-development/development-status/"
+  },
+  "gcdg": {
+    "source": "Global Child Development Group (GCDG)",
+    "description": "Multi-cohort consortium for child development research",
+    "sample_size": ">100,000 children across cohorts",
+    "age_range": "0-18 years",
+    "cohorts": [
+      "ALSPAC (UK)",
+      "Generation R (Netherlands)",
+      "INMA (Spain)",
+      "ABCD Study (USA)",
+      "BAMSE (Sweden)",
+      "MoBa (Norway)"
+    ],
+    "domains": [
+      "Cognitive",
+      "Language",
+      "Motor",
+      "Social-behavioral",
+      "Academic"
+    ],
+    "publications": "Available through member cohorts",
+    "access": "Collaborative research basis"
+  },
+  "sample_milestones": [
+    {
+      "edad_meses": 2,
+      "hito": "Calma cuando se le habla o alza",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 2,
+      "hito": "Mira su cara",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 2,
+      "hito": "Hace sonidos además del llanto",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 2,
+      "hito": "Mantiene la cabeza erguida cuando está boca abajo",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 4,
+      "hito": "Sonríe espontáneamente",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 4,
+      "hito": "Balbucea",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 4,
+      "hito": "Mantiene la cabeza firme sin apoyo",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 4,
+      "hito": "Lleva las manos a la boca",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 6,
+      "hito": "Conoce caras familiares",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 6,
+      "hito": "Responde a sonidos haciendo sonidos",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 6,
+      "hito": "Se sienta sin apoyo",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 6,
+      "hito": "Se lleva objetos a la boca",
+      "dominio": "Cognitivo",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 9,
+      "hito": "Muestra ansiedad ante extraños",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 9,
+      "hito": "Dice \"mamá\" y \"papá\"",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 9,
+      "hito": "Se pone de pie sosteniéndose",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 9,
+      "hito": "Busca objetos caídos",
+      "dominio": "Cognitivo",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 12,
+      "hito": "Imita durante el juego",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 12,
+      "hito": "Dice primera palabra",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 12,
+      "hito": "Da pasos independientes",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 12,
+      "hito": "Explora de diferentes maneras",
+      "dominio": "Cognitivo",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 18,
+      "hito": "Juega juegos simples de simulación",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 18,
+      "hito": "Dice varias palabras sueltas",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 18,
+      "hito": "Camina solo",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 18,
+      "hito": "Sabe para qué sirven objetos comunes",
+      "dominio": "Cognitivo",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 24,
+      "hito": "Se emociona cuando está con otros niños",
+      "dominio": "Social/Emocional",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 24,
+      "hito": "Dice oraciones de 2-4 palabras",
+      "dominio": "Lenguaje/Comunicación",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 24,
+      "hito": "Patea una pelota",
+      "dominio": "Movimiento/Físico",
+      "fuente": "CDC"
+    },
+    {
+      "edad_meses": 24,
+      "hito": "Encuentra objetos aunque estén ocultos",
+      "dominio": "Cognitivo",
+      "fuente": "CDC"
+    }
+  ]
+}

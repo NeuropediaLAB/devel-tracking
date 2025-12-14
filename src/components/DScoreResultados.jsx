@@ -301,7 +301,7 @@ const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño'
                 <span className="font-medium">Bajo</span>
               </div>
               <div className="flex justify-between">
-                <span>DAZ < -2.0:</span>
+                <span>DAZ &lt; -2.0:</span>
                 <span className="font-medium">Muy bajo</span>
               </div>
             </div>

@@ -1591,6 +1591,210 @@ app.delete('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
   });
 });
 
+// ===== NUEVOS ENDPOINTS PARA DATOS REALES =====
+
+// Obtener fuentes de datos reales
+app.get('/api/fuentes-datos-reales', (req, res) => {
+  db.all(`
+    SELECT * FROM fuentes_datos_reales 
+    ORDER BY ano_publicacion DESC
+  `, [], (err, rows) => {
+    if (err) {
+      console.error('Error obteniendo fuentes de datos reales:', err.message);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+    res.json(rows);
+  });
+});
+
+// Obtener hitos reales de CDC
+app.get('/api/hitos-reales-cdc', (req, res) => {
+  const { dominio, edad_min, edad_max } = req.query;
+  
+  let query = 'SELECT * FROM hitos_reales_cdc WHERE 1=1';
+  let params = [];
+  
+  if (dominio) {
+    query += ' AND dominio = ?';
+    params.push(dominio);
+  }
+  
+  if (edad_min) {
+    query += ' AND edad_meses >= ?';
+    params.push(parseInt(edad_min));
+  }
+  
+  if (edad_max) {
+    query += ' AND edad_meses <= ?';
+    params.push(parseInt(edad_max));
+  }
+  
+  query += ' ORDER BY edad_meses, dominio';
+  
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      console.error('Error obteniendo hitos reales CDC:', err.message);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+    res.json(rows);
+  });
+});
+
+// Obtener información educativa
+app.get('/api/informacion-educativa', (req, res) => {
+  const { categoria } = req.query;
+  
+  let query = 'SELECT * FROM informacion_educativa';
+  let params = [];
+  
+  if (categoria) {
+    query += ' WHERE categoria = ?';
+    params.push(categoria);
+  }
+  
+  query += ' ORDER BY categoria, titulo';
+  
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      console.error('Error obteniendo información educativa:', err.message);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+    res.json(rows);
+  });
+});
+
+// Obtener estadísticas de datos reales
+app.get('/api/estadisticas-datos-reales', (req, res) => {
+  const stats = {};
+  
+  // Contar hitos por dominio
+  db.all(`
+    SELECT dominio, COUNT(*) as cantidad 
+    FROM hitos_reales_cdc 
+    GROUP BY dominio 
+    ORDER BY cantidad DESC
+  `, [], (err, hitosPorDominio) => {
+    if (err) {
+      console.error('Error obteniendo estadísticas:', err.message);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+    
+    stats.hitosPorDominio = hitosPorDominio;
+    
+    // Contar fuentes por año
+    db.all(`
+      SELECT ano_publicacion, COUNT(*) as cantidad 
+      FROM fuentes_datos_reales 
+      GROUP BY ano_publicacion 
+      ORDER BY ano_publicacion DESC
+    `, [], (err, fuentesPorAno) => {
+      if (err) {
+        console.error('Error obteniendo fuentes por año:', err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+      
+      stats.fuentesPorAno = fuentesPorAno;
+      
+      // Estadísticas generales
+      db.get(`SELECT COUNT(*) as total FROM hitos_reales_cdc`, [], (err, totalHitos) => {
+        if (err) {
+          console.error('Error obteniendo total hitos:', err.message);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+        
+        db.get(`SELECT COUNT(*) as total FROM fuentes_datos_reales`, [], (err, totalFuentes) => {
+          if (err) {
+            console.error('Error obteniendo total fuentes:', err.message);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+          }
+          
+          db.get(`SELECT COUNT(*) as total FROM informacion_educativa`, [], (err, totalEducativo) => {
+            if (err) {
+              console.error('Error obteniendo total educativo:', err.message);
+              return res.status(500).json({ error: 'Error interno del servidor' });
+            }
+            
+            stats.totales = {
+              hitos: totalHitos.total,
+              fuentes: totalFuentes.total,
+              educativo: totalEducativo.total
+            };
+            
+            res.json(stats);
+          });
+        });
+      });
+    });
+  });
+});
+
+// Endpoint para calcular D-score básico (implementación simple)
+app.post('/api/calcular-dscore', verificarToken, (req, res) => {
+  const { nino_id, hitos_conseguidos } = req.body;
+  
+  if (!nino_id || !Array.isArray(hitos_conseguidos)) {
+    return res.status(400).json({ error: 'Datos inválidos' });
+  }
+  
+  // Implementación básica del D-score
+  // En una implementación real, esto sería mucho más complejo
+  let dscore = 0;
+  let edad_total = 0;
+  let count = 0;
+  
+  hitos_conseguidos.forEach(hito => {
+    if (hito.edad_conseguido_meses && hito.edad_conseguido_meses > 0) {
+      edad_total += hito.edad_conseguido_meses;
+      count++;
+    }
+  });
+  
+  if (count > 0) {
+    const edad_media = edad_total / count;
+    
+    // Obtener edad cronológica del niño
+    db.get(`
+      SELECT 
+        fecha_nacimiento,
+        ROUND((julianday('now') - julianday(fecha_nacimiento)) / 30.44, 1) as edad_meses
+      FROM ninos 
+      WHERE id = ?
+    `, [nino_id], (err, nino) => {
+      if (err) {
+        console.error('Error obteniendo datos del niño:', err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+      
+      if (!nino) {
+        return res.status(404).json({ error: 'Niño no encontrado' });
+      }
+      
+      // Cálculo simplificado del D-score
+      dscore = edad_media / nino.edad_meses;
+      const daz = (dscore - 1) / 0.2; // Normalización simplificada
+      
+      let interpretacion = '';
+      if (daz > 2.0) interpretacion = 'Desarrollo muy alto';
+      else if (daz > 1.0) interpretacion = 'Desarrollo alto';
+      else if (daz > -1.0) interpretacion = 'Desarrollo típico';
+      else if (daz > -2.0) interpretacion = 'Desarrollo bajo';
+      else interpretacion = 'Desarrollo muy bajo (posible retraso)';
+      
+      res.json({
+        dscore: dscore.toFixed(3),
+        daz: daz.toFixed(2),
+        interpretacion,
+        edad_cronologica: nino.edad_meses,
+        edad_desarrollo: edad_media.toFixed(1),
+        hitos_evaluados: count,
+        fecha_calculo: new Date().toISOString()
+      });
+    });
+  } else {
+    res.status(400).json({ error: 'No hay hitos válidos para calcular D-score' });
+  }
+});
+
 const { fork } = require('child_process');
 
 app.listen(PORT, '0.0.0.0', () => {

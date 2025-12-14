@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, ReferenceLine } from 'recharts';
+import { LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, ReferenceLine, BarChart, Bar, Cell, ComposedChart, ErrorBar, Line } from 'recharts';
 import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 import './FuentesNormativas.css';
@@ -55,18 +55,50 @@ function FuentesNormativas() {
   };
 
   const obtenerIconoFuente = (nombre) => {
+    // Iconos para fuentes principales con datos reales
     if (nombre.includes('CDC')) return '🏛️';
-    if (nombre.includes('OMS') || nombre.includes('WHO')) return '🌍';
-    if (nombre.includes('Bayley')) return '🧠';
-    if (nombre.includes('Battelle')) return '📊';
+    if (nombre.includes('OMS') || nombre.includes('WHO') || nombre.includes('GSED')) return '🌍';
+    
+    // Iconos para fuentes internacionales con datos reales
+    if (nombre.includes('ASQ')) return '📝';
+    if (nombre.includes('UK Millennium') || nombre.includes('MCS')) return '🇬🇧';
+    if (nombre.includes('GCDG')) return '🧬';
+    if (nombre.includes('Denver')) return '⚕️';
+    if (nombre.includes('ECDI')) return '🎯';
+    if (nombre.includes('China')) return '🇨🇳';
+    if (nombre.includes('Chile')) return '🇨🇱';
+    if (nombre.includes('Colombia')) return '🇨🇴';
+    if (nombre.includes('Ecuador')) return '🇪🇨';
+    
+    // Fuentes en cuarentena (sin datos reales aún)
+    if (nombre.includes('Bayley')) return '🔒'; // Cuarentena
+    if (nombre.includes('Battelle')) return '🔒'; // Cuarentena
+    
+    // Icono por defecto
     return '📋';
   };
 
   const obtenerColorFuente = (nombre) => {
+    // Colores para fuentes principales con datos reales
     if (nombre.includes('CDC')) return '#0066cc';
-    if (nombre.includes('OMS') || nombre.includes('WHO')) return '#009639';
-    if (nombre.includes('Bayley')) return '#8e44ad';
-    if (nombre.includes('Battelle')) return '#e67e22';
+    if (nombre.includes('OMS') || nombre.includes('WHO') || nombre.includes('GSED')) return '#009639';
+    
+    // Colores para fuentes internacionales con datos reales
+    if (nombre.includes('ASQ')) return '#ff6b6b';
+    if (nombre.includes('UK Millennium') || nombre.includes('MCS')) return '#4ecdc4';
+    if (nombre.includes('GCDG')) return '#45b7d1';
+    if (nombre.includes('Denver')) return '#96ceb4';
+    if (nombre.includes('ECDI')) return '#ffeaa7';
+    if (nombre.includes('China')) return '#fd79a8';
+    if (nombre.includes('Chile')) return '#fdcb6e';
+    if (nombre.includes('Colombia')) return '#6c5ce7';
+    if (nombre.includes('Ecuador')) return '#a29bfe';
+    
+    // Fuentes en cuarentena (sin datos reales aún)
+    if (nombre.includes('Bayley')) return '#999999'; // Gris para indicar cuarentena
+    if (nombre.includes('Battelle')) return '#999999'; // Gris para indicar cuarentena
+    
+    // Color por defecto para otras fuentes
     return '#666666';
   };
 
@@ -80,71 +112,159 @@ function FuentesNormativas() {
 
   const cargarDatosGraficos = async () => {
     try {
-      // Obtener todos los hitos del sistema
-      const response = await fetchConAuth(`${API_URL}/hitos`);
-      if (response.ok) {
-        const hitos = await response.json();
-        
-        // Procesar datos para gráficos
-        const datosPorFuente = {};
-        const datosScatter = [];
-        
-        hitos.forEach(hito => {
-          // Usar la fuente normativa del hito
-          const fuenteNombre = hito.fuente_normativa || 'Fuente no especificada';
+      // Obtener todos los hitos de todas las fuentes CON DATOS REALES SOLAMENTE
+      const todosHitos = [];
+      const estadisticasFuentes = [];
+      
+      // Cargar hitos solo de fuentes con datos reales (CDC y OMS)
+      const fuentesConDatos = fuentesNormativas.filter(f => f.id === 1 || f.id === 2);
+      
+      for (const fuente of fuentesConDatos) {
+        const response = await fetchConAuth(`${API_URL}/hitos-normativos?fuente=${fuente.id}`);
+        if (response.ok) {
+          const hitos = await response.json();
+          // Agregar información completa de la fuente a cada hito
+          hitos.forEach(hito => {
+            hito.fuente_normativa_nombre = fuente.nombre;
+            hito.fuente_tamaño_muestra = fuente.tamaño_muestra;
+            hito.fuente_poblacion = fuente.poblacion;
+            hito.fuente_año = fuente.año;
+          });
+          todosHitos.push(...hitos);
           
-          if (!datosPorFuente[fuenteNombre]) {
-            datosPorFuente[fuenteNombre] = {
-              nombre: fuenteNombre,
-              edades: [],
-              color: obtenerColorFuente(fuenteNombre)
-            };
-          }
-          
-          // Añadir la edad media del hito
-          if (hito.edad_media_meses) {
-            datosPorFuente[fuenteNombre].edades.push(hito.edad_media_meses);
-            
-            // Crear punto para scatter plot
-            datosScatter.push({
-              x: hito.edad_media_meses,
-              y: hito.desviacion_estandar || 2, // Valor por defecto si no hay DE
-              fuente: fuenteNombre,
-              nombre: hito.nombre || 'Hito sin nombre',
-              dominio: hito.dominio || 'Sin dominio'
-            });
-          }
-        });
-        
-        // Calcular estadísticas para cada fuente
-        Object.values(datosPorFuente).forEach(fuente => {
-          if (fuente.edades.length > 0) {
-            const edades = fuente.edades.sort((a, b) => a - b);
-            const q1Index = Math.floor(edades.length * 0.25);
-            const q3Index = Math.floor(edades.length * 0.75);
-            
-            fuente.min = Math.min(...edades);
-            fuente.max = Math.max(...edades);
-            fuente.q1 = edades[q1Index];
-            fuente.q3 = edades[q3Index];
-            fuente.median = edades[Math.floor(edades.length * 0.5)];
-            fuente.mean = edades.reduce((a, b) => a + b, 0) / edades.length;
-          }
-        });
-        
-        // Filtrar fuentes que tengan datos
-        const fuentesConDatos = Object.values(datosPorFuente).filter(fuente => fuente.edades.length > 0);
-        
-        setDatosGraficos({
-          boxPlotData: fuentesConDatos,
-          scatterData: datosScatter
-        });
-      } else {
-        console.error('Error al cargar hitos:', response.statusText);
+          // Agregar estadísticas de la fuente
+          estadisticasFuentes.push({
+            nombre: fuente.nombre,
+            tamaño_muestra: fuente.tamaño_muestra,
+            año: fuente.año,
+            poblacion: fuente.poblacion,
+            color: obtenerColorFuente(fuente.nombre),
+            icono: obtenerIconoFuente(fuente.nombre)
+          });
+        }
       }
+      
+      if (todosHitos.length === 0) {
+        console.warn('No se pudieron cargar hitos para los gráficos');
+        return;
+      }
+      
+      // Procesar datos para gráficos
+      const datosPorFuente = {};
+      const datosScatter = [];
+      const datosPoderEstadistico = [];
+      const datosBoxplotHitos = []; // Nuevos datos para boxplot de hitos individuales
+      
+      todosHitos.forEach(hito => {
+        const fuenteNombre = hito.fuente_normativa_nombre || 'Fuente no especificada';
+        
+        if (!datosPorFuente[fuenteNombre]) {
+          datosPorFuente[fuenteNombre] = {
+            nombre: fuenteNombre,
+            edades: [],
+            color: obtenerColorFuente(fuenteNombre),
+            tamaño_muestra: hito.fuente_tamaño_muestra,
+            año: hito.fuente_año,
+            poblacion: hito.fuente_poblacion
+          };
+        }
+        
+        // Añadir la edad media del hito
+        if (hito.edad_media_meses) {
+          datosPorFuente[fuenteNombre].edades.push(hito.edad_media_meses);
+          
+          // Crear punto para scatter plot con información de poder estadístico
+          datosScatter.push({
+            x: hito.edad_media_meses,
+            y: hito.desviacion_estandar || 2,
+            fuente: fuenteNombre,
+            nombre: hito.nombre || 'Hito sin nombre',
+            dominio: hito.dominio_nombre || 'Sin dominio',
+            tamaño_muestra: hito.fuente_tamaño_muestra,
+            poder_estadistico: calcularPoderEstadistico(hito.fuente_tamaño_muestra)
+          });
+          
+          // Crear entrada para boxplot de hitos individuales
+          const edad = hito.edad_media_meses;
+          const de = hito.desviacion_estandar || 2;
+          const hitoId = `${fuenteNombre.split(' - ')[0]}_${hito.nombre?.replace(/\s+/g, '_') || 'Hito'}`;
+          
+          datosBoxplotHitos.push({
+            categoria: hitoId,
+            fuente: fuenteNombre.split(' - ')[0],
+            hito: hito.nombre || 'Sin nombre',
+            dominio: hito.dominio_nombre || 'Sin dominio',
+            min: Math.max(0, edad - 2*de),
+            q1: edad - de,
+            median: edad,
+            q3: edad + de,
+            max: edad + 2*de,
+            mean: edad,
+            sd: de,
+            color: obtenerColorFuente(fuenteNombre),
+            tamaño_muestra: hito.fuente_tamaño_muestra
+          });
+        }
+      });
+      
+      // Calcular estadísticas para cada fuente
+      Object.values(datosPorFuente).forEach(fuente => {
+        if (fuente.edades.length > 0) {
+          const edades = fuente.edades.sort((a, b) => a - b);
+          const n = edades.length;
+          const q1Index = Math.floor(n * 0.25);
+          const q3Index = Math.floor(n * 0.75);
+          
+          fuente.min = Math.min(...edades);
+          fuente.max = Math.max(...edades);
+          fuente.q1 = edades[q1Index];
+          fuente.q3 = edades[q3Index];
+          fuente.median = edades[Math.floor(n * 0.5)];
+          fuente.mean = edades.reduce((a, b) => a + b, 0) / n;
+          fuente.sd = Math.sqrt(edades.reduce((acc, val) => acc + Math.pow(val - fuente.mean, 2), 0) / n);
+          fuente.iqr = fuente.q3 - fuente.q1;
+          
+          // Datos para gráfico de poder estadístico
+          datosPoderEstadistico.push({
+            nombre: fuente.nombre.split(' - ')[0],
+            n: fuente.tamaño_muestra,
+            hitos: n,
+            poder: calcularPoderEstadistico(fuente.tamaño_muestra),
+            color: fuente.color
+          });
+        }
+      });
+      
+      // Filtrar fuentes que tengan datos
+      const fuentesConDatosReales = Object.values(datosPorFuente).filter(fuente => fuente.edades.length > 0);
+      
+      console.log('Datos para gráficos cargados:', {
+        fuentesConDatos: fuentesConDatosReales.length,
+        totalHitos: todosHitos.length,
+        scatterPoints: datosScatter.length,
+        estadisticas: estadisticasFuentes
+      });
+      
+      setDatosGraficos({
+        boxPlotData: fuentesConDatosReales,
+        scatterData: datosScatter,
+        poderEstadistico: datosPoderEstadistico,
+        estadisticasFuentes: estadisticasFuentes,
+        boxplotHitos: datosBoxplotHitos.slice(0, 20) // Limitar a 20 hitos para mejor visualización
+      });
     } catch (error) {
       console.error('Error cargando datos de gráficos:', error);
     }
+  };
+
+  // Función para calcular el poder estadístico basado en el tamaño de muestra
+  const calcularPoderEstadistico = (n) => {
+    if (!n) return 'Bajo';
+    if (n < 100) return 'Muy Bajo';
+    if (n < 500) return 'Bajo';
+    if (n < 1000) return 'Moderado';
+    if (n < 5000) return 'Alto';
+    return 'Muy Alto';
   };
 
   const renderFuenteCard = (fuente) => {
@@ -473,12 +593,163 @@ function FuentesNormativas() {
               <div className="cargando">Cargando datos de visualización...</div>
             ) : (
               <>
-                {/* Diagrama de Cajas */}
+                {/* Poder Estadístico */}
                 <div className="grafico-seccion">
-                  <h4>📦 Distribución de Edades por Fuente Normativa</h4>
+                  <h4>🔬 Comparación del Poder Estadístico</h4>
                   <p className="grafico-descripcion">
-                    Diagrama de cajas mostrando la distribución de edades de los hitos en cada escala.
-                    Permite identificar el rango de cobertura y la concentración de hitos por edad.
+                    Comparación del tamaño de muestra (n) utilizado para normar cada escala.
+                    Un mayor tamaño de muestra proporciona mayor precisión estadística y representatividad poblacional.
+                  </p>
+                  
+                  <div className="grafico-wrapper" style={{ width: '100%', height: '350px', background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #ddd' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={datosGraficos.poderEstadistico} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                          dataKey="nombre" 
+                          tick={{ fontSize: 12 }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                        />
+                        <YAxis 
+                          scale="log"
+                          domain={['dataMin', 'dataMax']}
+                          label={{ value: 'Tamaño de Muestra (n)', angle: -90, position: 'insideLeft' }}
+                        />
+                        <Tooltip 
+                          formatter={(value, name, props) => [
+                            `n = ${value.toLocaleString()}`,
+                            'Tamaño de Muestra'
+                          ]}
+                          labelFormatter={(label) => `Fuente: ${label}`}
+                          content={({ active, payload, label }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload;
+                              return (
+                                <div className="custom-tooltip">
+                                  <p><strong>{label}</strong></p>
+                                  <p>Tamaño muestra: n = {data.n.toLocaleString()}</p>
+                                  <p>Hitos disponibles: {data.hitos}</p>
+                                  <p>Poder estadístico: <strong>{data.poder}</strong></p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                        <Bar dataKey="n" name="Tamaño de Muestra">
+                          {datosGraficos.poderEstadistico.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="poder-estadistico-info">
+                    <h5>📋 Interpretación del Poder Estadístico:</h5>
+                    <div className="poder-grid">
+                      <div className="poder-categoria muy-alto">
+                        <span className="poder-nivel">Muy Alto</span>
+                        <span className="poder-rango">n ≥ 5,000</span>
+                        <span className="poder-desc">Máxima precisión estadística</span>
+                      </div>
+                      <div className="poder-categoria alto">
+                        <span className="poder-nivel">Alto</span>
+                        <span className="poder-rango">1,000 ≤ n &lt; 5,000</span>
+                        <span className="poder-desc">Buena representatividad</span>
+                      </div>
+                      <div className="poder-categoria moderado">
+                        <span className="poder-nivel">Moderado</span>
+                        <span className="poder-rango">500 ≤ n &lt; 1,000</span>
+                        <span className="poder-desc">Representatividad aceptable</span>
+                      </div>
+                      <div className="poder-categoria bajo">
+                        <span className="poder-nivel">Bajo</span>
+                        <span className="poder-rango">n &lt; 500</span>
+                        <span className="poder-desc">Limitaciones estadísticas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Diagrama de Cajas Real */}
+                <div className="grafico-seccion">
+                  <h4>📦 Distribución de Edades por Fuente (Box Plot)</h4>
+                  <p className="grafico-descripcion">
+                    Diagrama de cajas mostrando la distribución de edades de los hitos por fuente normativa.
+                    Visualiza mediana, cuartiles, rango y valores atípicos en la distribución de edades.
+                  </p>
+                  
+                  <div className="boxplot-container">
+                    {datosGraficos.boxPlotData.map((fuente, index) => (
+                      <div key={fuente.nombre} className="boxplot-fuente" style={{ borderColor: fuente.color }}>
+                        <div className="boxplot-header">
+                          <span className="fuente-icono">{obtenerIconoFuente(fuente.nombre)}</span>
+                          <span className="fuente-nombre">{fuente.nombre.split(' - ')[0]}</span>
+                          <span className="muestra-info">n = {fuente.tamaño_muestra?.toLocaleString()}</span>
+                        </div>
+                        
+                        <div className="boxplot-visual" style={{ '--color': fuente.color }}>
+                          <div className="box-stats">
+                            <div className="stat-line">
+                              <span className="stat-label">Mín:</span>
+                              <span className="stat-value">{fuente.min.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line">
+                              <span className="stat-label">Q1:</span>
+                              <span className="stat-value">{fuente.q1.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line main-stat">
+                              <span className="stat-label">Mediana:</span>
+                              <span className="stat-value">{fuente.median.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line">
+                              <span className="stat-label">Q3:</span>
+                              <span className="stat-value">{fuente.q3.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line">
+                              <span className="stat-label">Máx:</span>
+                              <span className="stat-value">{fuente.max.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line">
+                              <span className="stat-label">IQR:</span>
+                              <span className="stat-value">{fuente.iqr.toFixed(1)}m</span>
+                            </div>
+                            <div className="stat-line">
+                              <span className="stat-label">Hitos:</span>
+                              <span className="stat-value">{fuente.edades.length}</span>
+                            </div>
+                          </div>
+
+                          <div className="box-visual">
+                            <div className="box-range" style={{ 
+                              background: `linear-gradient(90deg, transparent 0%, ${fuente.color}20 20%, ${fuente.color}40 50%, ${fuente.color}20 80%, transparent 100%)`,
+                              height: '20px',
+                              position: 'relative',
+                              borderRadius: '4px',
+                              border: `1px solid ${fuente.color}`
+                            }}>
+                              <div className="quartile-lines">
+                                <div className="q1-line" style={{ left: '25%', borderColor: fuente.color }}></div>
+                                <div className="median-line" style={{ left: '50%', borderColor: fuente.color, borderWidth: '2px' }}></div>
+                                <div className="q3-line" style={{ left: '75%', borderColor: fuente.color }}></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Scatter Plot de Precisión */}
+                <div className="grafico-seccion">
+                  <h4>🎯 Precisión vs Edad de los Hitos</h4>
+                  <p className="grafico-descripcion">
+                    Análisis de la desviación estándar (precisión) de cada hito en función de la edad.
+                    Puntos más cercanos al eje X indican mayor precisión normativa.
                   </p>
                   
                   <div className="grafico-wrapper" style={{ width: '100%', height: '400px', background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #ddd' }}>
@@ -489,30 +760,27 @@ function FuentesNormativas() {
                           dataKey="x" 
                           type="number"
                           domain={[0, 72]}
-                          label={{ value: 'Edad Media (meses)', position: 'insideBottom', offset: -10 }}
+                          label={{ value: 'Edad del Hito (meses)', position: 'insideBottom', offset: -10 }}
                         />
                         <YAxis 
                           dataKey="y"
                           type="number" 
-                          domain={[0, 'dataMax + 2']}
+                          domain={[0, 'dataMax + 1']}
                           label={{ value: 'Desviación Estándar (meses)', angle: -90, position: 'insideLeft' }}
                         />
                         <Tooltip 
-                          formatter={(value, name) => {
-                            if (name === 'y') return [`${value?.toFixed(2)} meses`, 'Desviación Estándar'];
-                            return [value, name];
-                          }}
-                          labelFormatter={(x) => `Edad: ${x} meses`}
                           content={({ active, payload }) => {
                             if (active && payload && payload.length) {
                               const data = payload[0].payload;
                               return (
                                 <div className="custom-tooltip">
                                   <p><strong>{data.nombre}</strong></p>
-                                  <p>Fuente: {data.fuente}</p>
+                                  <p>Fuente: {data.fuente.split(' - ')[0]}</p>
                                   <p>Dominio: {data.dominio}</p>
                                   <p>Edad: {data.x} meses</p>
                                   <p>DE: ±{data.y?.toFixed(2)} meses</p>
+                                  <p>Muestra: n = {data.tamaño_muestra?.toLocaleString()}</p>
+                                  <p>Poder: <strong>{data.poder_estadistico}</strong></p>
                                 </div>
                               );
                             }
@@ -520,14 +788,17 @@ function FuentesNormativas() {
                           }}
                         />
                         
-                        {/* Puntos por fuente con colores diferentes */}
-                        {datosGraficos.boxPlotData.map((fuente, index) => (
+                        {/* Línea de referencia para alta precisión */}
+                        <ReferenceLine y={1} stroke="#ff6b6b" strokeDasharray="5 5" label={{ value: "Alta precisión (DE < 1m)", position: "topRight" }} />
+                        
+                        {/* Puntos por fuente */}
+                        {datosGraficos.boxPlotData.map((fuente) => (
                           <Scatter
                             key={fuente.nombre}
                             data={datosGraficos.scatterData.filter(d => d.fuente === fuente.nombre)}
                             fill={fuente.color}
-                            fillOpacity={0.7}
-                            name={fuente.nombre}
+                            fillOpacity={0.8}
+                            name={fuente.nombre.split(' - ')[0]}
                           />
                         ))}
                       </ScatterChart>
@@ -535,61 +806,207 @@ function FuentesNormativas() {
                   </div>
 
                   <div className="leyenda-graficos">
-                    <h5>Leyenda por Fuente:</h5>
+                    <h5>📊 Resumen Estadístico:</h5>
                     <div className="leyenda-items">
-                      {datosGraficos.boxPlotData.map((fuente, index) => (
-                        <div key={fuente.nombre} className="leyenda-item">
-                          <span 
-                            className="color-indicator" 
-                            style={{ backgroundColor: fuente.color }}
-                          ></span>
-                          <span>{obtenerIconoFuente(fuente.nombre)} {fuente.nombre.split(' - ')[0]}</span>
-                          <span className="stats-resumidas">
-                            (n={fuente.edades.length}, μ={fuente.mean.toFixed(1)}m)
-                          </span>
+                      {datosGraficos.estadisticasFuentes.map((fuente) => (
+                        <div key={fuente.nombre} className="leyenda-item-completa">
+                          <div className="leyenda-header">
+                            <span className="color-indicator" style={{ backgroundColor: fuente.color }}></span>
+                            <span className="fuente-info">
+                              {fuente.icono} <strong>{fuente.nombre.split(' - ')[0]}</strong> ({fuente.año})
+                            </span>
+                          </div>
+                          <div className="leyenda-detalles">
+                            <p className="poblacion-info">{fuente.poblacion}</p>
+                            <p className="muestra-poder">
+                              <strong>n = {fuente.tamaño_muestra?.toLocaleString()}</strong> 
+                              | Poder estadístico: <strong>{calcularPoderEstadistico(fuente.tamaño_muestra)}</strong>
+                            </p>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Análisis de Variabilidad */}
+                {/* Boxplot de Hitos Individuales */}
                 <div className="grafico-seccion">
-                  <h4>📈 Análisis de Variabilidad por Edad</h4>
+                  <h4>📦 Distribución de Edad por Hito Individual</h4>
                   <p className="grafico-descripcion">
-                    Muestra cómo varía la desviación estándar de los hitos en función de la edad.
-                    Ayuda a identificar períodos de mayor o menor variabilidad en el desarrollo.
+                    Diagramas de cajas mostrando la distribución de edades normativas (media ± DE) para hitos específicos.
+                    Cada caja representa el rango típico de desarrollo para ese hito.
                   </p>
                   
-                  <div className="estadisticas-resumen">
-                    <h5>📋 Estadísticas por Fuente:</h5>
-                    <div className="stats-grid">
-                      {datosGraficos.boxPlotData.map((fuente) => (
-                        <div key={fuente.nombre} className="stat-fuente-card">
-                          <div className="stat-header" style={{ borderLeft: `4px solid ${fuente.color}` }}>
-                            <span>{obtenerIconoFuente(fuente.nombre)}</span>
-                            <strong>{fuente.nombre.split(' - ')[0]}</strong>
-                          </div>
-                          <div className="stat-content">
-                            <div className="stat-row">
-                              <span>Hitos totales:</span>
-                              <span>{fuente.edades.length}</span>
-                            </div>
-                            <div className="stat-row">
-                              <span>Rango de edad:</span>
-                              <span>{fuente.min.toFixed(1)} - {fuente.max.toFixed(1)}m</span>
-                            </div>
-                            <div className="stat-row">
-                              <span>Edad media:</span>
-                              <span>{fuente.mean.toFixed(1)}m</span>
-                            </div>
-                            <div className="stat-row">
-                              <span>Mediana:</span>
-                              <span>{fuente.median.toFixed(1)}m</span>
-                            </div>
+                  <div className="boxplot-custom-container" style={{ width: '100%', background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #ddd' }}>
+                    {datosGraficos.boxplotHitos.map((hito, index) => (
+                      <div key={hito.categoria} className="boxplot-row" style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        marginBottom: '8px',
+                        padding: '4px 0',
+                        borderBottom: index < datosGraficos.boxplotHitos.length - 1 ? '1px solid #f0f0f0' : 'none'
+                      }}>
+                        {/* Etiqueta del hito */}
+                        <div className="boxplot-label" style={{ 
+                          width: '200px', 
+                          fontSize: '11px', 
+                          fontWeight: '500',
+                          textAlign: 'right',
+                          paddingRight: '10px',
+                          color: hito.color,
+                          borderRight: `2px solid ${hito.color}`
+                        }}>
+                          <div>{hito.fuente}</div>
+                          <div style={{ fontSize: '10px', opacity: 0.8 }}>
+                            {hito.hito.length > 20 ? hito.hito.substring(0, 20) + '...' : hito.hito}
                           </div>
                         </div>
-                      ))}
+                        
+                        {/* Visualización del boxplot */}
+                        <div className="boxplot-visual" style={{ 
+                          flex: 1, 
+                          height: '24px', 
+                          position: 'relative', 
+                          marginLeft: '20px',
+                          marginRight: '20px'
+                        }}>
+                          {/* Escala de fondo */}
+                          <div style={{ 
+                            position: 'absolute', 
+                            top: '50%', 
+                            left: 0, 
+                            right: 0, 
+                            height: '1px', 
+                            background: '#e0e0e0',
+                            transform: 'translateY(-50%)'
+                          }}></div>
+                          
+                          {/* Marcadores de escala (cada 12 meses) */}
+                          {[0, 12, 24, 36, 48, 60, 72].map(mes => (
+                            <div key={mes} style={{
+                              position: 'absolute',
+                              left: `${(mes / 72) * 100}%`,
+                              top: '50%',
+                              width: '1px',
+                              height: '8px',
+                              background: '#ccc',
+                              transform: 'translate(-50%, -50%)'
+                            }}>
+                              <span style={{
+                                position: 'absolute',
+                                top: '-15px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '8px',
+                                color: '#999'
+                              }}>{mes}</span>
+                            </div>
+                          ))}
+                          
+                          {/* Bigotes (min-max) */}
+                          <div style={{
+                            position: 'absolute',
+                            left: `${(hito.min / 72) * 100}%`,
+                            width: `${((hito.max - hito.min) / 72) * 100}%`,
+                            top: '50%',
+                            height: '2px',
+                            background: hito.color,
+                            transform: 'translateY(-50%)',
+                            opacity: 0.6
+                          }}></div>
+                          
+                          {/* Caja (Q1-Q3) */}
+                          <div style={{
+                            position: 'absolute',
+                            left: `${(hito.q1 / 72) * 100}%`,
+                            width: `${((hito.q3 - hito.q1) / 72) * 100}%`,
+                            top: '50%',
+                            height: '16px',
+                            background: `${hito.color}40`,
+                            border: `2px solid ${hito.color}`,
+                            borderRadius: '3px',
+                            transform: 'translateY(-50%)'
+                          }}></div>
+                          
+                          {/* Línea de la mediana */}
+                          <div style={{
+                            position: 'absolute',
+                            left: `${(hito.median / 72) * 100}%`,
+                            top: '50%',
+                            width: '2px',
+                            height: '20px',
+                            background: '#333',
+                            transform: 'translate(-50%, -50%)'
+                          }}></div>
+                          
+                          {/* Tooltip hover area */}
+                          <div 
+                            className="boxplot-hover"
+                            style={{
+                              position: 'absolute',
+                              left: 0,
+                              right: 0,
+                              top: 0,
+                              bottom: 0,
+                              cursor: 'pointer'
+                            }}
+                            title={`${hito.hito} (${hito.fuente})
+Dominio: ${hito.dominio}
+Edad Media: ${hito.median.toFixed(1)} meses
+Desviación: ±${hito.sd?.toFixed(1)} meses
+Rango: ${hito.min.toFixed(1)} - ${hito.max.toFixed(1)} meses
+Muestra: n = ${hito.tamaño_muestra?.toLocaleString()}`}
+                          ></div>
+                        </div>
+                        
+                        {/* Valor numérico */}
+                        <div className="boxplot-value" style={{ 
+                          width: '80px', 
+                          textAlign: 'center',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          color: hito.color
+                        }}>
+                          {hito.median.toFixed(1)}m
+                          <div style={{ fontSize: '9px', opacity: 0.7 }}>
+                            ±{hito.sd?.toFixed(1)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {/* Escala inferior */}
+                    <div className="boxplot-scale" style={{ 
+                      marginTop: '20px', 
+                      paddingTop: '10px',
+                      borderTop: '1px solid #ddd',
+                      fontSize: '10px',
+                      color: '#666',
+                      textAlign: 'center'
+                    }}>
+                      Escala: 0 - 72 meses | Línea negra: mediana | Caja: Q1-Q3 | Línea completa: rango ±2DE
+                    </div>
+                  </div>
+
+                  <div className="boxplot-interpretacion" style={{ marginTop: '15px' }}>
+                    <h5>🔍 Interpretación del Boxplot:</h5>
+                    <div className="interpretacion-items" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', fontSize: '12px' }}>
+                      <div className="interpretacion-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="interpretacion-simbolo">📦</span>
+                        <span><strong>Caja coloreada:</strong> Rango intercuartil (Q1 a Q3)</span>
+                      </div>
+                      <div className="interpretacion-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="interpretacion-simbolo">➖</span>
+                        <span><strong>Línea negra:</strong> Mediana (edad típica)</span>
+                      </div>
+                      <div className="interpretacion-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="interpretacion-simbolo">📏</span>
+                        <span><strong>Línea completa:</strong> Rango de variabilidad (±2 DE)</span>
+                      </div>
+                      <div className="interpretacion-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="interpretacion-simbolo">🎯</span>
+                        <span><strong>Cajas estrechas:</strong> Mayor consistencia normativa</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1282,6 +1282,8 @@ function HitosRegistro({ ninoId }) {
           </div>
         </>
       )}
+        </>
+      )}
       
       {/* Contenido de la pestaña D-score */}
       {tabActiva === 'dscore' && ninoData && (
