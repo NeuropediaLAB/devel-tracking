@@ -581,3 +581,197 @@
   background: #ccc;
   cursor: not-allowed;
 }
+
+/* Estilos para edición de títulos */
+.titulo-container {
+  margin-bottom: 10px;
+}
+
+.titulo-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.titulo-display h4 {
+  margin: 0;
+  flex: 1;
+}
+
+.btn-editar-titulo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.btn-editar-titulo:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.titulo-edicion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.input-titulo {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.input-titulo:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.botones-edicion {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-guardar,
+.btn-cancelar {
+  background: none;
+  border: 1px solid;
+  cursor: pointer;
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-guardar {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-guardar:hover {
+  background: #28a745;
+  color: white;
+}
+
+.btn-cancelar {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-cancelar:hover {
+  background: #dc3545;
+  color: white;
+}
+
+/* Contenedor para botones de video */
+.botones-video {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Grupo de acciones en filtros */
+.filtro-grupo.acciones {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Botón de asociación masiva */
+.btn-asociacion-masiva {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-asociacion-masiva:hover {
+  background: linear-gradient(45deg, #e84545, #d63031);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+}
+
+.btn-asociacion-masiva:active {
+  transform: translateY(0);
+}
+
+.btn-asociacion-masiva:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Botón de asociación automática */
+.btn-asociacion-automatica {
+  background: linear-gradient(45deg, #6f42c1, #8a5cf6);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-asociacion-automatica:hover {
+  background: linear-gradient(45deg, #5a2d91, #7c3aed);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(111, 66, 193, 0.3);
+}
+
+.btn-asociacion-automatica:active {
+  transform: translateY(0);
+}
+
+.btn-asociacion-automatica:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ajuste del botón de gestionar asociaciones para que combine bien */
+.btn-asociar-video {
+  flex: 1;
+  min-width: 140px;
+}
+
+@media (max-width: 600px) {
+  .botones-video {
+    flex-direction: column;
+  }
+  
+  .btn-asociacion-automatica,
+  .btn-asociar-video {
+    width: 100%;
+  }
+}

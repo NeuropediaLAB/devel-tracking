@@ -325,3 +325,224 @@ export function generateDScoreChart(ageRange = [0, 72]) {
   
   return dataPoints;
 }
+
+/**
+ * Validates milestone responses for D-score calculation
+ */
+export function validateMilestoneResponses(responses) {
+  const errors = [];
+  const warnings = [];
+  
+  if (!Array.isArray(responses)) {
+    errors.push('Las respuestas deben ser un array');
+    return { isValid: false, errors, warnings };
+  }
+  
+  if (responses.length === 0) {
+    warnings.push('No hay respuestas para evaluar');
+    return { isValid: true, errors, warnings };
+  }
+  
+  let validCount = 0;
+  const domains = new Set();
+  
+  responses.forEach((response, index) => {
+    if (!response.milestone) {
+      warnings.push(`Respuesta ${index + 1}: Falta información del hito`);
+      return;
+    }
+    
+    if (response.achieved === undefined || response.achieved === null) {
+      warnings.push(`Respuesta ${index + 1}: Falta indicar si se logró el hito`);
+      return;
+    }
+    
+    if (typeof response.achieved !== 'boolean') {
+      errors.push(`Respuesta ${index + 1}: El logro debe ser true o false`);
+      return;
+    }
+    
+    validCount++;
+    if (response.milestone.area) {
+      domains.add(response.milestone.area);
+    }
+  });
+  
+  if (validCount < 5) {
+    warnings.push(`Solo ${validCount} respuestas válidas. Se recomienda al menos 5 para un cálculo confiable.`);
+  }
+  
+  if (domains.size < 2) {
+    warnings.push('Se recomienda evaluar hitos de múltiples áreas del desarrollo.');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings,
+    validCount,
+    domains: Array.from(domains)
+  };
+}
+
+/**
+ * Calculates D-score trajectory from multiple assessments
+ */
+export function calculateDScoreTrajectory(assessments) {
+  if (!Array.isArray(assessments) || assessments.length === 0) {
+    return {
+      trajectory: [],
+      velocity: null,
+      acceleration: null,
+      interpretation: 'No hay suficientes evaluaciones para calcular trayectoria'
+    };
+  }
+  
+  // Sort by age
+  const sortedAssessments = [...assessments].sort((a, b) => a.ageMonths - b.ageMonths);
+  
+  const trajectory = sortedAssessments.map(assessment => {
+    const result = calculateDScore(assessment.responses, assessment.ageMonths);
+    return {
+      age: assessment.ageMonths,
+      dscore: result.dscore,
+      daz: result.daz,
+      date: assessment.date,
+      n: result.n
+    };
+  }).filter(point => point.dscore !== null);
+  
+  if (trajectory.length < 2) {
+    return {
+      trajectory,
+      velocity: null,
+      acceleration: null,
+      interpretation: 'Se necesitan al menos 2 evaluaciones válidas para calcular velocidad'
+    };
+  }
+  
+  // Calculate velocity (D-score change per month)
+  const velocities = [];
+  for (let i = 1; i < trajectory.length; i++) {
+    const timeDiff = trajectory[i].age - trajectory[i-1].age;
+    const scoreDiff = trajectory[i].dscore - trajectory[i-1].dscore;
+    velocities.push(scoreDiff / timeDiff);
+  }
+  
+  const avgVelocity = velocities.reduce((sum, v) => sum + v, 0) / velocities.length;
+  
+  // Calculate acceleration if we have enough points
+  let acceleration = null;
+  if (velocities.length >= 2) {
+    const accelerations = [];
+    for (let i = 1; i < velocities.length; i++) {
+      const timeIndex = i + 1;
+      const timeDiff = trajectory[timeIndex].age - trajectory[timeIndex-1].age;
+      const velocityDiff = velocities[i] - velocities[i-1];
+      accelerations.push(velocityDiff / timeDiff);
+    }
+    acceleration = accelerations.reduce((sum, a) => sum + a, 0) / accelerations.length;
+  }
+  
+  return {
+    trajectory,
+    velocity: Math.round(avgVelocity * 1000) / 1000,
+    acceleration: acceleration ? Math.round(acceleration * 1000) / 1000 : null,
+    interpretation: interpretTrajectory(avgVelocity, acceleration)
+  };
+}
+
+/**
+ * Interprets D-score trajectory
+ */
+function interpretTrajectory(velocity, acceleration) {
+  let interpretation = '';
+  
+  if (velocity > 0.5) {
+    interpretation = 'Desarrollo acelerado - el niño está progresando más rápido que lo esperado';
+  } else if (velocity > 0.1) {
+    interpretation = 'Desarrollo normal - progreso constante apropiado para la edad';
+  } else if (velocity > -0.1) {
+    interpretation = 'Desarrollo estable - progreso mínimo, requiere monitoreo';
+  } else {
+    interpretation = 'Desarrollo desacelerado - progreso por debajo de lo esperado, evaluación recomendada';
+  }
+  
+  if (acceleration !== null) {
+    if (acceleration > 0.1) {
+      interpretation += '. La velocidad de desarrollo está aumentando (aceleración positiva).';
+    } else if (acceleration < -0.1) {
+      interpretation += '. La velocidad de desarrollo está disminuyendo (desaceleración).';
+    }
+  }
+  
+  return interpretation;
+}
+
+/**
+ * Compares D-score with normative references
+ */
+export function compareWithNorms(dscore, daz, ageMonths, populationNorms = null) {
+  const expectedScore = interpolateReference(ageMonths, D_SCORE_REFERENCES);
+  const expectedSD = interpolateReference(ageMonths, D_SCORE_SD);
+  
+  // Calculate percentile approximation
+  const percentile = Math.round(normalCDF(daz) * 100);
+  
+  const comparison = {
+    childScore: dscore,
+    expectedScore: Math.round(expectedScore * 10) / 10,
+    difference: Math.round((dscore - expectedScore) * 10) / 10,
+    zScore: daz,
+    percentile: percentile,
+    standardDeviation: Math.round(expectedSD * 10) / 10,
+    interpretation: getPercentileInterpretation(percentile)
+  };
+  
+  // Add population-specific norms if available
+  if (populationNorms) {
+    comparison.populationComparison = {
+      population: populationNorms.name,
+      sample_size: populationNorms.n,
+      mean: populationNorms.mean,
+      sd: populationNorms.sd,
+      populationZ: (dscore - populationNorms.mean) / populationNorms.sd
+    };
+  }
+  
+  return comparison;
+}
+
+/**
+ * Approximation of normal cumulative distribution function
+ */
+function normalCDF(x) {
+  // Abramowitz and Stegun approximation
+  const t = 1.0 / (1.0 + 0.2316419 * Math.abs(x));
+  const d = 0.3989423 * Math.exp(-x * x / 2.0);
+  let prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  
+  if (x > 0) prob = 1.0 - prob;
+  return Math.max(0, Math.min(1, prob));
+}
+
+/**
+ * Interprets percentile scores
+ */
+function getPercentileInterpretation(percentile) {
+  if (percentile >= 98) {
+    return 'Excepcionalmente alto (top 2%)';
+  } else if (percentile >= 90) {
+    return 'Muy alto (top 10%)';
+  } else if (percentile >= 75) {
+    return 'Alto (percentil 75-90)';
+  } else if (percentile >= 25) {
+    return 'Promedio (percentil 25-75)';
+  } else if (percentile >= 10) {
+    return 'Bajo (percentil 10-25)';
+  } else if (percentile >= 2) {
+    return 'Muy bajo (percentil 2-10)';
+  } else {
+    return 'Excepcionalmente bajo (bottom 2%)';
+  }
+}

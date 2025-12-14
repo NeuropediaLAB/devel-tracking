@@ -912,13 +912,14 @@ app.get('/api/hitos-normativos', (req, res) => {
   const fuenteNormativaId = req.query.fuente || 1;
   
   const query = `
-    SELECT hn.*, d.nombre as dominio_nombre,
+    SELECT hn.*, d.nombre as dominio_nombre, f.nombre as fuente_normativa_nombre,
            v.id as video_id, v.titulo as video_titulo, v.url as video_url, v.fuente as video_fuente
     FROM hitos_normativos hn
     JOIN dominios d ON hn.dominio_id = d.id
+    JOIN fuentes_normativas f ON hn.fuente_normativa_id = f.id
     LEFT JOIN videos_hitos vh ON hn.id = vh.hito_id
     LEFT JOIN videos v ON vh.video_id = v.id
-    WHERE hn.fuente_normativa_id = ?
+    WHERE hn.fuente_normativa_id = ? AND f.activa = 1
     ORDER BY hn.edad_media_meses, d.id
   `;
   
@@ -953,9 +954,12 @@ app.get('/api/hitos-normativos', (req, res) => {
 
 app.get('/api/hitos-normativos/dominio/:dominioId', (req, res) => {
   const query = `
-    SELECT * FROM hitos_normativos 
-    WHERE dominio_id = ?
-    ORDER BY edad_media_meses
+    SELECT hn.*, d.nombre as dominio_nombre, f.nombre as fuente_normativa_nombre
+    FROM hitos_normativos hn
+    JOIN dominios d ON hn.dominio_id = d.id
+    JOIN fuentes_normativas f ON hn.fuente_normativa_id = f.id
+    WHERE hn.dominio_id = ? AND f.activa = 1
+    ORDER BY hn.edad_media_meses
   `;
   db.all(query, [req.params.dominioId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -1411,6 +1415,88 @@ app.delete('/api/escalas-evaluaciones/:id', verificarToken, (req, res) => {
   );
 });
 
+// ==================== D-SCORE ENDPOINTS ====================
+
+// Guardar evaluación D-score
+app.post('/api/dscore-evaluaciones', verificarToken, (req, res) => {
+  const { 
+    nino_id, 
+    dscore, 
+    daz, 
+    sem,
+    n_hitos,
+    proporcion,
+    hitos_evaluados,
+    edad_meses,
+    fecha_evaluacion = new Date().toISOString().split('T')[0],
+    notas = ''
+  } = req.body;
+  
+  verificarAccesoNino(nino_id, req.usuario.id, req.usuario.rol, (err, tieneAcceso) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!tieneAcceso) return res.status(403).json({ error: 'No tiene acceso a este niño' });
+    
+    const evaluacionData = JSON.stringify({
+      dscore: dscore,
+      daz: daz,
+      sem: sem,
+      n_hitos: n_hitos,
+      proporcion: proporcion,
+      hitos_evaluados: hitos_evaluados
+    });
+    
+    db.run(
+      `INSERT INTO escalas_evaluaciones 
+       (nino_id, escala, fecha_evaluacion, edad_evaluacion_meses, puntuaciones, notas, fecha_registro) 
+       VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [nino_id, 'D-score', fecha_evaluacion, edad_meses, evaluacionData, notas],
+      function(err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        res.json({ 
+          id: this.lastID,
+          mensaje: 'Evaluación D-score guardada correctamente'
+        });
+      }
+    );
+  });
+});
+
+// Obtener historial de evaluaciones D-score de un niño
+app.get('/api/dscore-evaluaciones/:ninoId', verificarToken, (req, res) => {
+  const { ninoId } = req.params;
+  
+  verificarAccesoNino(ninoId, req.usuario.id, req.usuario.rol, (err, tieneAcceso) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!tieneAcceso) return res.status(403).json({ error: 'No tiene acceso a este niño' });
+    
+    db.all(
+      `SELECT id, fecha_evaluacion, edad_evaluacion_meses, puntuaciones, notas, fecha_registro
+       FROM escalas_evaluaciones 
+       WHERE nino_id = ? AND escala = 'D-score'
+       ORDER BY fecha_evaluacion ASC`,
+      [ninoId],
+      (err, rows) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        
+        const evaluaciones = rows.map(row => ({
+          id: row.id,
+          fecha: row.fecha_evaluacion,
+          edad_meses: row.edad_evaluacion_meses,
+          datos: JSON.parse(row.puntuaciones),
+          notas: row.notas,
+          fecha_registro: row.fecha_registro
+        }));
+        
+        res.json(evaluaciones);
+      }
+    );
+  });
+});
+
 // ==================== RUTA DE ITINERARIO (DATOS PROSPECTIVOS) ====================
 
 // Obtener itinerario de desarrollo con evaluaciones prospectivas
@@ -1502,8 +1588,10 @@ app.get("/api/hitos-completos", (req, res) => {
            CASE 
              WHEN f.nombre LIKE "%CDC%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - CDC" 
              WHEN f.nombre LIKE "%OMS%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - OMS" 
-             WHEN f.nombre LIKE "%Bayley%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - Bayley" 
-             WHEN f.nombre LIKE "%Battelle%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - Battelle" 
+             WHEN f.nombre LIKE "%GCDG%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - GCDG" 
+             WHEN f.nombre LIKE "%ECDI%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - ECDI2030" 
+             WHEN f.nombre LIKE "%ASQ%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - ASQ" 
+             WHEN f.nombre LIKE "%Haizea%" THEN h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - Haizea" 
              ELSE h.nombre || " (" || ROUND(h.edad_media_meses) || "m) - " || SUBSTR(f.nombre, 1, 10) 
            END as descripcion, 
            h.edad_media_meses as edad, 
@@ -1513,6 +1601,7 @@ app.get("/api/hitos-completos", (req, res) => {
     FROM hitos_normativos h 
     LEFT JOIN dominios d ON h.dominio_id = d.id 
     LEFT JOIN fuentes_normativas f ON h.fuente_normativa_id = f.id 
+    WHERE f.activa = 1
     ORDER BY h.edad_media_meses, d.nombre, f.nombre, h.nombre
   `;
   
@@ -1588,6 +1677,55 @@ app.delete('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ message: 'Video eliminado correctamente', cambios: this.changes });
     });
+  });
+});
+
+// Actualizar información de video
+app.put('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
+  const videoId = req.params.id;
+  const { titulo, descripcion, url, fuente } = req.body;
+  
+  // Validar que al menos un campo esté presente
+  if (!titulo && !descripcion && !url && !fuente) {
+    return res.status(400).json({ error: 'Se requiere al menos un campo para actualizar' });
+  }
+  
+  // Construir la consulta dinámicamente
+  let campos = [];
+  let valores = [];
+  
+  if (titulo !== undefined) {
+    campos.push('titulo = ?');
+    valores.push(titulo);
+  }
+  if (descripcion !== undefined) {
+    campos.push('descripcion = ?');
+    valores.push(descripcion);
+  }
+  if (url !== undefined) {
+    campos.push('url = ?');
+    valores.push(url);
+  }
+  if (fuente !== undefined) {
+    campos.push('fuente = ?');
+    valores.push(fuente);
+  }
+  
+  valores.push(videoId);
+  
+  const query = `UPDATE videos SET ${campos.join(', ')} WHERE id = ?`;
+  
+  db.run(query, valores, function(err) {
+    if (err) {
+      console.error('Error actualizando video:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Video no encontrado' });
+    }
+    
+    res.json({ message: 'Video actualizado correctamente', cambios: this.changes });
   });
 });
 

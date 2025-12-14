@@ -16,6 +16,8 @@ const BibliotecaMedios = () => {
   const [busquedaModal, setBusquedaModal] = useState('');
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
+  const [videoEditando, setVideoEditando] = useState(null);
+  const [nuevoTitulo, setNuevoTitulo] = useState('');
 
   useEffect(() => {
     cargarDatos();
@@ -115,6 +117,53 @@ const BibliotecaMedios = () => {
     }
   };
 
+  const iniciarEdicionTitulo = (video) => {
+    setVideoEditando(video.id);
+    setNuevoTitulo(video.titulo || '');
+  };
+
+  const cancelarEdicionTitulo = () => {
+    setVideoEditando(null);
+    setNuevoTitulo('');
+  };
+
+  const guardarTitulo = async (videoId) => {
+    if (!nuevoTitulo.trim()) {
+      mostrarMensaje('El título no puede estar vacío', 'error');
+      return;
+    }
+
+    try {
+      setCargando(true);
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`/api/videos/${videoId}`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          titulo: nuevoTitulo.trim()
+        })
+      });
+
+      if (response.ok) {
+        mostrarMensaje('Título actualizado correctamente', 'success');
+        setVideoEditando(null);
+        setNuevoTitulo('');
+        cargarDatos();
+      } else {
+        throw new Error('Error al actualizar el título');
+      }
+    } catch (error) {
+      console.error('Error al actualizar título:', error);
+      mostrarMensaje('Error al actualizar el título', 'error');
+    } finally {
+      setCargando(false);
+    }
+  };
+
   const abrirModalAsociaciones = (video) => {
     console.log('=== DEBUGGING MODAL ===');
     console.log('Video recibido:', video);
@@ -198,6 +247,125 @@ const BibliotecaMedios = () => {
     }
   };
 
+  // Función para asociación automática basada en nombres
+  const asociarAutomaticamentePorNombre = async (video) => {
+    if (!video.titulo || !hitos.length) return [];
+
+    const titulo = video.titulo.toLowerCase();
+    const hitosCoincidentes = [];
+
+    // Palabras clave y sus hitos asociados
+    const palabrasClave = {
+      'sonrisa': ['sonrisa social', 'sonríe socialmente'],
+      'sonrie': ['sonrisa social', 'sonríe socialmente'],
+      'control': ['control cefálico', 'control de cabeza'],
+      'cabeza': ['control cefálico', 'control de cabeza'],
+      'sienta': ['se sienta sin apoyo', 'sedestación'],
+      'gatea': ['gatea', 'gateo'],
+      'camina': ['camina solo', 'marcha independiente', 'camina sin apoyo'],
+      'palabra': ['primera palabra', 'primera palabra con significado'],
+      'mirada': ['sigue objetos con la mirada', 'seguimiento visual'],
+      'balbucea': ['balbucea', 'balbuceo'],
+      'voltea': ['se voltea', 'volteo', 'se da vuelta'],
+      'agarra': ['agarra objetos', 'prensión'],
+      'aplaude': ['aplaude', 'palmadas'],
+      'señala': ['señala', 'gesto de señalar'],
+      'juega': ['juego simple', 'juego social'],
+      'abraza': ['abraza', 'muestra afecto'],
+      'come': ['come solo', 'alimentación independiente'],
+      'bebe': ['bebe del vaso', 'bebe solo'],
+      'torres': ['apila bloques', 'torre de cubos'],
+      'escaleras': ['sube escaleras', 'baja escaleras'],
+      'corre': ['corre', 'carrera'],
+      'salta': ['salta', 'salto']
+    };
+
+    // Buscar coincidencias
+    Object.entries(palabrasClave).forEach(([palabra, hitosRelacionados]) => {
+      if (titulo.includes(palabra)) {
+        hitosRelacionados.forEach(hitoNombre => {
+          const hitoEncontrado = hitos.find(h => 
+            h.nombre && h.nombre.toLowerCase().includes(hitoNombre.toLowerCase())
+          );
+          if (hitoEncontrado && !hitosCoincidentes.includes(hitoEncontrado.id)) {
+            hitosCoincidentes.push(hitoEncontrado.id);
+          }
+        });
+      }
+    });
+
+    // También buscar por edad si está en el título
+    const edadMatch = titulo.match(/(\d+)\s*(mes|meses|month|months)/i);
+    if (edadMatch) {
+      const edadMeses = parseInt(edadMatch[1]);
+      const hitosDeEdad = hitos.filter(h => 
+        h.edad_media_meses && 
+        Math.abs(h.edad_media_meses - edadMeses) <= 1
+      );
+      hitosDeEdad.forEach(h => {
+        if (!hitosCoincidentes.includes(h.id)) {
+          hitosCoincidentes.push(h.id);
+        }
+      });
+    }
+
+    // Si se encontraron hitos, asociarlos al video
+    if (hitosCoincidentes.length > 0) {
+      try {
+        const token = localStorage.getItem('token');
+        await fetch('/api/asociar-video-hitos', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+          },
+          body: JSON.stringify({ 
+            videoId: video.id, 
+            hitosIds: hitosCoincidentes 
+          })
+        });
+        console.log(`Video ${video.titulo} asociado con ${hitosCoincidentes.length} hitos`);
+      } catch (error) {
+        console.error('Error asociando video:', error);
+        throw error;
+      }
+    }
+
+    return hitosCoincidentes;
+  };
+
+  // Función para ejecutar asociación automática masiva
+  const ejecutarAsociacionMasiva = async () => {
+    setCargando(true);
+    setMensaje('');
+    let asociacionesRealizadas = 0;
+    let errores = 0;
+
+    try {
+      for (const video of videosFiltrados) {
+        try {
+          const hitosCoincidentes = await asociarAutomaticamentePorNombre(video);
+          if (hitosCoincidentes.length > 0) {
+            asociacionesRealizadas++;
+          }
+        } catch (error) {
+          console.error(`Error asociando video ${video.id}:`, error);
+          errores++;
+        }
+      }
+
+      setMensaje(`Asociación masiva completada: ${asociacionesRealizadas} videos asociados. ${errores > 0 ? `${errores} errores.` : ''}`);
+      await cargarDatos(); // Recargar datos
+    } catch (error) {
+      console.error('Error en asociación masiva:', error);
+      setMensaje('Error durante la asociación masiva');
+    } finally {
+      setCargando(false);
+      setTimeout(() => setMensaje(''), 5000);
+    }
+  };
+
+
   const videosFiltrados = Array.isArray(videos) ? videos.filter(video => {
     const matchFuente = filtroFuente === 'todos' || video.fuente === filtroFuente;
     const matchEdad = filtroEdad === 'todos' || (video.hitoAsociado && video.hitoAsociado.edad === parseInt(filtroEdad));
@@ -278,6 +446,17 @@ const BibliotecaMedios = () => {
             onChange={(e) => setBusqueda(e.target.value)}
           />
         </div>
+
+        <div className="filtro-grupo acciones">
+          <button 
+            className="btn-asociacion-masiva"
+            onClick={ejecutarAsociacionMasiva}
+            disabled={cargando || videosFiltrados.length === 0}
+            title="Ejecutar asociación automática para todos los videos visibles"
+          >
+            🤖 Auto-asociar Todo
+          </button>
+        </div>
       </div>
 
 
@@ -318,7 +497,53 @@ const BibliotecaMedios = () => {
                 </div>
 
                 <div className="video-info">
-                  <h4>{video.titulo || 'Sin título'}</h4>
+                  <div className="titulo-container">
+                    {videoEditando === video.id ? (
+                      <div className="titulo-edicion">
+                        <input
+                          type="text"
+                          value={nuevoTitulo}
+                          onChange={(e) => setNuevoTitulo(e.target.value)}
+                          className="input-titulo"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              guardarTitulo(video.id);
+                            } else if (e.key === 'Escape') {
+                              cancelarEdicionTitulo();
+                            }
+                          }}
+                          autoFocus
+                        />
+                        <div className="botones-edicion">
+                          <button 
+                            className="btn-guardar"
+                            onClick={() => guardarTitulo(video.id)}
+                            title="Guardar cambios"
+                          >
+                            ✓
+                          </button>
+                          <button 
+                            className="btn-cancelar"
+                            onClick={cancelarEdicionTitulo}
+                            title="Cancelar edición"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="titulo-display">
+                        <h4>{video.titulo || 'Sin título'}</h4>
+                        <button 
+                          className="btn-editar-titulo"
+                          onClick={() => iniciarEdicionTitulo(video)}
+                          title="Editar título"
+                        >
+                          ✏️
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   {video.descripcion && <p className="video-descripcion">{video.descripcion}</p>}
                   
 
@@ -345,18 +570,20 @@ const BibliotecaMedios = () => {
                   )}
                 </div>
 
-                <button 
-                  type="button"
-                  className="btn-asociar-video"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Botón clickeado para video:', video.id);
-                    abrirModalAsociaciones(video);
-                  }}
-                >
-                  🔗 Gestionar Asociaciones
-                </button>
+                <div className="botones-video">
+                  <button 
+                    type="button"
+                    className="btn-asociar-video"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Botón clickeado para video:', video.id);
+                      abrirModalAsociaciones(video);
+                    }}
+                  >
+                    🔗 Gestionar Asociaciones
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -527,7 +754,7 @@ const BibliotecaMedios = () => {
                           />
                           <span className="hito-info">
                             <strong>{hito.descripcion || 'Sin descripción'}</strong>
-                            <small>{hito.area || 'Sin área'} - {hito.fuente_normativa || 'Sin fuente'} - {hito.edad || 0}m</small>
+                            <small>{hito.area || 'Sin área'} - {hito.fuente_normativa_nombre || hito.fuente_normativa || 'Sin fuente'} - {hito.edad || 0}m</small>
                           </span>
                         </label>
                       </div>

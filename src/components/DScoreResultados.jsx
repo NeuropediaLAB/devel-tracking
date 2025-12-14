@@ -1,16 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { calculateDScore, calculateDevelopmentalAge, generateDScoreChart } from '../utils/dscore';
+import { 
+  calculateDScore, 
+  calculateDevelopmentalAge, 
+  generateDScoreChart, 
+  validateMilestoneResponses,
+  compareWithNorms 
+} from '../utils/dscore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Dot } from 'recharts';
 import './DScore.css';
 
 const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño' }) => {
   const [dscoreResults, setDscoreResults] = useState(null);
   const [chartData, setChartData] = useState([]);
+  const [validation, setValidation] = useState(null);
+  const [comparison, setComparison] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     if (milestoneResponses && milestoneResponses.length > 0 && childAge) {
+      // Validar datos de entrada
+      const validationResult = validateMilestoneResponses(milestoneResponses);
+      setValidation(validationResult);
+      
+      // Calcular D-score
       const results = calculateDScore(milestoneResponses, childAge);
       setDscoreResults(results);
+      
+      // Comparar con normas si hay resultados válidos
+      if (results.dscore !== null && results.daz !== null) {
+        const comparisonResult = compareWithNorms(results.dscore, results.daz, childAge);
+        setComparison(comparisonResult);
+      }
       
       // Generar datos para la gráfica incluyendo el punto del niño
       const referenceData = generateDScoreChart([Math.max(0, childAge - 12), Math.min(72, childAge + 12)]);
@@ -137,22 +157,22 @@ const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño'
         <div className="flex items-start">
           <div className="bg-white p-2 rounded-full mr-4 shadow-sm">
             {dscoreResults.interpretation.level === 'Superior' && (
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             )}
             {(dscoreResults.interpretation.level === 'Típico' || dscoreResults.interpretation.level === 'Sobre el promedio') && (
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
             {dscoreResults.interpretation.level === 'Ligeramente bajo' && (
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             )}
             {(dscoreResults.interpretation.level === 'Preocupante' || dscoreResults.interpretation.level === 'Alto riesgo') && (
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
@@ -285,7 +305,7 @@ const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño'
             <h4 className="font-semibold text-gray-800 mb-2">Interpretación DAZ</h4>
             <div className="space-y-1 text-gray-600">
               <div className="flex justify-between">
-                <span>DAZ > +2.0:</span>
+                <span>DAZ {'>'} +2.0:</span>
                 <span className="font-medium">Muy superior</span>
               </div>
               <div className="flex justify-between">
@@ -301,7 +321,7 @@ const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño'
                 <span className="font-medium">Bajo</span>
               </div>
               <div className="flex justify-between">
-                <span>DAZ &lt; -2.0:</span>
+                <span>DAZ {'<'} -2.0:</span>
                 <span className="font-medium">Muy bajo</span>
               </div>
             </div>
@@ -314,6 +334,153 @@ const DScoreResultados = ({ milestoneResponses, childAge, childName = 'el niño'
             Para evaluaciones clínicas, se recomienda consultar con un profesional de desarrollo infantil.
           </p>
         </div>
+      </div>
+
+      {/* Validación de Datos */}
+      {validation && (
+        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">Calidad de los Datos</h3>
+          
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold text-blue-800 mb-2">Estadísticas</h4>
+              <ul className="space-y-1 text-blue-700">
+                <li><strong>Respuestas válidas:</strong> {validation.validCount}</li>
+                <li><strong>Áreas evaluadas:</strong> {validation.domains.length} ({validation.domains.join(', ')})</li>
+                <li><strong>Estado:</strong> {validation.isValid ? 'Datos válidos' : 'Datos con errores'}</li>
+              </ul>
+            </div>
+            
+            <div>
+              {validation.warnings.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-yellow-800 mb-2">Advertencias</h4>
+                  <ul className="text-xs text-yellow-700 space-y-1">
+                    {validation.warnings.map((warning, index) => (
+                      <li key={index}>• {warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {validation.errors.length > 0 && (
+                <div className="mt-3">
+                  <h4 className="font-semibold text-red-800 mb-2">Errores</h4>
+                  <ul className="text-xs text-red-700 space-y-1">
+                    {validation.errors.map((error, index) => (
+                      <li key={index}>• {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Comparación con Normas */}
+      {comparison && (
+        <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+          <h3 className="text-lg font-semibold text-green-900 mb-4">Comparación Normativa</h3>
+          
+          <div className="grid md:grid-cols-2 gap-6 text-sm">
+            <div>
+              <h4 className="font-semibold text-green-800 mb-2">Posición Relativa</h4>
+              <div className="space-y-2 text-green-700">
+                <div className="flex justify-between">
+                  <span>Percentil:</span>
+                  <span className="font-medium">{comparison.percentile}°</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Puntuación Z:</span>
+                  <span className="font-medium">{comparison.zScore}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Diferencia con media:</span>
+                  <span className="font-medium">{comparison.difference > 0 ? '+' : ''}{comparison.difference} puntos</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-green-800 mb-2">Interpretación</h4>
+              <div className="text-green-700">
+                <div className="bg-white p-3 rounded border border-green-200">
+                  <p className="font-medium">{comparison.interpretation}</p>
+                  {comparison.percentile <= 10 && (
+                    <p className="text-xs mt-2 text-orange-600">
+                      ⚠️ Se recomienda evaluación profesional
+                    </p>
+                  )}
+                  {comparison.percentile >= 90 && (
+                    <p className="text-xs mt-2 text-blue-600">
+                      ✨ Desarrollo excepcional
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detalles Adicionales */}
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <button 
+          onClick={() => setShowDetails(!showDetails)}
+          className="flex items-center justify-between w-full text-left"
+        >
+          <h3 className="text-lg font-semibold text-gray-900">Información Detallada sobre D-score</h3>
+          <svg 
+            className={`w-5 h-5 transition-transform ${showDetails ? 'rotate-180' : ''}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        {showDetails && (
+          <div className="mt-4 space-y-4 text-sm text-gray-600">
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-2">¿Qué es el D-score?</h4>
+              <p>
+                El D-score es una medida continua del desarrollo infantil que integra hitos de múltiples 
+                dominios (motor, cognitivo, lenguaje, etc.) en una sola puntuación. Es similar a como 
+                medimos la altura o peso, pero para el desarrollo general.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-2">DAZ (D-score for Age Z-score)</h4>
+              <p>
+                El DAZ compara el D-score del niño con el esperado para su edad cronológica. 
+                Un DAZ de 0 indica desarrollo típico, valores positivos indican desarrollo avanzado, 
+                y valores negativos pueden indicar retrasos en el desarrollo.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-2">Limitaciones</h4>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>Esta es una implementación educativa simplificada</li>
+                <li>Se basa en referencias aproximadas, no en estudios poblacionales específicos</li>
+                <li>No reemplaza la evaluación profesional clínica</li>
+                <li>Los resultados deben interpretarse junto con observaciones cualitativas</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-2">Referencias</h4>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>van Buuren, S. (2014). Growth charts of human development. Statistical Methods in Medical Research.</li>
+                <li>Weber, A. M., et al. (2019). The D-score: a metric for interpreting the early development of infants and toddlers across global settings. BMJ Global Health.</li>
+                <li>Proyecto D-score: <a href="https://d-score.org" className="text-blue-600 hover:underline">d-score.org</a></li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

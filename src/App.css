@@ -232,6 +232,24 @@ body {
   font-size: 0.75rem;
 }
 
+.dscore-name-tab {
+  padding: 0.5rem 0.8rem;
+  background: #f3e5f5;
+  border: 1px solid #9c27b0;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  color: #4a148c;
+  margin-right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dscore-nombre {
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
 /* Ícono de jerarquía removido */
 
 .sub-nav-btn:hover {

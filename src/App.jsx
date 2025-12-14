@@ -35,6 +35,7 @@ function App() {
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
   const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
   const [subVistaBibliotecaDatos, setSubVistaBibliotecaDatos] = useState('escalas-normativas'); // 'escalas-normativas', 'cohortes-personalizadas', 'estadisticas-uso'
+  const [subVistaDScore, setSubVistaDScore] = useState('concepto'); // 'concepto', 'metodologia', 'interpretacion', 'grafica', 'guia', 'fuentes'
 
   useEffect(() => {
     if (autenticado) {
@@ -206,6 +207,7 @@ function App() {
             onClick={() => {
               setVistaActual('dscore');
               setNinoSeleccionado(null);
+              setSubVistaDScore('concepto'); // Reset to default
             }}
           >
             📊 D-score Educativo
@@ -322,6 +324,53 @@ function App() {
           </div>
         )}
 
+        {/* Sub-pestañas jerárquicas para D-score Educativo */}
+        {vistaActual === 'dscore' && (
+          <div className="nav-level-2">
+            <div className="sub-nav-buttons">
+              <div className="dscore-name-tab">
+                <div className="dscore-nombre">📊 D-score Educativo</div>
+              </div>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'concepto' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('concepto')}
+              >
+                💡 Concepto
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'metodologia' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('metodologia')}
+              >
+                🔬 Metodología
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'interpretacion' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('interpretacion')}
+              >
+                📖 Interpretación
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'grafica' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('grafica')}
+              >
+                📈 Gráfica de Referencia
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'guia' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('guia')}
+              >
+                📋 Guía Práctica
+              </button>
+              <button 
+                className={`sub-nav-btn ${subVistaDScore === 'fuentes' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('fuentes')}
+              >
+                📚 Referencias
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Sub-pestañas jerárquicas para biblioteca de datos */}
         {esAdmin() && vistaActual === 'datos' && (
           <div className="nav-level-2">
@@ -411,7 +460,7 @@ function App() {
         )}
         
         {vistaActual === 'dscore' && (
-          <DScoreEducacion />
+          <DScoreEducacion activeTab={subVistaDScore} />
         )}
       </main>
     </div>
