@@ -4,6 +4,8 @@ import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 
 import VideoModal from './VideoModal';
+import DScoreResultados from './DScoreResultados';
+import './DScore.css';
 
 // Helper function to extract YouTube video ID from URL
 const extractYouTubeId = (url) => {
@@ -41,6 +43,7 @@ function HitosRegistro({ ninoId }) {
   const [rangoEdadInferior, setRangoEdadInferior] = useState(0); // Para expandir rango en modo puntual
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoSeleccionado, setVideoSeleccionado] = useState(null);
+  const [tabActiva, setTabActiva] = useState('evaluacion'); // 'evaluacion' o 'dscore'
 
   useEffect(() => {
     cargarFuentesNormativas();
@@ -469,11 +472,98 @@ function HitosRegistro({ ninoId }) {
     }
   }, [modoEvaluacion, hitosFiltrados.length, hitosNoAlcanzados.length, rangoEdadInferior, ninoData]);
 
+  // Función para preparar datos para el D-score
+  const obtenerRespuestasHitos = () => {
+    const respuestas = [];
+    
+    // Agregar hitos conseguidos
+    hitosConseguidos.forEach(hitoConseguido => {
+      const hitoNormativo = hitosNormativos.find(h => h.id === hitoConseguido.hito_id);
+      if (hitoNormativo) {
+        respuestas.push({
+          milestone: {
+            id: hitoNormativo.id,
+            descripcion: hitoNormativo.nombre,
+            area: hitoNormativo.dominio_nombre,
+            edad: hitoNormativo.edad_media_meses,
+            fuente_normativa: hitoNormativo.fuente_normativa
+          },
+          achieved: true,
+          ageAchieved: hitoConseguido.edad_meses
+        });
+      }
+    });
+    
+    // Agregar hitos no alcanzados
+    hitosNoAlcanzados.forEach(hitoNoAlcanzado => {
+      const hitoNormativo = hitosNormativos.find(h => h.id === hitoNoAlcanzado.hito_id);
+      if (hitoNormativo) {
+        respuestas.push({
+          milestone: {
+            id: hitoNormativo.id,
+            descripcion: hitoNormativo.nombre,
+            area: hitoNormativo.dominio_nombre,
+            edad: hitoNormativo.edad_media_meses,
+            fuente_normativa: hitoNormativo.fuente_normativa
+          },
+          achieved: false,
+          ageEvaluated: hitoNoAlcanzado.edad_evaluacion
+        });
+      }
+    });
+    
+    return respuestas;
+  };
+
   return (
     <div className="hitos-registro">
       <h2>Registro de Hitos del Desarrollo</h2>
       
-      <div className="filtros">
+      {/* Pestañas */}
+      <div className="pestanas-dscore" style={{ 
+        marginBottom: '20px', 
+        borderBottom: '2px solid #e5e7eb',
+        display: 'flex',
+        gap: '0'
+      }}>
+        <button
+          onClick={() => setTabActiva('evaluacion')}
+          style={{
+            padding: '12px 24px',
+            border: 'none',
+            backgroundColor: tabActiva === 'evaluacion' ? '#3b82f6' : 'transparent',
+            color: tabActiva === 'evaluacion' ? 'white' : '#6b7280',
+            borderBottom: tabActiva === 'evaluacion' ? '3px solid #1d4ed8' : '3px solid transparent',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: tabActiva === 'evaluacion' ? 'bold' : 'normal',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          📋 Evaluación de Hitos
+        </button>
+        <button
+          onClick={() => setTabActiva('dscore')}
+          style={{
+            padding: '12px 24px',
+            border: 'none',
+            backgroundColor: tabActiva === 'dscore' ? '#3b82f6' : 'transparent',
+            color: tabActiva === 'dscore' ? 'white' : '#6b7280',
+            borderBottom: tabActiva === 'dscore' ? '3px solid #1d4ed8' : '3px solid transparent',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: tabActiva === 'dscore' ? 'bold' : 'normal',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          📊 D-score & Análisis
+        </button>
+      </div>
+
+      {/* Contenido de la pestaña de evaluación */}
+      {tabActiva === 'evaluacion' && (
+        <>
+          <div className="filtros">
         <div className="filtro-grupo">
           <label>Modo de evaluación:</label>
           <select 
@@ -1191,6 +1281,15 @@ function HitosRegistro({ ninoId }) {
                     })}
           </div>
         </>
+      )}
+      
+      {/* Contenido de la pestaña D-score */}
+      {tabActiva === 'dscore' && ninoData && (
+        <DScoreResultados
+          milestoneResponses={obtenerRespuestasHitos()}
+          childAge={edadActualMeses}
+          childName={ninoData.nombre}
+        />
       )}
     </div>
   );

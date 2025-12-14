@@ -1,0 +1,315 @@
+/* Estilos para componentes D-score */
+
+.pestanas-dscore {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+  display: flex;
+  gap: 0;
+}
+
+.pestanas-dscore button {
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.pestanas-dscore button:hover {
+  background-color: #f3f4f6;
+}
+
+.pestanas-dscore button.active {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+}
+
+.pestanas-dscore button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #1d4ed8;
+}
+
+/* Estilos para DScoreEducacion */
+.d-score-educacion {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.d-score-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.d-score-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.d-score-header p {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+
+/* Pestañas del componente educativo */
+.d-score-tabs {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.d-score-tabs-nav {
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  background-color: #f8fafc;
+}
+
+.d-score-tab-button {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.d-score-tab-button:hover {
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.d-score-tab-button.active {
+  color: #3b82f6;
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.d-score-tab-content {
+  padding: 2rem;
+}
+
+/* Estilos para tarjetas */
+.d-score-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.d-score-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.d-score-card h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.d-score-card p {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.d-score-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.d-score-card li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.d-score-card li:last-child {
+  border-bottom: none;
+}
+
+/* Estilos para grid de tarjetas */
+.d-score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Estilos para alertas/avisos */
+.d-score-alert {
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.d-score-alert-info {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+
+.d-score-alert-warning {
+  background-color: #fffbeb;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+}
+
+.d-score-alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+/* Estilos para badges/etiquetas */
+.d-score-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.d-score-badge-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.d-score-badge-green {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.d-score-badge-yellow {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.d-score-badge-red {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Estilos para resultados D-score */
+.d-score-results {
+  margin-top: 2rem;
+}
+
+.d-score-summary {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #cbd5e1;
+}
+
+.d-score-summary h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.d-score-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.d-score-metric {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.d-score-metric-value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.d-score-metric-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.d-score-metric-description {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.d-score-interpretation {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid;
+  margin: 2rem 0;
+}
+
+.d-score-interpretation h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.d-score-interpretation p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.d-score-recommendation {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .d-score-header h1 {
+    font-size: 2rem;
+  }
+  
+  .d-score-header p {
+    font-size: 1rem;
+  }
+  
+  .d-score-tabs-nav {
+    flex-wrap: wrap;
+  }
+  
+  .d-score-tab-button {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .d-score-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .d-score-metrics {
+    grid-template-columns: 1fr;
+  }
+}

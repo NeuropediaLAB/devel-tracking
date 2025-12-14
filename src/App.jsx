@@ -12,6 +12,8 @@ import Fundamentos from './components/Fundamentos';
 import Investigacion from './components/Investigacion';
 import BibliotecaMedios from './components/BibliotecaMedios';
 import BibliotecaDatos from './components/BibliotecaDatos';
+import DScoreEducacion from './components/DScoreEducacion';
+import DScoreResultados from './components/DScoreResultados';
 import { API_URL } from './config';
 import { 
   estaAutenticado, 
@@ -27,7 +29,7 @@ function App() {
   const [usuario, setUsuario] = useState(getUsuario());
   const [ninos, setNinos] = useState([]);
   const [ninoSeleccionado, setNinoSeleccionado] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios, datos
+  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios, datos, dscore
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
@@ -199,6 +201,15 @@ function App() {
               🔬 Investigación
             </button>
           )}
+          <button 
+            className={vistaActual === 'dscore' ? 'active' : ''}
+            onClick={() => {
+              setVistaActual('dscore');
+              setNinoSeleccionado(null);
+            }}
+          >
+            📊 D-score Educativo
+          </button>
           {esAdmin() && (
             <>
               <button 
@@ -397,6 +408,10 @@ function App() {
         
         {vistaActual === 'datos' && esAdmin() && (
           <BibliotecaDatos subVista={subVistaBibliotecaDatos} />
+        )}
+        
+        {vistaActual === 'dscore' && (
+          <DScoreEducacion />
         )}
       </main>
     </div>
