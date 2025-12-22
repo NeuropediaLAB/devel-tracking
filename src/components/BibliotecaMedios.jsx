@@ -49,7 +49,12 @@ const BibliotecaMedios = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const dataHitos = await resHitos.json();
-      setHitos(Array.isArray(dataHitos) ? dataHitos : []);
+      const hitosArray = Array.isArray(dataHitos) ? dataHitos : [];
+      console.log(`📊 Hitos cargados: ${hitosArray.length}`);
+      if (hitosArray.length > 0) {
+        console.log(`   Ejemplo de hito:`, hitosArray[0]);
+      }
+      setHitos(hitosArray);
       
     } catch (error) {
       console.error('Error al cargar datos:', error);
@@ -247,91 +252,200 @@ const BibliotecaMedios = () => {
     }
   };
 
-  // Función para asociación automática basada en nombres
+  // Función mejorada que analiza semánticamente toda la frase
   const asociarAutomaticamentePorNombre = async (video) => {
-    if (!video.titulo || !hitos.length) return [];
+    if (!video.titulo || !hitos.length) {
+      console.log('❌ Video sin título o sin hitos disponibles');
+      return [];
+    }
 
     const titulo = video.titulo.toLowerCase();
-    const hitosCoincidentes = [];
+    const descripcion = (video.descripcion || '').toLowerCase();
+    const textoCompleto = `${titulo} ${descripcion}`;
 
-    // Palabras clave y sus hitos asociados
-    const palabrasClave = {
-      'sonrisa': ['sonrisa social', 'sonríe socialmente'],
-      'sonrie': ['sonrisa social', 'sonríe socialmente'],
-      'control': ['control cefálico', 'control de cabeza'],
-      'cabeza': ['control cefálico', 'control de cabeza'],
-      'sienta': ['se sienta sin apoyo', 'sedestación'],
-      'gatea': ['gatea', 'gateo'],
-      'camina': ['camina solo', 'marcha independiente', 'camina sin apoyo'],
-      'palabra': ['primera palabra', 'primera palabra con significado'],
-      'mirada': ['sigue objetos con la mirada', 'seguimiento visual'],
-      'balbucea': ['balbucea', 'balbuceo'],
-      'voltea': ['se voltea', 'volteo', 'se da vuelta'],
-      'agarra': ['agarra objetos', 'prensión'],
-      'aplaude': ['aplaude', 'palmadas'],
-      'señala': ['señala', 'gesto de señalar'],
-      'juega': ['juego simple', 'juego social'],
-      'abraza': ['abraza', 'muestra afecto'],
-      'come': ['come solo', 'alimentación independiente'],
-      'bebe': ['bebe del vaso', 'bebe solo'],
-      'torres': ['apila bloques', 'torre de cubos'],
-      'escaleras': ['sube escaleras', 'baja escaleras'],
-      'corre': ['corre', 'carrera'],
-      'salta': ['salta', 'salto']
+    console.log(`🔍 Analizando video: "${video.titulo}"`);
+    console.log(`📝 Texto completo: "${textoCompleto}"`);
+
+    // Extraer edad del video
+    const edadMatch = titulo.match(/(\d+)\s*(mes|meses|month|months|año|años|year)/i);
+    let edadVideoMeses = null;
+    if (edadMatch) {
+      const numero = parseInt(edadMatch[1]);
+      const unidad = edadMatch[2].toLowerCase();
+      edadVideoMeses = unidad.includes('año') || unidad.includes('year') ? numero * 12 : numero;
+      console.log(`  📅 Edad detectada en video: ${edadVideoMeses} meses`);
+    }
+
+    // Normalizar texto: eliminar artículos, preposiciones comunes, puntuación
+    const normalizarTexto = (texto) => {
+      return texto
+        .toLowerCase()
+        .replace(/[.,;:()¿?¡!]/g, ' ')
+        .replace(/\b(el|la|los|las|un|una|unos|unas|de|del|a|al|en|con|por|para|cuando|usted|su|sus|le|lo|la)\b/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
     };
 
-    // Buscar coincidencias
-    Object.entries(palabrasClave).forEach(([palabra, hitosRelacionados]) => {
-      if (titulo.includes(palabra)) {
-        hitosRelacionados.forEach(hitoNombre => {
-          const hitoEncontrado = hitos.find(h => 
-            h.nombre && h.nombre.toLowerCase().includes(hitoNombre.toLowerCase())
-          );
-          if (hitoEncontrado && !hitosCoincidentes.includes(hitoEncontrado.id)) {
-            hitosCoincidentes.push(hitoEncontrado.id);
+    const textoVideoNormalizado = normalizarTexto(textoCompleto);
+    console.log(`  🔤 Texto normalizado: "${textoVideoNormalizado}"`);
+
+    // Diccionario de sinónimos para mejorar matching
+    const sinonimos = {
+      'sonrie': ['sonrisa', 'sonreir', 'sonríe'],
+      'sonrisa': ['sonrie', 'sonreir', 'sonríe'],
+      'cabeza': ['cefálico', 'cefalico', 'head'],
+      'cefalico': ['cabeza', 'cefálico'],
+      'sienta': ['sentado', 'sedestación', 'sedestacion', 'sits'],
+      'sentado': ['sienta', 'sedestación'],
+      'gatea': ['gateo', 'crawl'],
+      'gateo': ['gatea', 'crawl'],
+      'camina': ['marcha', 'caminar', 'walk'],
+      'marcha': ['camina', 'caminar'],
+      'palabra': ['habla', 'dice', 'speak'],
+      'habla': ['palabra', 'dice', 'lenguaje'],
+      'dice': ['habla', 'palabra'],
+      'voltea': ['gira', 'voltearse', 'roll'],
+      'gira': ['voltea', 'girar'],
+      'responde': ['respuesta', 'reaccion', 'response'],
+      'nombre': ['llama', 'llamar'],
+      'juega': ['juego', 'play'],
+      'juego': ['juega', 'play']
+    };
+
+    // Expandir texto con sinónimos
+    const expandirConSinonimos = (texto) => {
+      const palabras = texto.split(' ');
+      const expandidas = new Set(palabras);
+      palabras.forEach(palabra => {
+        if (sinonimos[palabra]) {
+          sinonimos[palabra].forEach(sin => expandidas.add(sin));
+        }
+      });
+      return Array.from(expandidas);
+    };
+
+    // Calcular similitud semántica mejorada
+    const calcularSimilitudSemantica = (textoVideo, textoHito) => {
+      const palabrasVideo = expandirConSinonimos(textoVideo).filter(p => p.length > 2);
+      const palabrasHito = textoHito.split(' ').filter(p => p.length > 2);
+      
+      if (palabrasVideo.length === 0 || palabrasHito.length === 0) return 0;
+
+      // Contar coincidencias (incluye coincidencias parciales)
+      let coincidencias = 0;
+      let coincidenciasFuertes = 0; // coincidencias exactas o muy similares
+      
+      palabrasVideo.forEach(palabraVideo => {
+        const hayCoincidencia = palabrasHito.some(palabraHito => {
+          // Coincidencia exacta o contenida
+          if (palabraHito === palabraVideo) {
+            coincidenciasFuertes++;
+            return true;
           }
+          if (palabraHito.includes(palabraVideo) || palabraVideo.includes(palabraHito)) {
+            return true;
+          }
+          return false;
         });
+        if (hayCoincidencia) coincidencias++;
+      });
+
+      // Score con bonus por coincidencias fuertes
+      const scoreBase = coincidencias / palabrasVideo.length;
+      const bonus = (coincidenciasFuertes / palabrasVideo.length) * 0.2; // +20% por coincidencias exactas
+      return Math.min(1.0, scoreBase + bonus);
+    };
+
+    // Evaluar cada hito
+    const hitosConScore = hitos.map(hito => {
+      const nombreHito = (hito.nombre || hito.descripcion || '').toLowerCase();
+      const textoHitoNormalizado = normalizarTexto(nombreHito);
+      
+      // Calcular similitud semántica
+      const similitud = calcularSimilitudSemantica(textoVideoNormalizado, textoHitoNormalizado);
+      
+      // Filtro estricto de edad: solo permitir hitos dentro de ±1 mes
+      let descartadoPorEdad = false;
+      if (edadVideoMeses && hito.edad) {
+        const diferenciaEdad = Math.abs(hito.edad - edadVideoMeses);
+        if (diferenciaEdad > 1) {
+          descartadoPorEdad = true;
+        }
+      }
+      
+      const scoreTotal = descartadoPorEdad ? 0 : similitud;
+      
+      return {
+        ...hito,
+        similitud,
+        descartadoPorEdad,
+        scoreTotal
+      };
+    });
+
+    // Filtrar hitos con score significativo (umbral mínimo de 0.25 - más flexible)
+    const hitosCoincidentes = hitosConScore
+      .filter(h => h.scoreTotal >= 0.25)
+      .sort((a, b) => b.scoreTotal - a.scoreTotal)
+      .slice(0, 5); // Máximo 5 hitos más relevantes
+
+    console.log(`  ✅ Hitos coincidentes encontrados: ${hitosCoincidentes.length}`);
+    hitosCoincidentes.forEach(hito => {
+      console.log(`    → "${hito.nombre || hito.descripcion}" (ID: ${hito.id})`);
+      console.log(`       Score: ${hito.scoreTotal.toFixed(2)} (similitud: ${hito.similitud.toFixed(2)})`);
+      if (edadVideoMeses && hito.edad) {
+        console.log(`       Edad: video ${edadVideoMeses}m vs hito ${hito.edad}m (diff: ${Math.abs(hito.edad - edadVideoMeses)}m)`);
       }
     });
 
-    // También buscar por edad si está en el título
-    const edadMatch = titulo.match(/(\d+)\s*(mes|meses|month|months)/i);
-    if (edadMatch) {
-      const edadMeses = parseInt(edadMatch[1]);
-      const hitosDeEdad = hitos.filter(h => 
-        h.edad_media_meses && 
-        Math.abs(h.edad_media_meses - edadMeses) <= 1
-      );
-      hitosDeEdad.forEach(h => {
-        if (!hitosCoincidentes.includes(h.id)) {
-          hitosCoincidentes.push(h.id);
-        }
+    const hitosIds = hitosCoincidentes.map(h => h.id);
+
+    // SIEMPRE asociar los hitos (incluso si es un array vacío)
+    // Esto permite eliminar asociaciones incorrectas previas
+    console.log(`  ✅ Total hitos coincidentes DESPUÉS del filtro: ${hitosIds.length}`);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/videos/asociar-multiple', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          videoId: video.id, 
+          hitosIds: hitosIds 
+        })
       });
-    }
-
-    // Si se encontraron hitos, asociarlos al video
-    if (hitosCoincidentes.length > 0) {
-      try {
-        const token = localStorage.getItem('token');
-        await fetch('/api/asociar-video-hitos', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
-          },
-          body: JSON.stringify({ 
-            videoId: video.id, 
-            hitosIds: hitosCoincidentes 
-          })
-        });
-        console.log(`Video ${video.titulo} asociado con ${hitosCoincidentes.length} hitos`);
-      } catch (error) {
-        console.error('Error asociando video:', error);
-        throw error;
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`❌ Error HTTP ${response.status}:`, errorText);
+        throw new Error(`Error en la respuesta del servidor: ${response.status}`);
       }
+      
+      const result = await response.json();
+      if (hitosIds.length > 0) {
+        console.log(`✅ Video "${video.titulo}":`);
+        console.log(`   - ${result.asociacionesCreadas} nuevas asociaciones`);
+        console.log(`   - ${result.asociacionesYaExistentes} asociaciones mantenidas`);
+        console.log(`   - ${result.asociacionesEliminadas} asociaciones eliminadas`);
+      } else if (result.asociacionesEliminadas > 0) {
+        console.log(`🗑️ Video "${video.titulo}": ${result.asociacionesEliminadas} asociaciones incorrectas eliminadas`);
+      } else {
+        console.log(`  ⚠️ No se encontraron hitos coincidentes para "${video.titulo}"`);
+      }
+      
+      return hitosIds;
+    } catch (error) {
+      console.error('❌ Error asociando video:', error);
+      console.error('   Error details:', {
+        message: error.message,
+        stack: error.stack,
+        videoId: video.id,
+        hitosCount: hitosIds.length
+      });
+      throw error;
     }
-
-    return hitosCoincidentes;
   };
 
   // Función para ejecutar asociación automática masiva
@@ -340,28 +454,40 @@ const BibliotecaMedios = () => {
     setMensaje('');
     let asociacionesRealizadas = 0;
     let errores = 0;
+    let videosAnalizados = 0;
+
+    console.log(`🚀 Iniciando asociación masiva de ${videosFiltrados.length} videos...`);
+    console.log(`📊 Total de hitos disponibles: ${hitos.length}`);
 
     try {
       for (const video of videosFiltrados) {
+        videosAnalizados++;
+        console.log(`\n📹 Video ${videosAnalizados}/${videosFiltrados.length}`);
         try {
           const hitosCoincidentes = await asociarAutomaticamentePorNombre(video);
           if (hitosCoincidentes.length > 0) {
             asociacionesRealizadas++;
           }
         } catch (error) {
-          console.error(`Error asociando video ${video.id}:`, error);
+          console.error(`❌ Error con video ${video.id}:`, error.message || error);
+          console.error('Stack:', error.stack);
           errores++;
         }
       }
 
-      setMensaje(`Asociación masiva completada: ${asociacionesRealizadas} videos asociados. ${errores > 0 ? `${errores} errores.` : ''}`);
+      console.log(`\n✅ Asociación masiva completada:`);
+      console.log(`   📊 Videos analizados: ${videosAnalizados}`);
+      console.log(`   ✓ Videos con asociaciones: ${asociacionesRealizadas}`);
+      console.log(`   ❌ Errores: ${errores}`);
+
+      setMensaje(`✅ Asociación completada: ${asociacionesRealizadas} videos procesados de ${videosAnalizados} analizados. ${errores > 0 ? `⚠️ ${errores} errores.` : ''}`);
       await cargarDatos(); // Recargar datos
     } catch (error) {
-      console.error('Error en asociación masiva:', error);
+      console.error('❌ Error en asociación masiva:', error);
       setMensaje('Error durante la asociación masiva');
     } finally {
       setCargando(false);
-      setTimeout(() => setMensaje(''), 5000);
+      setTimeout(() => setMensaje(''), 8000);
     }
   };
 

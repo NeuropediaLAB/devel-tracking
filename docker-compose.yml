@@ -1,39 +1,65 @@
 services:
-  # Backend API
+  # Backend API con nuevos roles médicos
   backend:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: neurodesarrollo-backend
-    command: sh -c "npm install && npm run server"
+    command: ["server"]
     ports:
       - "8001:8001"
     volumes:
-      - ./server:/app/server
-      - db-data:/app/data
-      - backend-node-modules:/app/node_modules
+      - db-data:/app/server/data
+      - ./server/neurodesarrollo_dev_new.db:/app/server/neurodesarrollo_dev_new.db
     environment:
       - NODE_ENV=production
       - PORT=8001
+      - JWT_SECRET=${JWT_SECRET:-neurodesarrollo_secret_key_change_in_production}
+      - DATABASE_PATH=/app/server/neurodesarrollo_dev_new.db
     restart: unless-stopped
     networks:
       - neurodesarrollo-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  # Frontend
+  # Frontend con soporte para nuevos roles
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: neurodesarrollo-frontend
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+    command: ["dev"]
     ports:
       - "5173:3000"
-    volumes:
-      - ./src:/app/src
-      - ./public:/app/public
-      - ./index.html:/app/index.html
-      - frontend-node-modules:/app/node_modules
     environment:
       - NODE_ENV=development
-      # VITE_API_URL no definida para usar la lógica automática de config.js
-      # que detecta HTTPS y usa el proxy correctamente
+      - VITE_API_URL=/api
     depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - neurodesarrollo-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx proxy para producción
+  nginx:
+    image: nginx:alpine
+    container_name: neurodesarrollo-nginx
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
       - backend
     restart: unless-stopped
     networks:
@@ -42,11 +68,14 @@ services:
 volumes:
   db-data:
     driver: local
-  backend-node-modules:
-    driver: local
-  frontend-node-modules:
-    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./server/data
 
 networks:
   neurodesarrollo-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

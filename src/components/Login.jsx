@@ -8,6 +8,7 @@ export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nombre, setNombre] = useState('');
+  const [rol, setRol] = useState('usuario');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
   const [mostrarModalInvitado, setMostrarModalInvitado] = useState(false);
@@ -20,7 +21,7 @@ export default function Login({ onLoginSuccess }) {
     const endpoint = modo === 'login' ? '/auth/login' : '/auth/registro';
     const body = modo === 'login' 
       ? { email, password }
-      : { email, password, nombre };
+      : { email, password, nombre, rol };
 
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
@@ -104,6 +105,26 @@ export default function Login({ onLoginSuccess }) {
                 required={modo === 'registro'}
                 disabled={cargando}
               />
+            </div>
+          )}
+
+          {modo === 'registro' && (
+            <div className="form-group">
+              <label htmlFor="rol">Rol profesional</label>
+              <select
+                id="rol"
+                value={rol}
+                onChange={(e) => setRol(e.target.value)}
+                required={modo === 'registro'}
+                disabled={cargando}
+              >
+                <option value="usuario">👤 Usuario estándar</option>
+                <option value="enfermeria">👩‍⚕️ Personal de enfermería</option>
+                <option value="pediatra_ap">👨‍⚕️ Pediatra de Atención Primaria</option>
+                <option value="neuropediatra">🧠 Neuropediatra</option>
+                <option value="admin">⚙️ Administrador</option>
+              </select>
+              <small className="form-help">Selecciona tu rol profesional para habilitar funciones específicas</small>
             </div>
           )}
 

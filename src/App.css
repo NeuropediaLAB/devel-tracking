@@ -2210,6 +2210,16 @@ body {
   text-transform: uppercase;
 }
 
+.role-badge {
+  background: #4CAF50;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 .btn-logout {
   background: white;
   color: #0073AA;

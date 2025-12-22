@@ -4,8 +4,6 @@ import { API_URL } from '../config';
 import { fetchConAuth } from '../utils/authService';
 
 import VideoModal from './VideoModal';
-import DScoreResultados from './DScoreResultados';
-import DScoreTrayectoria from './DScoreTrayectoria';
 import './DScore.css';
 
 // Helper function to extract YouTube video ID from URL
@@ -44,9 +42,6 @@ function HitosRegistro({ ninoId }) {
   const [rangoEdadInferior, setRangoEdadInferior] = useState(0); // Para expandir rango en modo puntual
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoSeleccionado, setVideoSeleccionado] = useState(null);
-  const [tabActiva, setTabActiva] = useState('evaluacion'); // 'evaluacion' o 'dscore'
-  const [evaluacionesDScore, setEvaluacionesDScore] = useState([]);
-  const [cargandoHistorial, setCargandoHistorial] = useState(false);
 
   useEffect(() => {
     cargarFuentesNormativas();
@@ -340,60 +335,6 @@ function HitosRegistro({ ninoId }) {
     }
   };
 
-  // ==================== FUNCIONES D-SCORE ====================
-
-  const cargarHistorialDScore = async () => {
-    setCargandoHistorial(true);
-    try {
-      const response = await fetchConAuth(`${API_URL}/dscore-evaluaciones/${ninoId}`);
-      const data = await response.json();
-      setEvaluacionesDScore(data);
-    } catch (error) {
-      console.error('Error al cargar historial D-score:', error);
-      setEvaluacionesDScore([]);
-    } finally {
-      setCargandoHistorial(false);
-    }
-  };
-
-  const guardarEvaluacionDScore = async (dscoreData) => {
-    try {
-      const response = await fetchConAuth(`${API_URL}/dscore-evaluaciones`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nino_id: parseInt(ninoId),
-          dscore: dscoreData.dscore,
-          daz: dscoreData.daz,
-          sem: dscoreData.sem,
-          n_hitos: dscoreData.n,
-          proporcion: dscoreData.p,
-          hitos_evaluados: obtenerRespuestasHitos(),
-          edad_meses: edadActualMeses,
-          fecha_evaluacion: fechaEvaluacion
-        })
-      });
-      
-      if (response.ok) {
-        // Recargar historial después de guardar
-        await cargarHistorialDScore();
-        return true;
-      } else {
-        throw new Error('Error al guardar evaluación');
-      }
-    } catch (error) {
-      console.error('Error al guardar evaluación D-score:', error);
-      return false;
-    }
-  };
-
-  // Cargar historial cuando cambie la pestaña a D-score
-  useEffect(() => {
-    if (tabActiva === 'dscore' && ninoId) {
-      cargarHistorialDScore();
-    }
-  }, [tabActiva, ninoId]);
-
   const hitoConseguido = (hitoId) => {
     return hitosConseguidos.find(hc => hc.hito_id === hitoId);
   };
@@ -548,98 +489,11 @@ function HitosRegistro({ ninoId }) {
     }
   }, [modoEvaluacion, hitosFiltrados.length, hitosNoAlcanzados.length, rangoEdadInferior, ninoData]);
 
-  // Función para preparar datos para el D-score
-  const obtenerRespuestasHitos = () => {
-    const respuestas = [];
-    
-    // Agregar hitos conseguidos
-    hitosConseguidos.forEach(hitoConseguido => {
-      const hitoNormativo = hitosNormativos.find(h => h.id === hitoConseguido.hito_id);
-      if (hitoNormativo) {
-        respuestas.push({
-          milestone: {
-            id: hitoNormativo.id,
-            descripcion: hitoNormativo.nombre,
-            area: hitoNormativo.dominio_nombre,
-            edad: hitoNormativo.edad_media_meses,
-            fuente_normativa: hitoNormativo.fuente_normativa
-          },
-          achieved: true,
-          ageAchieved: hitoConseguido.edad_meses
-        });
-      }
-    });
-    
-    // Agregar hitos no alcanzados
-    hitosNoAlcanzados.forEach(hitoNoAlcanzado => {
-      const hitoNormativo = hitosNormativos.find(h => h.id === hitoNoAlcanzado.hito_id);
-      if (hitoNormativo) {
-        respuestas.push({
-          milestone: {
-            id: hitoNormativo.id,
-            descripcion: hitoNormativo.nombre,
-            area: hitoNormativo.dominio_nombre,
-            edad: hitoNormativo.edad_media_meses,
-            fuente_normativa: hitoNormativo.fuente_normativa
-          },
-          achieved: false,
-          ageEvaluated: hitoNoAlcanzado.edad_evaluacion
-        });
-      }
-    });
-    
-    return respuestas;
-  };
-
   return (
     <div className="hitos-registro">
       <h2>Registro de Hitos del Desarrollo</h2>
       
-      {/* Pestañas */}
-      <div className="pestanas-dscore" style={{ 
-        marginBottom: '20px', 
-        borderBottom: '2px solid #e5e7eb',
-        display: 'flex',
-        gap: '0'
-      }}>
-        <button
-          onClick={() => setTabActiva('evaluacion')}
-          style={{
-            padding: '12px 24px',
-            border: 'none',
-            backgroundColor: tabActiva === 'evaluacion' ? '#3b82f6' : 'transparent',
-            color: tabActiva === 'evaluacion' ? 'white' : '#6b7280',
-            borderBottom: tabActiva === 'evaluacion' ? '3px solid #1d4ed8' : '3px solid transparent',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: tabActiva === 'evaluacion' ? 'bold' : 'normal',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          📋 Evaluación de Hitos
-        </button>
-        <button
-          onClick={() => setTabActiva('dscore')}
-          style={{
-            padding: '12px 24px',
-            border: 'none',
-            backgroundColor: tabActiva === 'dscore' ? '#3b82f6' : 'transparent',
-            color: tabActiva === 'dscore' ? 'white' : '#6b7280',
-            borderBottom: tabActiva === 'dscore' ? '3px solid #1d4ed8' : '3px solid transparent',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: tabActiva === 'dscore' ? 'bold' : 'normal',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          📊 D-score & Análisis
-        </button>
-      </div>
-
-      {/* Contenido de la pestaña de evaluación */}
-      {tabActiva === 'evaluacion' && (
-        <>
-          <div className="filtros">
+      <div className="filtros">
         <div className="filtro-grupo">
           <label>Modo de evaluación:</label>
           <select 
@@ -1379,46 +1233,6 @@ function HitosRegistro({ ninoId }) {
                     })}
           </div>
         </>
-      )}
-        </>
-      )}
-      
-      {/* Contenido de la pestaña D-score */}
-      {tabActiva === 'dscore' && ninoData && (
-        <div className="space-y-6">
-          <DScoreResultados
-            milestoneResponses={obtenerRespuestasHitos()}
-            childAge={edadActualMeses}
-            childName={ninoData.nombre}
-          />
-          
-          {/* Componente de trayectoria con evaluaciones históricas */}
-          <DScoreTrayectoria
-            assessments={[
-              // Evaluaciones históricas guardadas
-              ...evaluacionesDScore.map(evaluacion => ({
-                responses: evaluacion.datos.hitos_evaluados,
-                ageMonths: evaluacion.edad_meses,
-                date: evaluacion.fecha,
-                id: evaluacion.id,
-                dscore: evaluacion.datos.dscore,
-                daz: evaluacion.datos.daz,
-                n: evaluacion.datos.n_hitos
-              })),
-              // Evaluación actual (no guardada)
-              {
-                responses: obtenerRespuestasHitos(),
-                ageMonths: edadActualMeses,
-                date: new Date().toISOString(),
-                id: 'actual',
-                isCurrent: true
-              }
-            ]}
-            childName={ninoData.nombre}
-            onSaveEvaluation={guardarEvaluacionDScore}
-            isLoadingHistory={cargandoHistorial}
-          />
-        </div>
       )}
     </div>
   );

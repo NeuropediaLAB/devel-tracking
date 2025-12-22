@@ -32,9 +32,37 @@ export function esAdmin() {
   return usuario && usuario.rol === 'admin';
 }
 
+// Verificar si el usuario es personal de enfermería
+export function esEnfermeria() {
+  const usuario = getUsuario();
+  return usuario && usuario.rol === 'enfermeria';
+}
+
+// Verificar si el usuario tiene rol médico (enfermería o superior)
+export function esRolMedico() {
+  const usuario = getUsuario();
+  return usuario && ['admin', 'neuropediatra', 'pediatra_ap', 'enfermeria'].includes(usuario.rol);
+}
+
 // Verificar si está en modo invitado
 export function esModoInvitado() {
   return sessionStorage.getItem('modoInvitado') === 'true';
+}
+
+// Obtener el nombre del rol en español
+export function getNombreRol() {
+  const usuario = getUsuario();
+  if (!usuario) return '';
+  
+  const roles = {
+    'admin': 'Administrador',
+    'neuropediatra': 'Neuropediatra',
+    'pediatra_ap': 'Pediatra AP',
+    'enfermeria': 'Enfermería',
+    'invitado': 'Invitado'
+  };
+  
+  return roles[usuario.rol] || usuario.rol;
 }
 
 // Activar modo invitado

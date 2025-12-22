@@ -14,6 +14,7 @@ import BibliotecaMedios from './components/BibliotecaMedios';
 import BibliotecaDatos from './components/BibliotecaDatos';
 import DScoreEducacion from './components/DScoreEducacion';
 import DScoreResultados from './components/DScoreResultados';
+import ScreeningEnfermeria from './components/ScreeningEnfermeria';
 import { API_URL } from './config';
 import { 
   estaAutenticado, 
@@ -21,7 +22,10 @@ import {
   cerrarSesion, 
   fetchConAuth,
   esAdmin,
-  esModoInvitado
+  esEnfermeria,
+  esRolMedico,
+  esModoInvitado,
+  getNombreRol
 } from './utils/authService';
 
 function App() {
@@ -29,19 +33,33 @@ function App() {
   const [usuario, setUsuario] = useState(getUsuario());
   const [ninos, setNinos] = useState([]);
   const [ninoSeleccionado, setNinoSeleccionado] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios, datos, dscore
+  const [vistaActual, setVistaActual] = useState('lista'); // lista, hitos, redflags, grafico, tutorial, investigacion, medios, datos, dscore, screening
   const [datosRegresion, setDatosRegresion] = useState(null); // Compartir datos de regresión entre gráficas
   const [modoAvanzado, setModoAvanzado] = useState(false); // false = modo básico, true = modo avanzado
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
   const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
   const [subVistaBibliotecaDatos, setSubVistaBibliotecaDatos] = useState('escalas-normativas'); // 'escalas-normativas', 'cohortes-personalizadas', 'estadisticas-uso'
-  const [subVistaDScore, setSubVistaDScore] = useState('concepto'); // 'concepto', 'metodologia', 'interpretacion', 'grafica', 'guia', 'fuentes'
+  const [subVistaDScore, setSubVistaDScore] = useState('guia'); // 'concepto', 'metodologia', 'interpretacion', 'grafica', 'guia', 'fuentes'
 
   useEffect(() => {
     if (autenticado) {
       cargarNinos();
     }
   }, [autenticado]);
+
+  // Cambiar pestaña de D-score cuando cambia el modo
+  useEffect(() => {
+    if (vistaActual === 'dscore') {
+      if (!modoAvanzado) {
+        // En modo básico, las pestañas avanzadas no están disponibles
+        // Si está en una de ellas, cambiar a 'guia'
+        if (['concepto', 'metodologia', 'interpretacion', 'grafica'].includes(subVistaDScore)) {
+          setSubVistaDScore('guia');
+        }
+      }
+    }
+  }, [modoAvanzado, vistaActual]);
+
 
   const handleLoginSuccess = (usuarioData) => {
     setAutenticado(true);
@@ -104,13 +122,14 @@ function App() {
       cargarNinos();
     }
     setNinoSeleccionado(nuevoNino);
-    setVistaActual('hitos');
+    // Enfermería va directamente a screening, otros a hitos
+    setVistaActual(esEnfermeria() ? 'screening' : 'hitos');
   };
 
   const handleNinoSeleccionado = (nino) => {
     setNinoSeleccionado(nino);
-    // Por defecto, abrir siempre Hitos del Desarrollo
-    setVistaActual('hitos');
+    // Enfermería va directamente a screening, otros a hitos
+    setVistaActual(esEnfermeria() ? 'screening' : 'hitos');
   };
 
   const handleNinoEliminado = () => {
@@ -149,19 +168,23 @@ function App() {
             <p className="subtitle">Sistema de evaluación del desarrollo 0-6 años</p>
           </div>
           <div className="user-info">
-            <div className="mode-switch-container">
-              <span className="mode-label">📖 Básico</span>
-              <label className="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  checked={modoAvanzado}
-                  onChange={() => setModoAvanzado(!modoAvanzado)}
-                />
-                <span className="toggle-slider"></span>
-              </label>
-              <span className="mode-label">🔬 Avanzado</span>
-            </div>
+            {/* Ocultar modo básico/avanzado para enfermería */}
+            {!esEnfermeria() && (
+              <div className="mode-switch-container">
+                <span className="mode-label">📖 Básico</span>
+                <label className="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    checked={modoAvanzado}
+                    onChange={() => setModoAvanzado(!modoAvanzado)}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+                <span className="mode-label">🔬 Avanzado</span>
+              </div>
+            )}
             <span className="user-name">👤 {usuario.nombre}</span>
+            <span className="role-badge">{getNombreRol()}</span>
             {esAdmin() && <span className="admin-badge">ADMIN</span>}
             {esModoInvitado() && <span className="invitado-badge">INVITADO</span>}
             <button className="btn-logout" onClick={handleLogout}>
@@ -175,31 +198,21 @@ function App() {
         {/* Pestañas principales de nivel superior */}
         <div className="nav-level-1">
           <button 
-            className={vistaActual === 'lista' || vistaActual === 'hitos' || vistaActual === 'redflags' || vistaActual === 'grafico' ? 'active' : ''}
+            className={vistaActual === 'lista' || vistaActual === 'hitos' || vistaActual === 'redflags' || vistaActual === 'grafico' || vistaActual === 'screening' ? 'active' : ''}
             onClick={() => setVistaActual('lista')}
           >
             👶 Niños
           </button>
-          <button 
-            className={vistaActual === 'tutorial' ? 'active' : ''}
-            onClick={() => {
-              setVistaActual('tutorial');
-              setNinoSeleccionado(null);
-              setSubVistaTutorial('guia'); // Reset to default
-            }}
-          >
-            📖 Tutorial
-          </button>
-          {modoAvanzado && (
+          {!esEnfermeria() && (
             <button 
-              className={vistaActual === 'investigacion' ? 'active' : ''}
+              className={vistaActual === 'tutorial' ? 'active' : ''}
               onClick={() => {
-                setVistaActual('investigacion');
+                setVistaActual('tutorial');
                 setNinoSeleccionado(null);
-                setSubVistaInvestigacion('limitaciones'); // Reset to default
+                setSubVistaTutorial('guia'); // Reset to default
               }}
             >
-              🔬 Investigación
+              📖 Tutorial
             </button>
           )}
           <button 
@@ -207,10 +220,10 @@ function App() {
             onClick={() => {
               setVistaActual('dscore');
               setNinoSeleccionado(null);
-              setSubVistaDScore('concepto'); // Reset to default
+              setSubVistaDScore('guia'); // Reset to default
             }}
           >
-            📊 D-score Educativo
+            📊 Tutorial D-Score
           </button>
           {esAdmin() && (
             <>
@@ -234,6 +247,18 @@ function App() {
               </button>
             </>
           )}
+          {modoAvanzado && (
+            <button 
+              className={vistaActual === 'investigacion' ? 'active' : ''}
+              onClick={() => {
+                setVistaActual('investigacion');
+                setNinoSeleccionado(null);
+                setSubVistaInvestigacion('limitaciones'); // Reset to default
+              }}
+            >
+              🔬 Investigación
+            </button>
+          )}
         </div>
 
         {/* Sub-pestañas jerárquicas para el niño seleccionado */}
@@ -249,24 +274,53 @@ function App() {
                   )}
                 </div>
               </div>
-              <button 
-                className={`sub-nav-btn ${vistaActual === 'hitos' ? 'active' : ''}`}
-                onClick={() => setVistaActual('hitos')}
-              >
-                ✅ Hitos del Desarrollo
-              </button>
-              <button 
-                className={`sub-nav-btn ${vistaActual === 'redflags' ? 'active' : ''}`}
-                onClick={() => setVistaActual('redflags')}
-              >
-                🚩 Señales de Alarma
-              </button>
-              <button 
-                className={`sub-nav-btn ${vistaActual === 'grafico' ? 'active' : ''}`}
-                onClick={() => setVistaActual('grafico')}
-              >
-                📊 Gráficas
-              </button>
+              {/* Enfermería solo ve sub-pestañas de Screening */}
+              {esEnfermeria() ? (
+                <>
+                  <button 
+                    className={`sub-nav-btn ${vistaActual === 'screening' ? 'active' : ''}`}
+                    onClick={() => setVistaActual('screening')}
+                  >
+                    📊 Evaluación D-Score
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${vistaActual === 'historial' ? 'active' : ''}`}
+                    onClick={() => setVistaActual('historial')}
+                  >
+                    📋 Historial
+                  </button>
+                </>
+              ) : (
+                /* Roles médicos ven todas las opciones */
+                <>
+                  {esRolMedico() && (
+                    <button 
+                      className={`sub-nav-btn ${vistaActual === 'screening' ? 'active' : ''}`}
+                      onClick={() => setVistaActual('screening')}
+                    >
+                      🩺 Screening D-Score
+                    </button>
+                  )}
+                  <button 
+                    className={`sub-nav-btn ${vistaActual === 'hitos' ? 'active' : ''}`}
+                    onClick={() => setVistaActual('hitos')}
+                  >
+                    ✅ Hitos del Desarrollo
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${vistaActual === 'redflags' ? 'active' : ''}`}
+                    onClick={() => setVistaActual('redflags')}
+                  >
+                    🚩 Señales de Alarma
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${vistaActual === 'grafico' ? 'active' : ''}`}
+                    onClick={() => setVistaActual('grafico')}
+                  >
+                    📊 Gráficas
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -331,30 +385,38 @@ function App() {
               <div className="dscore-name-tab">
                 <div className="dscore-nombre">📊 D-score Educativo</div>
               </div>
-              <button 
-                className={`sub-nav-btn ${subVistaDScore === 'concepto' ? 'active' : ''}`}
-                onClick={() => setSubVistaDScore('concepto')}
-              >
-                💡 Concepto
-              </button>
-              <button 
-                className={`sub-nav-btn ${subVistaDScore === 'metodologia' ? 'active' : ''}`}
-                onClick={() => setSubVistaDScore('metodologia')}
-              >
-                🔬 Metodología
-              </button>
-              <button 
-                className={`sub-nav-btn ${subVistaDScore === 'interpretacion' ? 'active' : ''}`}
-                onClick={() => setSubVistaDScore('interpretacion')}
-              >
-                📖 Interpretación
-              </button>
-              <button 
-                className={`sub-nav-btn ${subVistaDScore === 'grafica' ? 'active' : ''}`}
-                onClick={() => setSubVistaDScore('grafica')}
-              >
-                📈 Gráfica de Referencia
-              </button>
+              
+              {/* Pestañas solo visibles en modo avanzado */}
+              {modoAvanzado && (
+                <>
+                  <button 
+                    className={`sub-nav-btn ${subVistaDScore === 'concepto' ? 'active' : ''}`}
+                    onClick={() => setSubVistaDScore('concepto')}
+                  >
+                    💡 Concepto
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${subVistaDScore === 'metodologia' ? 'active' : ''}`}
+                    onClick={() => setSubVistaDScore('metodologia')}
+                  >
+                    🔬 Metodología
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${subVistaDScore === 'interpretacion' ? 'active' : ''}`}
+                    onClick={() => setSubVistaDScore('interpretacion')}
+                  >
+                    📖 Interpretación
+                  </button>
+                  <button 
+                    className={`sub-nav-btn ${subVistaDScore === 'grafica' ? 'active' : ''}`}
+                    onClick={() => setSubVistaDScore('grafica')}
+                  >
+                    📈 Gráfica de Referencia
+                  </button>
+                </>
+              )}
+              
+              {/* Pestañas visibles en todos los modos */}
               <button 
                 className={`sub-nav-btn ${subVistaDScore === 'guia' ? 'active' : ''}`}
                 onClick={() => setSubVistaDScore('guia')}
@@ -424,7 +486,7 @@ function App() {
                 onEjemploCreado={handleEjemploCreado}
                 onSeleccionarNino={(nino) => {
                   setNinoSeleccionado(nino);
-                  setVistaActual('hitos');
+                  setVistaActual(esEnfermeria() ? 'screening' : 'hitos');
                 }}
               />
             )}
@@ -433,6 +495,24 @@ function App() {
 
         {vistaActual === 'hitos' && ninoSeleccionado && (
           <HitosRegistro ninoId={ninoSeleccionado.id} />
+        )}
+
+        {vistaActual === 'screening' && ninoSeleccionado && (esRolMedico() || esEnfermeria()) && (
+          <ScreeningEnfermeria 
+            ninoId={ninoSeleccionado.id} 
+            nino={ninoSeleccionado}
+            onActualizarNino={cargarNinos}
+            vistaInicial="evaluacion"
+          />
+        )}
+
+        {vistaActual === 'historial' && ninoSeleccionado && esEnfermeria() && (
+          <ScreeningEnfermeria 
+            ninoId={ninoSeleccionado.id} 
+            nino={ninoSeleccionado}
+            onActualizarNino={cargarNinos}
+            vistaInicial="historial"
+          />
         )}
 
         {vistaActual === 'redflags' && ninoSeleccionado && (

@@ -3,20 +3,28 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const db = require('./database');
-const { verificarToken, verificarAdmin, generarToken } = require('./authMiddleware');
+const { verificarToken, verificarAdmin, verificarRolMedico, verificarNeuropediatra, verificarPediatra, generarToken } = require('./authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 8001;
 
 // Función helper para verificar acceso a un niño
 function verificarAccesoNino(ninoId, usuarioId, rol, callback) {
-  if (rol === 'admin') {
-    // Admin tiene acceso a todos
+  // Roles con acceso completo
+  if (['admin', 'neuropediatra'].includes(rol)) {
+    // Admin y neuropediatra tienen acceso a todos los casos
     callback(null, true);
   } else if (rol === 'invitado') {
     // Invitados solo pueden acceder a sus propios datos temporales
     // El ninoId para invitados es el mismo que el usuarioId
     callback(null, ninoId === usuarioId);
+  } else if (['pediatra_ap', 'enfermeria'].includes(rol)) {
+    // Pediatras y enfermería pueden acceder a casos de su área pero con limitaciones
+    // Por ahora, mismo comportamiento que usuario normal
+    db.get('SELECT id FROM ninos WHERE id = ? AND usuario_id = ?', [ninoId, usuarioId], (err, row) => {
+      if (err) return callback(err, false);
+      callback(null, !!row);
+    });
   } else {
     // Usuario normal solo puede acceder a sus propios niños
     db.get('SELECT id FROM ninos WHERE id = ? AND usuario_id = ?', [ninoId, usuarioId], (err, row) => {
@@ -47,14 +55,18 @@ app.use(cors({
     // Log para debug
     console.log('🔍 Intento de conexión desde origen:', origin);
     
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'La política CORS de este sitio no permite el acceso desde el origen especificado.';
-      console.error('❌ Origen rechazado:', origin);
-      console.error('✅ Orígenes permitidos:', allowedOrigins);
-      return callback(new Error(msg), false);
+    // Permitir cualquier origen que sea localhost o IP local en desarrollo
+    const isLocalOrigin = origin.match(/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|169\.254\.\d+\.\d+):\d+$/);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || isLocalOrigin) {
+      console.log('✅ Origen aceptado:', origin);
+      return callback(null, true);
     }
-    console.log('✅ Origen aceptado:', origin);
-    return callback(null, true);
+    
+    const msg = 'La política CORS de este sitio no permite el acceso desde el origen especificado.';
+    console.error('❌ Origen rechazado:', origin);
+    console.error('✅ Orígenes permitidos:', allowedOrigins);
+    return callback(new Error(msg), false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -67,12 +79,16 @@ app.use(bodyParser.json());
 
 // Registro de nuevo usuario
 app.post('/api/auth/registro', async (req, res) => {
-  const { email, password, nombre } = req.body;
+  const { email, password, nombre, rol } = req.body;
 
   // Validación
   if (!email || !password || !nombre) {
     return res.status(400).json({ error: 'Email, contraseña y nombre son requeridos' });
   }
+
+  // Validar rol
+  const rolesPermitidos = ['usuario', 'enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
+  const rolSeleccionado = rol && rolesPermitidos.includes(rol) ? rol : 'usuario';
 
   if (password.length < 6) {
     return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
@@ -89,7 +105,7 @@ app.post('/api/auth/registro', async (req, res) => {
     // Insertar nuevo usuario
     db.run(
       'INSERT INTO usuarios (email, password_hash, nombre, rol) VALUES (?, ?, ?, ?)',
-      [email, passwordHash, nombre, 'usuario'],
+      [email, passwordHash, nombre, rolSeleccionado],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
 
@@ -97,7 +113,7 @@ app.post('/api/auth/registro', async (req, res) => {
           id: this.lastID,
           email,
           nombre,
-          rol: 'usuario'
+          rol: rolSeleccionado
         };
 
         const token = generarToken(nuevoUsuario);
@@ -213,6 +229,43 @@ app.post('/api/auth/cambiar-password', verificarToken, (req, res) => {
 
 // ==================== RUTAS DE ADMINISTRACIÓN (solo admin) ====================
 
+// Obtener información de roles del sistema (solo admin)
+app.get('/api/admin/roles', verificarToken, verificarAdmin, (req, res) => {
+  const roles = [
+    {
+      id: 'admin',
+      nombre: 'Administrador',
+      descripcion: 'Acceso completo al sistema, gestión de usuarios y configuración',
+      permisos: ['Gestión de usuarios', 'Acceso a todos los casos', 'Configuración del sistema', 'Estadísticas globales']
+    },
+    {
+      id: 'neuropediatra',
+      nombre: 'Neuropediatra',
+      descripcion: 'Especialista en desarrollo neurológico infantil',
+      permisos: ['Acceso a todos los casos', 'Diagnóstico especializado', 'Clasificación de trayectorias', 'Análisis avanzado']
+    },
+    {
+      id: 'pediatra_ap',
+      nombre: 'Pediatra de Atención Primaria',
+      descripcion: 'Médico de primera línea en seguimiento del desarrollo',
+      permisos: ['Seguimiento básico', 'Detección temprana', 'Derivación a especialistas', 'Evaluación inicial']
+    },
+    {
+      id: 'enfermeria',
+      nombre: 'Enfermería',
+      descripcion: 'Personal de enfermería especializado en desarrollo infantil',
+      permisos: ['Registro de hitos', 'Seguimiento rutinario', 'Apoyo familiar', 'Educación sanitaria']
+    },
+    {
+      id: 'usuario',
+      nombre: 'Usuario General',
+      descripcion: 'Acceso básico para familias y otros profesionales',
+      permisos: ['Acceso a casos propios', 'Registro básico', 'Consulta de datos', 'Informes básicos']
+    }
+  ];
+  res.json(roles);
+});
+
 // Listar todos los usuarios (solo admin)
 app.get('/api/admin/usuarios', verificarToken, verificarAdmin, (req, res) => {
   db.all(
@@ -249,8 +302,11 @@ app.put('/api/admin/usuarios/:id/cambiar-rol', verificarToken, verificarAdmin, (
   const { id } = req.params;
   const { rol } = req.body;
 
-  if (!['usuario', 'admin'].includes(rol)) {
-    return res.status(400).json({ error: 'Rol inválido. Debe ser "usuario" o "admin"' });
+  const rolesValidos = ['usuario', 'enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
+  if (!rolesValidos.includes(rol)) {
+    return res.status(400).json({ 
+      error: 'Rol inválido. Debe ser uno de: ' + rolesValidos.join(', ') 
+    });
   }
 
   db.run('UPDATE usuarios SET rol = ? WHERE id = ?', [rol, id], (err) => {
@@ -701,6 +757,37 @@ function getInfoAdicionalFuente(fuenteId) {
       cobertura_dominios: 'Muy completa (5 dominios con 13 subescalas)',
       validacion: 'Muestra normativa n=2,500 con grupos especiales',
       edad_rango: 'Nacimiento - 7 años 11 meses'
+    },
+    10: {
+      nombre_corto: 'D-score',
+      tipo: 'Métrica continua de desarrollo basada en IRT',
+      metodologia: 'Teoría de Respuesta al Ítem (Item Response Theory) con modelo de Rasch',
+      fortalezas: [
+        'Comparabilidad transcultural (15 países)',
+        'Métrica continua sin techo',
+        'Integra múltiples escalas de desarrollo',
+        'Base de datos global abierta (childdevdata)',
+        'Monitoreo longitudinal preciso',
+        'No requiere licencia',
+        'Edad equivalente del desarrollo (DAZ)'
+      ],
+      limitaciones: [
+        'Relativamente nuevo (2019)',
+        'Requiere software específico para cálculo',
+        'No es herramienta diagnóstica standalone',
+        'Menor reconocimiento que escalas tradicionales'
+      ],
+      mejor_para: 'Monitoreo poblacional, screening, investigación transcultural y seguimiento longitudinal',
+      cobertura_dominios: 'Motor grueso, Motor fino, Lenguaje expresivo, Social-emocional',
+      validacion: 'Global Child Development Group (GCDG) - datos de 15 países, múltiples cohortes',
+      edad_rango: 'Nacimiento - 36 meses (óptimo)',
+      website: 'https://d-score.org/childdevdata/',
+      recursos: [
+        'Base de datos: https://d-score.org/childdevdata/',
+        'Paquete R: dscore',
+        'Calculadora online disponible',
+        'Documentación completa open-source'
+      ]
     }
   };
   
@@ -1664,6 +1751,123 @@ app.post('/api/videos/desasociar', verificarToken, verificarAdmin, (req, res) =>
   );
 });
 
+// Asociar video con múltiples hitos (para auto-asociación)
+app.post('/api/videos/asociar-multiple', verificarToken, verificarAdmin, (req, res) => {
+  const { videoId, hitosIds } = req.body;
+  
+  if (!videoId || !Array.isArray(hitosIds)) {
+    return res.status(400).json({ error: 'videoId y hitosIds (array) son requeridos' });
+  }
+  
+  let asociacionesCreadas = 0;
+  let asociacionesYaExistentes = 0;
+  let asociacionesEliminadas = 0;
+  let errores = 0;
+  
+  // Primero: obtener todas las asociaciones actuales del video
+  db.all(
+    'SELECT hito_id FROM videos_hitos WHERE video_id = ?',
+    [videoId],
+    (err, asociacionesActuales) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error al obtener asociaciones actuales' });
+      }
+      
+      const hitosActuales = asociacionesActuales.map(a => a.hito_id);
+      const hitosNuevos = hitosIds;
+      
+      // Identificar hitos a eliminar (están en actuales pero no en nuevos)
+      const hitosAEliminar = hitosActuales.filter(id => !hitosNuevos.includes(id));
+      
+      console.log(`📊 Video ${videoId}:`);
+      console.log(`   - Hitos actuales: ${hitosActuales.length}`);
+      console.log(`   - Hitos nuevos: ${hitosNuevos.length}`);
+      console.log(`   - A eliminar: ${hitosAEliminar.length}`);
+      
+      // Función para eliminar un hito
+      const eliminarHito = (hitoId) => {
+        return new Promise((resolve, reject) => {
+          db.run(
+            'DELETE FROM videos_hitos WHERE video_id = ? AND hito_id = ?',
+            [videoId, hitoId],
+            function(err) {
+              if (err) {
+                errores++;
+                return reject(err);
+              }
+              asociacionesEliminadas++;
+              resolve();
+            }
+          );
+        });
+      };
+      
+      // Función para asociar un hito
+      const asociarHito = (hitoId) => {
+        return new Promise((resolve, reject) => {
+          // Verificar si ya existe la asociación
+          db.get(
+            'SELECT id FROM videos_hitos WHERE video_id = ? AND hito_id = ?',
+            [videoId, hitoId],
+            (err, row) => {
+              if (err) {
+                errores++;
+                return reject(err);
+              }
+              
+              if (row) {
+                asociacionesYaExistentes++;
+                return resolve({ yaExiste: true });
+              }
+              
+              // Crear la asociación
+              db.run(
+                'INSERT INTO videos_hitos (video_id, hito_id) VALUES (?, ?)',
+                [videoId, hitoId],
+                function(err) {
+                  if (err) {
+                    errores++;
+                    return reject(err);
+                  }
+                  asociacionesCreadas++;
+                  resolve({ id: this.lastID });
+                }
+              );
+            }
+          );
+        });
+      };
+      
+      // Primero eliminar los hitos que ya no corresponden
+      Promise.all(hitosAEliminar.map(hitoId => eliminarHito(hitoId).catch(e => console.error(e))))
+        .then(() => {
+          // Luego asociar los nuevos hitos
+          return Promise.all(hitosNuevos.map(hitoId => asociarHito(hitoId).catch(e => console.error(e))));
+        })
+        .then(() => {
+          console.log(`   ✅ Resultado: +${asociacionesCreadas} nuevas, ${asociacionesYaExistentes} mantenidas, -${asociacionesEliminadas} eliminadas`);
+          res.json({ 
+            message: 'Asociación múltiple completada',
+            asociacionesCreadas,
+            asociacionesYaExistentes,
+            asociacionesEliminadas,
+            errores,
+            total: hitosNuevos.length
+          });
+        })
+        .catch(err => {
+          res.status(500).json({ 
+            error: 'Error en asociación múltiple',
+            detalles: err.message,
+            asociacionesCreadas,
+            asociacionesEliminadas,
+            errores
+          });
+        });
+    }
+  );
+});
+
 // Eliminar video
 app.delete('/api/videos/:id', verificarToken, verificarAdmin, (req, res) => {
   const videoId = req.params.id;
@@ -1931,6 +2135,178 @@ app.post('/api/calcular-dscore', verificarToken, (req, res) => {
   } else {
     res.status(400).json({ error: 'No hay hitos válidos para calcular D-score' });
   }
+});
+
+// ==================== HEALTH CHECK ====================
+app.get('/api/health', (req, res) => {
+  // Verificar conexión a la base de datos
+  db.get('SELECT 1', (err) => {
+    if (err) {
+      return res.status(503).json({ 
+        status: 'error', 
+        message: 'Database connection failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    res.json({ 
+      status: 'healthy', 
+      version: '0.3.2',
+      roles: ['admin', 'neuropediatra', 'pediatra_ap', 'enfermeria', 'usuario', 'invitado'],
+      database: 'connected',
+      timestamp: new Date().toISOString()
+    });
+  });
+});
+
+// ==================== RUTAS PARA SCREENING D-SCORE ====================
+
+// Calcular D-Score para screening de enfermería
+app.post('/api/dscore/calcular', verificarToken, verificarRolMedico, (req, res) => {
+  const { nino_id, edad_meses, items_superados, items_total } = req.body;
+  
+  if (!nino_id || !edad_meses || !Array.isArray(items_superados) || !items_total) {
+    return res.status(400).json({ error: 'Datos incompletos para el cálculo' });
+  }
+  
+  // Verificar acceso al niño
+  verificarAccesoNino(nino_id, req.usuario.id, req.usuario.rol, (err, tieneAcceso) => {
+    if (err || !tieneAcceso) {
+      return res.status(403).json({ error: 'No tienes acceso a este niño' });
+    }
+    
+    // Algoritmo de D-Score basado en porcentaje de items superados
+    const numItemsSuperados = items_superados.length;
+    const totalItemsEvaluados = items_total;
+    const numItemsNoSuperados = totalItemsEvaluados - numItemsSuperados;
+    
+    // Cálculo del porcentaje de desarrollo
+    const porcentajeSuperado = numItemsSuperados / totalItemsEvaluados;
+    
+    // Conversión a D-Score (escala 0-100)
+    // Un D-Score de 50 representa el 50% de items superados (desarrollo típico medio)
+    // Por debajo de 40 indica posible retraso
+    let dscore = porcentajeSuperado * 100;
+    
+    // Ajuste por edad: los niños más pequeños tienen más margen
+    let ajusteEdad = 0;
+    if (edad_meses < 12) {
+      // Bebés menores de 1 año: más permisivos
+      ajusteEdad = 5;
+    } else if (edad_meses < 24) {
+      // 1-2 años: ajuste moderado
+      ajusteEdad = 2;
+    }
+    
+    dscore = Math.max(0, Math.min(100, dscore + ajusteEdad));
+    
+    // Determinar nivel de desarrollo basado en el D-Score
+    let nivelDesarrollo;
+    let recomendacion;
+    
+    if (dscore >= 75) {
+      nivelDesarrollo = 'Desarrollo Adecuado';
+      recomendacion = 'El desarrollo es adecuado. Continuar seguimiento rutinario.';
+    } else if (dscore >= 50) {
+      nivelDesarrollo = 'Desarrollo Normal';
+      recomendacion = 'Desarrollo dentro del rango esperado. Seguimiento según calendario.';
+    } else if (dscore >= 40) {
+      nivelDesarrollo = 'Vigilancia';
+      recomendacion = 'Se recomienda vigilancia estrecha y reevaluación en 1-2 meses.';
+    } else if (dscore >= 25) {
+      nivelDesarrollo = 'Alerta';
+      recomendacion = 'Se recomienda evaluación por pediatra especializado.';
+    } else {
+      nivelDesarrollo = 'Derivación Urgente';
+      recomendacion = 'Se recomienda derivación inmediata a neuropediatría.';
+    }
+    
+    const resultado = {
+      dscore: Math.round(dscore * 10) / 10, // Redondear a 1 decimal
+      edad_meses: edad_meses,
+      items_total: totalItemsEvaluados,
+      items_superados: numItemsSuperados,
+      items_no_superados: numItemsNoSuperados,
+      porcentaje_superado: Math.round(porcentajeSuperado * 100),
+      nivel_desarrollo: nivelDesarrollo,
+      recomendacion: recomendacion
+    };
+    
+    res.json(resultado);
+  });
+});
+
+// ==================== RUTAS PARA EVALUACIONES ====================
+
+// Crear nueva evaluación
+app.post('/api/evaluaciones', verificarToken, verificarRolMedico, (req, res) => {
+  const { nino_id, tipo, resultado, items_evaluados, edad_meses, evaluador } = req.body;
+  
+  if (!nino_id || !tipo || !resultado) {
+    return res.status(400).json({ error: 'Datos incompletos para la evaluación' });
+  }
+  
+  // Verificar acceso al niño
+  verificarAccesoNino(nino_id, req.usuario.id, req.usuario.rol, (err, tieneAcceso) => {
+    if (err || !tieneAcceso) {
+      return res.status(403).json({ error: 'No tienes acceso a este niño' });
+    }
+    
+    db.run(`
+      INSERT INTO evaluaciones_screening (
+        nino_id, tipo, resultado, items_evaluados, edad_meses, 
+        evaluador, usuario_id, fecha
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    `, [
+      nino_id, tipo, resultado, items_evaluados || '[]', 
+      edad_meses, evaluador || req.usuario.rol, req.usuario.id
+    ], function(err) {
+      if (err) {
+        console.error('Error guardando evaluación:', err);
+        return res.status(500).json({ error: 'Error guardando evaluación' });
+      }
+      
+      res.json({ 
+        id: this.lastID, 
+        mensaje: 'Evaluación guardada correctamente' 
+      });
+    });
+  });
+});
+
+// Obtener evaluaciones de un niño
+app.get('/api/evaluaciones/:nino_id', verificarToken, verificarRolMedico, (req, res) => {
+  const { nino_id } = req.params;
+  const { tipo } = req.query;
+  
+  // Verificar acceso al niño
+  verificarAccesoNino(nino_id, req.usuario.id, req.usuario.rol, (err, tieneAcceso) => {
+    if (err || !tieneAcceso) {
+      return res.status(403).json({ error: 'No tienes acceso a este niño' });
+    }
+    
+    let query = `
+      SELECT * FROM evaluaciones_screening 
+      WHERE nino_id = ?
+    `;
+    let params = [nino_id];
+    
+    if (tipo) {
+      query += ' AND tipo = ?';
+      params.push(tipo);
+    }
+    
+    query += ' ORDER BY fecha DESC';
+    
+    db.all(query, params, (err, rows) => {
+      if (err) {
+        console.error('Error obteniendo evaluaciones:', err);
+        return res.status(500).json({ error: 'Error obteniendo evaluaciones' });
+      }
+      
+      res.json({ evaluaciones: rows || [] });
+    });
+  });
 });
 
 const { fork } = require('child_process');

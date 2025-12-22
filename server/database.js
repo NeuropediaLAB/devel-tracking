@@ -52,23 +52,55 @@ db.serialize(() => {
     }
   });
 
-  // Crear usuario admin por defecto si no existe
-  db.get('SELECT id FROM usuarios WHERE email = ?', ['admin@neuropedialab.org'], (err, row) => {
-    if (err) {
-      console.error('Error checking admin user:', err);
-      return;
+  // Crear usuarios con diferentes roles si no existen
+  const usuariosIniciales = [
+    {
+      email: 'admin@neuropedialab.org',
+      password: 'admin123',
+      nombre: 'Administrador',
+      rol: 'admin'
+    },
+    {
+      email: 'neuropediatra@hospital.es',
+      password: 'neuro123',
+      nombre: 'Dr. Ana García',
+      rol: 'neuropediatra'
+    },
+    {
+      email: 'pediatra@centrosalud.es',
+      password: 'ped123',
+      nombre: 'Dr. Carlos López',
+      rol: 'pediatra_ap'
+    },
+    {
+      email: 'enfermeria@hospital.es',
+      password: 'enf123',
+      nombre: 'Carmen Martínez',
+      rol: 'enfermeria'
     }
-    if (!row) {
-      const adminPassword = bcrypt.hashSync('admin123', 10);
-      db.run(`INSERT INTO usuarios (email, password_hash, nombre, rol) VALUES (?, ?, ?, ?)`,
-        ['admin@neuropedialab.org', adminPassword, 'Administrador', 'admin'],
-        (err) => {
-          if (err) {
-            console.error('Error creating admin user (database may be read-only):', err.message);
+  ];
+
+  usuariosIniciales.forEach(usuario => {
+    db.get('SELECT id FROM usuarios WHERE email = ?', [usuario.email], (err, row) => {
+      if (err) {
+        console.error(`Error checking ${usuario.rol} user:`, err);
+        return;
+      }
+      if (!row) {
+        const passwordHash = bcrypt.hashSync(usuario.password, 10);
+        db.run(
+          `INSERT INTO usuarios (email, password_hash, nombre, rol) VALUES (?, ?, ?, ?)`,
+          [usuario.email, passwordHash, usuario.nombre, usuario.rol],
+          (err) => {
+            if (err) {
+              console.error(`Error creating ${usuario.rol} user:`, err.message);
+            } else {
+              console.log(`Usuario ${usuario.rol} creado: ${usuario.email}`);
+            }
           }
-        }
-      );
-    }
+        );
+      }
+    });
   });
 
   // Tabla de dominios de desarrollo
@@ -220,6 +252,21 @@ db.serialize(() => {
       UNIQUE(video_id, hito_id)
     )
   `);
+
+  // Tabla de evaluaciones de screening (para enfermería y D-Score)
+  db.run(`CREATE TABLE IF NOT EXISTS evaluaciones_screening (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nino_id INTEGER NOT NULL,
+    tipo TEXT NOT NULL,
+    resultado TEXT NOT NULL,
+    items_evaluados TEXT,
+    edad_meses INTEGER,
+    evaluador TEXT,
+    usuario_id INTEGER NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (nino_id) REFERENCES ninos(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+  )`);
 
   // Insertar fuentes normativas predeterminadas
   const fuentesNormativas = [

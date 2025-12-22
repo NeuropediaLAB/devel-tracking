@@ -56,6 +56,31 @@ function verificarAdmin(req, res, next) {
   next();
 }
 
+// Middleware para verificar roles médicos
+function verificarRolMedico(req, res, next) {
+  const rolesMedicos = ['admin', 'neuropediatra', 'pediatra_ap', 'enfermeria'];
+  if (!rolesMedicos.includes(req.usuario.rol)) {
+    return res.status(403).json({ error: 'Acceso denegado. Se requiere rol médico' });
+  }
+  next();
+}
+
+// Middleware para verificar rol neuropediatra o superior
+function verificarNeuropediatra(req, res, next) {
+  if (!['admin', 'neuropediatra'].includes(req.usuario.rol)) {
+    return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de neuropediatra' });
+  }
+  next();
+}
+
+// Middleware para verificar rol pediatra o superior
+function verificarPediatra(req, res, next) {
+  if (!['admin', 'neuropediatra', 'pediatra_ap'].includes(req.usuario.rol)) {
+    return res.status(403).json({ error: 'Acceso denegado. Se requiere rol de pediatra' });
+  }
+  next();
+}
+
 // Función para generar token
 function generarToken(usuario) {
   return jwt.sign(
@@ -73,6 +98,9 @@ function generarToken(usuario) {
 module.exports = {
   verificarToken,
   verificarAdmin,
+  verificarRolMedico,
+  verificarNeuropediatra,
+  verificarPediatra,
   generarToken,
   JWT_SECRET
 };

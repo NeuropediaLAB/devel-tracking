@@ -1,0 +1,126 @@
+# Docker Compose para Producción - Sistema de Seguimiento del Neurodesarrollo
+services:
+  # Backend API optimizado para producción
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: neurodesarrollo-backend-prod
+    command: ["server"]
+    ports:
+      - "8001:8001"
+    volumes:
+      - db-data:/app/server/data:rw
+      - ./server/neurodesarrollo_dev_new.db:/app/server/neurodesarrollo_dev_new.db:rw
+      - ./logs:/app/logs:rw
+    environment:
+      - NODE_ENV=production
+      - PORT=8001
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_PATH=${DATABASE_PATH}
+      - LOG_LEVEL=warn
+    restart: always
+    networks:
+      - neurodesarrollo-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8001/api/health"]
+      interval: ${HEALTHCHECK_INTERVAL}
+      timeout: ${HEALTHCHECK_TIMEOUT}
+      retries: ${HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    security_opt:
+      - no-new-privileges:true
+
+  # Frontend optimizado para producción
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neurodesarrollo-frontend-prod
+    command: ["dev"]
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=/api
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: always
+    networks:
+      - neurodesarrollo-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: ${HEALTHCHECK_INTERVAL}
+      timeout: ${HEALTHCHECK_TIMEOUT}
+      retries: ${HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.3'
+    security_opt:
+      - no-new-privileges:true
+
+  # Nginx Proxy con SSL
+  nginx:
+    image: nginx:alpine
+    container_name: neurodesarrollo-nginx-prod
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx:rw
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    restart: always
+    networks:
+      - neurodesarrollo-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.2'
+
+  # Watchtower para actualizaciones automáticas (opcional)
+  watchtower:
+    image: containrrr/watchtower
+    container_name: neurodesarrollo-watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 2 * * *  # 2 AM daily
+    restart: always
+    command: --interval 86400 neurodesarrollo-backend-prod neurodesarrollo-frontend-prod
+
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DB_DATA_PATH}
+
+networks:
+  neurodesarrollo-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: neurodesarrollo-br0

@@ -1,17 +1,25 @@
 {
   "name": "devel-tracking",
   "version": "0.3.2",
-  "description": "",
+  "description": "Sistema de Seguimiento del Neurodesarrollo con Roles Médicos",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/server.js",
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "docker:dev": "./docker-manager.sh dev",
+    "docker:prod": "./docker-manager.sh prod",
+    "docker:build": "./docker-manager.sh build",
+    "docker:stop": "./docker-manager.sh stop",
+    "docker:clean": "./docker-manager.sh clean",
+    "docker:status": "./docker-manager.sh status",
+    "docker:backup": "./docker-manager.sh backup",
+    "docker:test": "./docker-manager.sh test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["neurodesarrollo", "medicina", "pediatria", "roles-medicos"],
+  "author": "Neuropedia Lab",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.13.2",

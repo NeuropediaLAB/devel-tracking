@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  guacamole:
+    image: flcontainers/guacamole
+    container_name: guacamole
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+      - "4822:4822"
+    environment:
+      - POSTGRES_MAX_CONNECTIONS=50
+      - GUAC_READ_TIMEOUT=60000
+      - CATALINA_OPTS=-Xms1536m -Xmx3072m -XX:+UnlockExperimentalVMOptions -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF-8 -server -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=8m -XX:+UseStringDeduplication -XX:MaxMetaspaceSize=256m -XX:CompressedClassSpaceSize=128m
+      - GUACD_READ_TIMEOUT=300
+      - GUAC_LOG_LEVEL=info
+      - GUACD_WRITE_TIMEOUT=300
+      - GUACD_TIMEOUT=300
+      - GUAC_SOCKET_TIMEOUT=60000
+      - TZ=UTC
+      - LC_ALL=C.UTF-8
+      - LD_LIBRARY_PATH=/opt/guacamole/lib
+      - GUAC_VER=1.6.0
+      - GUACAMOLE_HOME=/config/guacamole
+      - CATALINA_HOME=/opt/tomcat
+      - PG_MAJOR=13
+      - PGDATA=/config/postgres
+      - POSTGRES_USER=guacamole
+      - POSTGRES_DB=guacamole_db
+      - GUACD_LOG_LEVEL=info
+      - CATALINA_PID=/tmp/tomcat.pid
+      - POSTGRES_PID=/config/postgresql/postmaster.pid
+      - GUACD_PID=/tmp/guacd.pid
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - guacamole_config:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f --connect-timeout 30 --max-time 60 http://localhost:8080/guacamole/ || exit 1"]
+      interval: 3m
+      timeout: 90s
+      start_period: 8m
+      retries: 6
+
+volumes:
+  guacamole_config:
+    driver: local
