@@ -32,6 +32,11 @@ const BibliotecaMedios = () => {
       const resVideos = await fetch('/api/videos', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!resVideos.ok) {
+        throw new Error(`Error al cargar videos: ${resVideos.status}`);
+      }
+      
       const dataVideos = await resVideos.json();
       // Procesar hitosAsociados de string a array
       const videosProcessed = Array.isArray(dataVideos) ? dataVideos.map(video => ({
@@ -43,24 +48,30 @@ const BibliotecaMedios = () => {
           ) : []
       })) : [];
       setVideos(videosProcessed);
+      console.log(`✅ Videos cargados: ${videosProcessed.length}`);
       
       // Cargar todos los hitos del sistema
       const resHitos = await fetch('/api/hitos-completos', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!resHitos.ok) {
+        throw new Error(`Error al cargar hitos: ${resHitos.status}`);
+      }
+      
       const dataHitos = await resHitos.json();
       const hitosArray = Array.isArray(dataHitos) ? dataHitos : [];
-      console.log(`📊 Hitos cargados: ${hitosArray.length}`);
+      console.log(`✅ Hitos cargados: ${hitosArray.length}`);
       if (hitosArray.length > 0) {
         console.log(`   Ejemplo de hito:`, hitosArray[0]);
       }
       setHitos(hitosArray);
       
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      console.error('❌ Error al cargar datos:', error);
       setVideos([]);
       setHitos([]);
-      mostrarMensaje('Error al cargar los datos', 'error');
+      mostrarMensaje('Error al cargar los datos: ' + error.message, 'error');
     } finally {
       setCargando(false);
     }

@@ -8,7 +8,7 @@ export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nombre, setNombre] = useState('');
-  const [rol, setRol] = useState('usuario');
+  const [rol, setRol] = useState('enfermeria');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
   const [mostrarModalInvitado, setMostrarModalInvitado] = useState(false);
@@ -118,7 +118,6 @@ export default function Login({ onLoginSuccess }) {
                 required={modo === 'registro'}
                 disabled={cargando}
               >
-                <option value="usuario">👤 Usuario estándar</option>
                 <option value="enfermeria">👩‍⚕️ Personal de enfermería</option>
                 <option value="pediatra_ap">👨‍⚕️ Pediatra de Atención Primaria</option>
                 <option value="neuropediatra">🧠 Neuropediatra</option>

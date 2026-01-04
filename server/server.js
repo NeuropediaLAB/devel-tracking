@@ -87,8 +87,8 @@ app.post('/api/auth/registro', async (req, res) => {
   }
 
   // Validar rol
-  const rolesPermitidos = ['usuario', 'enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
-  const rolSeleccionado = rol && rolesPermitidos.includes(rol) ? rol : 'usuario';
+  const rolesPermitidos = ['enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
+  const rolSeleccionado = rol && rolesPermitidos.includes(rol) ? rol : 'enfermeria';
 
   if (password.length < 6) {
     return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
@@ -302,7 +302,7 @@ app.put('/api/admin/usuarios/:id/cambiar-rol', verificarToken, verificarAdmin, (
   const { id } = req.params;
   const { rol } = req.body;
 
-  const rolesValidos = ['usuario', 'enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
+  const rolesValidos = ['enfermeria', 'pediatra_ap', 'neuropediatra', 'admin'];
   if (!rolesValidos.includes(rol)) {
     return res.status(400).json({ 
       error: 'Rol inválido. Debe ser uno de: ' + rolesValidos.join(', ') 
@@ -2152,7 +2152,7 @@ app.get('/api/health', (req, res) => {
     res.json({ 
       status: 'healthy', 
       version: '0.3.2',
-      roles: ['admin', 'neuropediatra', 'pediatra_ap', 'enfermeria', 'usuario', 'invitado'],
+      roles: ['admin', 'neuropediatra', 'pediatra_ap', 'enfermeria', 'invitado'],
       database: 'connected',
       timestamp: new Date().toISOString()
     });
