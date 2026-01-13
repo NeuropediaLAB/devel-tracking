@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { generateDScoreChart } from '../utils/dscore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, ComposedChart } from 'recharts';
 import GuiaUsoDScore from './GuiaUsoD-score';
+import GSEDResources from './GSEDResources';
 import './DScore.css';
 
 const DScoreEducacion = ({ activeTab }) => {
@@ -429,6 +430,7 @@ const DScoreEducacion = ({ activeTab }) => {
           {activeTab === 'interpretacion' && <InterpretacionTab />}
           {activeTab === 'grafica' && <GraficaTab />}
           {activeTab === 'guia' && <GuiaUsoDScore />}
+          {activeTab === 'recursos' && <GSEDResources />}
           {activeTab === 'fuentes' && <FuentesTab />}
         </div>
       </div>

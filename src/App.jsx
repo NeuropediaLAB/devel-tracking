@@ -14,6 +14,7 @@ import BibliotecaMedios from './components/BibliotecaMedios';
 import BibliotecaDatos from './components/BibliotecaDatos';
 import DScoreEducacion from './components/DScoreEducacion';
 import DScoreResultados from './components/DScoreResultados';
+import GSEDResources from './components/GSEDResources';
 import ScreeningEnfermeria from './components/ScreeningEnfermeria';
 import { API_URL } from './config';
 import { 
@@ -39,7 +40,7 @@ function App() {
   const [subVistaInvestigacion, setSubVistaInvestigacion] = useState('limitaciones'); // 'limitaciones', 'simulacion', 'fuentes-normativas'
   const [subVistaTutorial, setSubVistaTutorial] = useState('guia'); // 'guia', 'ejemplos'
   const [subVistaBibliotecaDatos, setSubVistaBibliotecaDatos] = useState('escalas-normativas'); // 'escalas-normativas', 'cohortes-personalizadas', 'estadisticas-uso'
-  const [subVistaDScore, setSubVistaDScore] = useState('guia'); // 'concepto', 'metodologia', 'interpretacion', 'grafica', 'guia', 'fuentes'
+  const [subVistaDScore, setSubVistaDScore] = useState('guia'); // 'concepto', 'metodologia', 'interpretacion', 'grafica', 'guia', 'recursos', 'fuentes'
 
   useEffect(() => {
     if (autenticado) {
@@ -424,10 +425,16 @@ function App() {
                 📋 Guía Práctica
               </button>
               <button 
+                className={`sub-nav-btn ${subVistaDScore === 'recursos' ? 'active' : ''}`}
+                onClick={() => setSubVistaDScore('recursos')}
+              >
+                📚 Recursos GSED
+              </button>
+              <button 
                 className={`sub-nav-btn ${subVistaDScore === 'fuentes' ? 'active' : ''}`}
                 onClick={() => setSubVistaDScore('fuentes')}
               >
-                📚 Referencias
+                🔗 Referencias
               </button>
             </div>
           </div>

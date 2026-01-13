@@ -13,7 +13,8 @@ const getApiUrl = () => {
   // IMPORTANTE: Si estamos en HTTPS desde un dominio externo,
   // necesitamos usar una ruta relativa para el proxy
   if (protocol === 'https:') {
-    // En HTTPS, siempre usar ruta relativa (proxy configurado en vite.config.mjs)
+    // En HTTPS, siempre usar ruta relativa (el proxy externo debe manejar /api/)
+    console.log('🔗 API URL configurada: /api (HTTPS - requiere proxy configurado)');
     return '/api';
   }
   
