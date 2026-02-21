@@ -24,6 +24,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Copiar código fuente
 COPY --chown=nextjs:nodejs . .
+COPY assets /usr/share/nginx/html/assets
 
 # Crear directorios necesarios con permisos correctos
 RUN mkdir -p /app/server/data && \
