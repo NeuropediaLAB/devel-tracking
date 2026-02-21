@@ -58,8 +58,8 @@ start_both() {
     
     # Esperar a que el backend esté listo
     echo "⏳ Esperando a que el backend esté disponible..."
-    timeout 60 sh -c 'until nc -z localhost 8001; do sleep 1; done' || {
-        echo "❌ Error: Backend no pudo iniciarse en 60 segundos"
+    timeout 180 sh -c 'until nc -z localhost 8001; do sleep 1; done' || {
+        echo "❌ Error: Backend no pudo iniciarse en 180 segundos"
         kill $BACKEND_PID 2>/dev/null || true
         exit 1
     }
